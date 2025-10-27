@@ -25,4 +25,5 @@ export interface AuthContextType {
   login: (user: UserDto, accessToken: string, refreshToken: string) => void;
   logout: () => void;
   isAuthenticated: boolean;
+  isLoading: boolean; // 👈 ADD THIS LINE
 }

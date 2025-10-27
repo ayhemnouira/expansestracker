@@ -1,13 +1,19 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
-import App from "./App.tsx";
-import { AuthProvider } from "./context/AuthContext.tsx";
+import { ThemeProvider, CssBaseline } from "@mui/material";
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <AuthProvider>
+import { AuthProvider } from "./context/AuthContext";
+import App from "./App";
+import "./index.css";
+import { ColorModeContext, useMode } from "./theme/theme";
+
+function Root() {
+  const [theme, colorMode] = useMode();
+
+  return (
+    <StrictMode>
       <App />
-    </AuthProvider>
-  </StrictMode>
-);
+    </StrictMode>
+  );
+}
+createRoot(document.getElementById("root")!).render(<Root />);

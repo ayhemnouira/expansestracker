@@ -1,7 +1,7 @@
 import { use, useState } from "react";
 import type { SignInFormData } from "./schema";
 import { Box } from "@mui/material";
-import SignInForm from "../auth/SignInForm";
+import SignInForm from "../authform/SignInForm";
 import { loginUser } from "../../../api/authApi";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";

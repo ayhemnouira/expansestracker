@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import type { SignUpFormData } from "./schema";
 import { registerUser } from "../../../api/authApi";
 import { Box } from "@mui/material";
-import SignUpForm from "../auth/SignUpForm";
+import SignUpForm from "../authform/SignUpForm";
 
 const SignUpPage: React.FC = () => {
   const { login } = useAuth();
