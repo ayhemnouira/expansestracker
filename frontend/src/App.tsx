@@ -14,8 +14,6 @@ const App = () => {
 
   return (
     <AuthProvider>
-      {" "}
-      {/* ✅ ONE AuthProvider here */}
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
           <CssBaseline />

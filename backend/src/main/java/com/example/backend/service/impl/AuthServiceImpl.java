@@ -1,4 +1,4 @@
-package com.example.backend.service;
+package com.example.backend.service.impl;
 
 import com.example.backend.dto.AuthResponseDto;
 import com.example.backend.dto.LoginRequestDto;
@@ -7,13 +7,13 @@ import com.example.backend.dto.UserDto;
 import com.example.backend.entity.User;
 import com.example.backend.enums.Role;
 import com.example.backend.repo.UserRepo;
+import com.example.backend.service.AuthService;
 import com.example.backend.util.JwtTokenUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthServiceImpl implements AuthService{
+public class AuthServiceImpl implements AuthService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
