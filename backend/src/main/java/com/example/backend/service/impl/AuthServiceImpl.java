@@ -28,10 +28,9 @@ public class AuthServiceImpl implements AuthService {
         String email = loginRequestDto.getEmail();
 
         // 1. Find user by email
-        User user = userRepo.findByEmail(email);
-        if (user == null) {
-            throw new IllegalArgumentException("Invalid email or password");
-        }
+        User user = userRepo.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+
 
         // 2. Verify password
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
@@ -81,11 +80,8 @@ public class AuthServiceImpl implements AuthService {
         }
 
         String email = jwtTokenUtil.getUsernameFromToken(refreshToken);
-        User user = userRepo.findByEmail(email);
-
-        if (user == null) {
-            throw new IllegalArgumentException("User not found");
-        }
+        User user = userRepo.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         // Generate new access token
         String newAccessToken = jwtTokenUtil.generateAccessToken(email);

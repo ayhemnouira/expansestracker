@@ -1,24 +1,43 @@
 export interface Account {
-  id: string;
+  id: number;
   name: string;
-  officialName: string;
+  officialName?: string;
   type: string;
-  subtype: string;
+  subtype?: string;
   currentBalance: number;
   availableBalance: number;
-  mask: string;
-  institutionId: string;
+  mask?: string;
+  institutionId?: string;
+  shareableId: string;
   enabled: boolean;
+  transactionCount: number;
 }
 
-export interface Transaction {
-  id: string;
+export interface CreateAccountRequest {
   name: string;
-  amount: number;
-  date: string;
-  category: string;
-  type: "income" | "expense";
+  officialName?: string;
+  type: string;
+  subtype?: string;
+  initialBalance: number;
+  mask?: string;
+  institutionId?: string;
 }
+
+export interface UpdateAccountRequest {
+  name: string;
+  officialName?: string;
+  subtype?: string;
+  mask?: string;
+  enabled?: boolean;
+}
+
+export interface AccountSummary {
+  totalAccounts: number;
+  totalBalance: number;
+  totalIncome: number;
+  totalExpenses: number;
+}
+
 
 export interface UserProfile {
   id: string;
@@ -28,20 +47,7 @@ export interface UserProfile {
   email: string;
   role?: string;
 }
-export interface Account {
-  id: string;
-  name: string;
-  officialName: string;
-  type: string;
-  subtype: string;
-  currentBalance: number;
-  availableBalance: number;
-  mask: string;
-  institutionId: string;
-  appwriteItemId?: string; // Add this
-  shareableId?: string; // Add this
-  enabled: boolean;
-}
+
 export interface CreditCardProps {
   account: Account;
   userName: string;
@@ -49,4 +55,31 @@ export interface CreditCardProps {
 }
 export interface DoughnutChartProps {
   accounts: Account[];
+}
+export interface Transaction {
+  id: number;
+  name: string;
+  amount: number;
+  date: string;
+  category: string;
+  type: "INCOME" | "EXPENSE";
+  accountId: number;
+  accountName: string;
+}
+
+export interface CreateTransactionRequest {
+  name: string;
+  amount: number;
+  date: string;
+  category: string;
+  type: "INCOME" | "EXPENSE";
+  accountId: number;
+}
+
+export interface UpdateTransactionRequest {
+  name: string;
+  amount: number;
+  date: string;
+  category: string;
+  type: "INCOME" | "EXPENSE";
 }

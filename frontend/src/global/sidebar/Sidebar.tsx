@@ -1,4 +1,5 @@
 import { useState } from "react";
+import AddCardIcon from "@mui/icons-material/AddCard";
 import {
   Drawer,
   List,
@@ -64,6 +65,12 @@ const menuItems: MenuItem[] = [
     title: "Profile",
     to: "/profile",
     icon: <PersonOutlined />,
+    category: "Pages",
+  },
+  {
+    title: "Accounts",
+    to: "/accounts",
+    icon: <AddCardIcon />,
     category: "Pages",
   },
 ];
