@@ -15,6 +15,7 @@ import com.example.backend.exception.UnauthorizedException;
 import com.example.backend.repo.AccountRepository;
 import com.example.backend.repo.TransactionRepository;
 import com.example.backend.repo.UserRepo;
+import com.example.backend.service.BudgetAlertService;
 import com.example.backend.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,8 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
     private final UserRepo userRepository;
+    private final BudgetAlertService budgetAlertService; // ✅ Already added
+
 
     @Override
     public List<TransactionResponseDto> getUserTransactions(Long userId) {
@@ -112,6 +115,17 @@ public class TransactionServiceImpl implements TransactionService {
         // Save transaction
         Transaction savedTransaction = transactionRepository.save(transaction);
 
+        // 🔥 TRIGGER BUDGET ALERTS (ONLY FOR EXPENSES)
+        if (request.getType() == TransactionType.EXPENSE) {
+            log.debug("Checking budgets after expense creation for category: {}", request.getCategory());
+            try {
+                budgetAlertService.checkBudgetForCategory(userId, request.getCategory());
+            } catch (Exception e) {
+                // Don't fail transaction if alert check fails
+                log.error("Failed to check budget alerts after transaction creation", e);
+            }
+        }
+
         log.info("Transaction created successfully with id: {}", savedTransaction.getId());
         return convertToResponseDto(savedTransaction);
     }
@@ -133,6 +147,10 @@ public class TransactionServiceImpl implements TransactionService {
 
         Account account = transaction.getAccount();
 
+        // Store old values for alert checking
+        String oldCategory = transaction.getCategory();
+        TransactionType oldType = transaction.getType();
+
         // Reverse old balance change
         updateAccountBalance(account, transaction.getAmount(), transaction.getType(), false);
 
@@ -149,6 +167,23 @@ public class TransactionServiceImpl implements TransactionService {
         // Save
         Transaction updatedTransaction = transactionRepository.save(transaction);
 
+        // 🔥 TRIGGER BUDGET ALERTS AFTER UPDATE
+        // Check both old and new categories if they're different and expenses
+        try {
+            if (oldType == TransactionType.EXPENSE) {
+                log.debug("Checking old category budget: {}", oldCategory);
+                budgetAlertService.checkBudgetForCategory(userId, oldCategory);
+            }
+
+            if (request.getType() == TransactionType.EXPENSE &&
+                    !request.getCategory().equals(oldCategory)) {
+                log.debug("Checking new category budget: {}", request.getCategory());
+                budgetAlertService.checkBudgetForCategory(userId, request.getCategory());
+            }
+        } catch (Exception e) {
+            log.error("Failed to check budget alerts after transaction update", e);
+        }
+
         log.info("Transaction updated successfully: {}", transactionId);
         return convertToResponseDto(updatedTransaction);
     }
@@ -164,12 +199,27 @@ public class TransactionServiceImpl implements TransactionService {
                         "Transaction not found with id: " + transactionId
                 ));
 
+        // Store category before deletion
+        String category = transaction.getCategory();
+        TransactionType type = transaction.getType();
+
         // Reverse balance change
         Account account = transaction.getAccount();
         updateAccountBalance(account, transaction.getAmount(), transaction.getType(), false);
 
         // Delete transaction
         transactionRepository.delete(transaction);
+
+        // 🔥 TRIGGER BUDGET ALERTS AFTER DELETION
+        // Budget might go from EXCEEDED back to WARNING or SAFE
+        if (type == TransactionType.EXPENSE) {
+            log.debug("Checking budget after expense deletion for category: {}", category);
+            try {
+                budgetAlertService.checkBudgetForCategory(userId, category);
+            } catch (Exception e) {
+                log.error("Failed to check budget alerts after transaction deletion", e);
+            }
+        }
 
         log.info("Transaction deleted successfully: {}", transactionId);
     }

@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-
 @Entity
 @Table(name = "users")
 @Data
@@ -36,15 +35,16 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
-    // UserDetails implementation
+
+    // ✅ FIX THIS - Return actual role
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(); // Add roles here if needed
+        return List.of(() -> "ROLE_" + role.name()); // ✅ Adds "ROLE_USER"
     }
 
     @Override
     public String getUsername() {
-        return email; // Use email as username
+        return email;
     }
 
     @Override
@@ -67,7 +67,6 @@ public class User implements UserDetails {
         return true;
     }
 
-    // Add this method if you want to get the display username
     public String getDisplayUsername() {
         return username;
     }

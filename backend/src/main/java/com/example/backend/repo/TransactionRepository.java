@@ -45,12 +45,16 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     List<Object[]> getMonthlySummary(@Param("userId") Long userId, @Param("type") TransactionType type);
 
 
-    @Query("SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t " +
+
+
+
+    // ✅ FIX: Return Double instead of Optional<BigDecimal>
+    @Query("SELECT COALESCE(SUM(t.amount), 0.0) FROM Transaction t " +
             "WHERE t.user.id = :userId " +
             "AND t.type = 'EXPENSE' " +
             "AND t.category = :category " +
             "AND t.date BETWEEN :startDate AND :endDate")
-    Optional<BigDecimal> sumExpensesByUserAndCategoryAndDateRange(
+    Double sumExpensesByUserAndCategoryAndDateRange(
             @Param("userId") Long userId,
             @Param("category") String category,
             @Param("startDate") LocalDate startDate,

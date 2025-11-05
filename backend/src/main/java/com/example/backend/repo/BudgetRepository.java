@@ -32,6 +32,15 @@ public interface BudgetRepository extends JpaRepository<Budget, Long> {
                                     @Param("startDate") LocalDate startDate,
                                     @Param("endDate") LocalDate endDate);
     List<Budget> findByUserId(Long userId);
+    @Query("SELECT b FROM Budget b WHERE b.user.id = :userId " +
+            "AND b.category = :category " +
+            "AND b.isActive = true " +
+            "AND :date BETWEEN b.startDate AND b.endDate")
+    List<Budget> findActiveBudgetsForCategory(
+            @Param("userId") Long userId,
+            @Param("category") String category,
+            @Param("date") LocalDate date
+    );
 
 
 }
