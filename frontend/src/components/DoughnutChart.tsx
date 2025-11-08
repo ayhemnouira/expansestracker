@@ -9,24 +9,49 @@ import {
 import type { DoughnutChartProps } from "../types";
 import { useTheme, Box } from "@mui/material";
 
+interface TooltipPayload {
+  name: string;
+  value: number;
+  fill: string;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: TooltipPayload[];
+}
+
+interface ChartDataItem {
+  name: string;
+  value: number;
+  color: string;
+  [key: string]: string | number; // Index signature for Recharts compatibility
+}
+
 const DoughnutChart = ({ accounts }: DoughnutChartProps) => {
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
 
   // Professional color palette
-  const colors = ["#1e3a8a", "#0d9488", "#f97316"];
-  const labels = ["Bank 1", "Bank 2", "Bank 3"];
-  const values = [1250, 2500, 3750];
+  const colors = [
+    "#1e3a8a",
+    "#0d9488",
+    "#f97316",
+    "#8b5cf6",
+    "#ec4899",
+    "#14b8a6",
+  ];
 
-  const data = labels.map((label, index) => ({
-    name: label,
-    value: values[index],
+  // Use actual account data instead of hardcoded values
+  const data: ChartDataItem[] = accounts.map((account, index) => ({
+    name: account.name,
+    value: account.currentBalance,
+    color: colors[index % colors.length],
   }));
 
-  const total = values.reduce((sum, val) => sum + val, 0);
+  const total = data.reduce((sum, item) => sum + item.value, 0);
 
   // Custom Tooltip Component
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
     if (active && payload && payload.length) {
       return (
         <Box
@@ -66,15 +91,16 @@ const DoughnutChart = ({ accounts }: DoughnutChartProps) => {
             outerRadius={80}
             paddingAngle={2}
             dataKey="value"
-            label={(entry: any) =>
-              `${((entry.value / total) * 100).toFixed(0)}%`
-            }
+            label={(entry) => {
+              const dataEntry = entry as unknown as ChartDataItem;
+              return `${((dataEntry.value / total) * 100).toFixed(0)}%`;
+            }}
             labelLine={true}
           >
             {data.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
-                fill={colors[index]}
+                fill={entry.color}
                 stroke={theme.palette.background.paper}
                 strokeWidth={2}
               />

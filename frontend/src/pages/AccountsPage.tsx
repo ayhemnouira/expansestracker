@@ -15,9 +15,6 @@ import {
   Snackbar,
   CircularProgress,
   IconButton,
-  Card,
-  CardContent,
-  Chip,
   InputAdornment,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
@@ -25,7 +22,6 @@ import {
   Add,
   Edit,
   Delete,
-  AccountBalance,
   Person,
   Business,
   Category,
@@ -98,8 +94,9 @@ const AccountsPage = () => {
       setAccounts(accountsData);
       setSummary(summaryData);
       setError(null);
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to load accounts");
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || "Failed to load accounts");
     } finally {
       setLoading(false);
     }
@@ -130,11 +127,12 @@ const AccountsPage = () => {
       }
       await fetchData();
       handleCloseDialog();
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Operation failed");
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || "Delete failed");
       setSnackbar({
         open: true,
-        message: err.response?.data?.message || "Operation failed",
+        message: error.response?.data?.message || "Delete failed",
         severity: "error",
       });
     }
@@ -152,11 +150,12 @@ const AccountsPage = () => {
         message: "Account deleted successfully!",
         severity: "success",
       });
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Delete failed");
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || "Delete failed");
       setSnackbar({
         open: true,
-        message: err.response?.data?.message || "Delete failed",
+        message: error.response?.data?.message || "Delete failed",
         severity: "error",
       });
     }
@@ -181,11 +180,12 @@ const AccountsPage = () => {
         message: `Account ${enabled ? "enabled" : "disabled"} successfully!`,
         severity: "info",
       });
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to update account");
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || "Delete failed");
       setSnackbar({
         open: true,
-        message: err.response?.data?.message || "Failed to update account",
+        message: error.response?.data?.message || "Delete failed",
         severity: "error",
       });
     }

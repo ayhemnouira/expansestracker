@@ -13,4 +13,5 @@ const AlertMessage = ({ message, ...props }: AlertMessageProps) => {
     </Alert>
   );
 };
+
 export default AlertMessage;

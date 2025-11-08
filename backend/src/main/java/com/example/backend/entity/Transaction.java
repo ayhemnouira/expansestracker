@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "transactions")
 @Data
@@ -51,5 +52,20 @@ public class Transaction {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        // ✅ Automatically lowercase category before saving
+        normalizeCategory();
+    }
+
+    // ✅ Also normalize on update
+    @PreUpdate
+    protected void onUpdate() {
+        normalizeCategory();
+    }
+
+    // ✅ Helper method to normalize category
+    private void normalizeCategory() {
+        if (this.category != null) {
+            this.category = this.category.toLowerCase().trim();
+        }
     }
 }

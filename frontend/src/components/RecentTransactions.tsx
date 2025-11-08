@@ -1,12 +1,12 @@
-import { 
-  Card, 
-  CardContent, 
-  Typography, 
-  Box, 
-  useTheme, 
-  Stack, 
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  useTheme,
+  Stack,
   Chip,
-  Divider 
+  Divider,
 } from "@mui/material";
 import { Receipt, TrendingUp, TrendingDown } from "@mui/icons-material";
 import type { Transaction } from "../types";
@@ -16,12 +16,12 @@ interface RecentTransactionsProps {
   maxDisplay?: number;
 }
 
-const RecentTransactions = ({ 
-  transactions, 
-  maxDisplay = 10 
+const RecentTransactions = ({
+  transactions,
+  maxDisplay = 10,
 }: RecentTransactionsProps) => {
   const theme = useTheme();
-  
+
   // Sort by date (most recent first) and limit display
   const displayTransactions = transactions
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -39,9 +39,9 @@ const RecentTransactions = ({
     } else if (date.toDateString() === yesterday.toDateString()) {
       return "Yesterday";
     } else {
-      return date.toLocaleDateString("en-US", { 
-        month: "short", 
-        day: "numeric" 
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
       });
     }
   };
@@ -52,7 +52,7 @@ const RecentTransactions = ({
         borderRadius: 3,
         boxShadow: theme.shadows[2],
         border: `1px solid ${theme.palette.divider}`,
-        height: '100%',
+        height: "100%",
       }}
     >
       <CardContent sx={{ p: 3 }}>
@@ -61,30 +61,28 @@ const RecentTransactions = ({
           <Typography variant="h6" fontWeight={600}>
             Recent Transactions
           </Typography>
-          <Chip 
-            label={displayTransactions.length} 
-            size="small" 
-            color="primary" 
-            sx={{ ml: 'auto' }}
+          <Chip
+            label={displayTransactions.length}
+            size="small"
+            color="primary"
+            sx={{ ml: "auto" }}
           />
         </Stack>
 
         <Divider sx={{ mb: 2 }} />
 
         {displayTransactions.length === 0 ? (
-          <Box 
-            sx={{ 
-              textAlign: 'center', 
+          <Box
+            sx={{
+              textAlign: "center",
               py: 4,
-              color: theme.palette.text.secondary 
+              color: theme.palette.text.secondary,
             }}
           >
-            <Typography variant="body2">
-              No transactions yet
-            </Typography>
+            <Typography variant="body2">No transactions yet</Typography>
           </Box>
         ) : (
-          <Stack spacing={1.5} sx={{ maxHeight: 500, overflowY: 'auto' }}>
+          <Stack spacing={1.5} sx={{ maxHeight: 500, overflowY: "auto" }}>
             {displayTransactions.map((transaction) => (
               <Box
                 key={transaction.id}
@@ -92,14 +90,14 @@ const RecentTransactions = ({
                   p: 2,
                   borderRadius: 2,
                   bgcolor: theme.palette.background.default,
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  transition: 'all 0.2s',
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  transition: "all 0.2s",
                   border: `1px solid transparent`,
-                  '&:hover': {
+                  "&:hover": {
                     bgcolor: theme.palette.action.hover,
-                    transform: 'translateX(4px)',
+                    transform: "translateX(4px)",
                     borderColor: theme.palette.divider,
                   },
                 }}
@@ -110,27 +108,28 @@ const RecentTransactions = ({
                       width: 40,
                       height: 40,
                       borderRadius: 2,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      bgcolor: transaction.amount > 0
-                        ? theme.palette.success.light + '20'
-                        : theme.palette.error.light + '20',
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      bgcolor:
+                        transaction.type === "INCOME"
+                          ? theme.palette.success.light + "20"
+                          : theme.palette.error.light + "20",
                     }}
                   >
-                    {transaction.amount > 0 ? (
-                      <TrendingUp 
-                        sx={{ 
+                    {transaction.type === "INCOME" ? (
+                      <TrendingUp
+                        sx={{
                           color: theme.palette.success.main,
-                          fontSize: 20 
-                        }} 
+                          fontSize: 20,
+                        }}
                       />
                     ) : (
-                      <TrendingDown 
-                        sx={{ 
+                      <TrendingDown
+                        sx={{
                           color: theme.palette.error.main,
-                          fontSize: 20 
-                        }} 
+                          fontSize: 20,
+                        }}
                       />
                     )}
                   </Box>
@@ -148,13 +147,14 @@ const RecentTransactions = ({
                   variant="h6"
                   fontWeight={700}
                   sx={{
-                    color: transaction.amount > 0
-                      ? theme.palette.success.main
-                      : theme.palette.error.main,
+                    color:
+                      transaction.type === "INCOME"
+                        ? theme.palette.success.main
+                        : theme.palette.error.main,
                   }}
                 >
-                  {transaction.amount > 0 ? '+' : ''}
-                  {Math.abs(transaction.amount).toFixed(2)} TND
+                  {transaction.type === "INCOME" ? "+" : "-"}
+                  {transaction.amount.toFixed(2)} TND
                 </Typography>
               </Box>
             ))}

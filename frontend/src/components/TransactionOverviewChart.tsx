@@ -40,7 +40,18 @@ interface TransactionOverviewChartProps {
   transactions: Transaction[];
   title?: string;
 }
+// Custom tooltip
+interface TooltipPayloadEntry {
+  name: string;
+  value: number;
+  color: string;
+}
 
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: TooltipPayloadEntry[];
+  label?: string;
+}
 const TransactionOverviewChart: React.FC<TransactionOverviewChartProps> = ({
   transactions,
   title = "Transaction Overview",
@@ -66,11 +77,11 @@ const TransactionOverviewChart: React.FC<TransactionOverviewChartProps> = ({
       if (!acc[date]) {
         acc[date] = { date, income: 0, expense: 0 };
       }
-      // Handle both positive and negative amounts
-      if (transaction.amount > 0) {
+      // Use transaction.type instead of checking amount
+      if (transaction.type === "INCOME") {
         acc[date].income += transaction.amount;
-      } else {
-        acc[date].expense += Math.abs(transaction.amount);
+      } else if (transaction.type === "EXPENSE") {
+        acc[date].expense += transaction.amount;
       }
       return acc;
     }, {} as Record<string, { date: string; income: number; expense: number }>);
@@ -98,8 +109,7 @@ const TransactionOverviewChart: React.FC<TransactionOverviewChartProps> = ({
     setDateRange(event.target.value);
   };
 
-  // Custom tooltip
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
     if (active && payload && payload.length) {
       return (
         <Box
@@ -114,7 +124,7 @@ const TransactionOverviewChart: React.FC<TransactionOverviewChartProps> = ({
           <Typography variant="body2" fontWeight={600} sx={{ mb: 1 }}>
             {label}
           </Typography>
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry, index) => (
             <Typography
               key={index}
               variant="caption"

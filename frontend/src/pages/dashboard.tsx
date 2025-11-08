@@ -13,7 +13,7 @@ import TransactionOverviewChart from "../components/TransactionOverviewChart";
 
 const Dashboard = () => {
   const { user } = useAuth();
-  
+
   // State management
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -26,21 +26,24 @@ const Dashboard = () => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        
+
         // Fetch all data in parallel
-        const [accountsData, transactionsData, summaryData] = await Promise.all([
-          getUserAccounts(true), // Only enabled accounts
-          getUserTransactions(),
-          getAccountSummary(),
-        ]);
-        
+        const [accountsData, transactionsData, summaryData] = await Promise.all(
+          [
+            getUserAccounts(true), // Only enabled accounts
+            getUserTransactions(),
+            getAccountSummary(),
+          ]
+        );
+
         setAccounts(accountsData);
         setTransactions(transactionsData);
         setSummary(summaryData);
         setError(null);
-      } catch (err: any) {
-        console.error("Error fetching dashboard data:", err);
-        setError(err.response?.data?.message || "Failed to load dashboard");
+      } catch (err: unknown) {
+        const error = err as { response?: { data?: { message?: string } } };
+        console.error("Error fetching dashboard data:", error);
+        setError(error.response?.data?.message || "Failed to load dashboard");
       } finally {
         setLoading(false);
       }
@@ -52,7 +55,14 @@ const Dashboard = () => {
   // Loading state
   if (loading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
         <CircularProgress />
       </Box>
     );
@@ -98,10 +108,7 @@ const Dashboard = () => {
 
           {/* Recent Transactions */}
           <Box sx={{ mt: 3 }}>
-            <RecentTransactions
-              transactions={transactions}
-              maxDisplay={8}
-            />
+            <RecentTransactions transactions={transactions} maxDisplay={8} />
           </Box>
         </Grid>
 

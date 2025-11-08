@@ -10,6 +10,7 @@ import {
 import { ResponsivePie } from "@nivo/pie";
 import { TrendingDown } from "@mui/icons-material";
 import { useMemo } from "react";
+import { getCategoryColor, getCategoryInfo } from "../utils/categories";
 
 type ExpenseSlice = {
   id: string;
@@ -34,26 +35,79 @@ interface MonthlyExpensesChartProps {
   transactions?: Transaction[];
 }
 
-// Category colors mapping
-const categoryColors: Record<string, string> = {
-  Groceries: "#EF4444",
-  Dining: "#F59E0B",
-  Transport: "#8B5CF6",
-  Utilities: "#3B82F6",
-  Shopping: "#10B981",
-  Healthcare: "#EC4899",
-  Entertainment: "#6366F1",
-  Housing: "#14B8A6",
-  Travel: "#F97316",
-  Other: "#6B7280",
-};
-
 const defaultData: ExpenseSlice[] = [
-  { id: "Food", label: "Food & Dining", value: 450, color: "#EF4444" },
-  { id: "Transport", label: "Transport", value: 280, color: "#F59E0B" },
-  { id: "Shopping", label: "Shopping", value: 320, color: "#8B5CF6" },
-  { id: "Bills", label: "Bills", value: 180, color: "#3B82F6" },
-  { id: "Other", label: "Other", value: 120, color: "#10B981" },
+  {
+    id: "food",
+    label: getCategoryInfo("Food").label,
+    value: 450,
+    color: getCategoryColor("Food"),
+  },
+  {
+    id: "groceries",
+    label: getCategoryInfo("Groceries").label,
+    value: 380,
+    color: getCategoryColor("Groceries"),
+  },
+  {
+    id: "dining",
+    label: getCategoryInfo("Dining").label,
+    value: 250,
+    color: getCategoryColor("Dining"),
+  },
+  {
+    id: "transport",
+    label: getCategoryInfo("Transport").label,
+    value: 280,
+    color: getCategoryColor("Transport"),
+  },
+  {
+    id: "shopping",
+    label: getCategoryInfo("Shopping").label,
+    value: 320,
+    color: getCategoryColor("Shopping"),
+  },
+  {
+    id: "entertainment",
+    label: getCategoryInfo("Entertainment").label,
+    value: 200,
+    color: getCategoryColor("Entertainment"),
+  },
+  {
+    id: "health",
+    label: getCategoryInfo("Health").label,
+    value: 150,
+    color: getCategoryColor("Health"),
+  },
+  {
+    id: "education",
+    label: getCategoryInfo("Education").label,
+    value: 180,
+    color: getCategoryColor("Education"),
+  },
+  {
+    id: "bills",
+    label: getCategoryInfo("Bills").label,
+    value: 180,
+    color: getCategoryColor("Bills"),
+  },
+  {
+    id: "utilities",
+    label: getCategoryInfo("Utilities").label,
+    value: 140,
+    color: getCategoryColor("Utilities"),
+  },
+  {
+    id: "housing",
+    label: getCategoryInfo("Housing").label,
+    value: 500,
+    color: getCategoryColor("Housing"),
+  },
+  {
+    id: "other",
+    label: getCategoryInfo("Other").label,
+    value: 120,
+    color: getCategoryColor("Other"),
+  },
 ];
 
 function MonthlyExpensesChart({
@@ -84,20 +138,25 @@ function MonthlyExpensesChart({
         );
       })
       .forEach((t) => {
-        const category = t.category || "Other";
+        // ✅ Normalize category to lowercase for consistent grouping
+        const category = (t.category || "other").toLowerCase().trim();
         expensesByCategory[category] =
           (expensesByCategory[category] || 0) + t.amount;
       });
 
     // Convert to chart format
-    const data = Object.entries(expensesByCategory).map(
-      ([category, value]) => ({
+    const data = Object.entries(expensesByCategory).map(([category, value]) => {
+      const categoryInfo = getCategoryInfo(category);
+      return {
         id: category,
-        label: category,
+        label: categoryInfo.label,
         value: value,
-        color: categoryColors[category] || categoryColors.Other,
-      })
-    );
+        color: getCategoryColor(category), // ✅ Use the color function
+      };
+    });
+
+    // Sort by value descending
+    data.sort((a, b) => b.value - a.value);
 
     return data.length > 0 ? data : defaultData;
   }, [transactions]);
@@ -161,7 +220,7 @@ function MonthlyExpensesChart({
             padAngle={2}
             cornerRadius={4}
             activeOuterRadiusOffset={8}
-            colors={{ datum: "data.color" }}
+            colors={{ datum: "data.color" }} // ✅ Use colors from data
             enableArcLinkLabels={false}
             enableArcLabels={false}
             borderWidth={2}

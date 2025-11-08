@@ -6,20 +6,19 @@ import {
   Typography,
   Switch,
   FormControlLabel,
-  IconButton,
-  Tooltip,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { tokens } from "../theme";
+
 import type { Account } from "../types";
 import paypassUrl from "../assets/Paypass.svg?url";
 import mastercardUrl from "../assets/mastercard.svg?url";
 import linesUrl from "../assets/lines.png?url";
+import { tokens } from "../theme/theme";
 
 interface AccountCardProps {
   account: Account;
   userName: string;
-  onToggleEnabled: (accountId: string, enabled: boolean) => void;
+  onToggleEnabled: (accountId: number, enabled: boolean) => void; // ✅ Changed from string to number
 }
 
 const AccountCard: React.FC<AccountCardProps> = ({
@@ -31,12 +30,12 @@ const AccountCard: React.FC<AccountCardProps> = ({
   const colors = tokens(theme.palette.mode);
 
   // 🎨 BankCard-style gradients (matching BankCard design)
-  const leftBrightStart = account.enabled ? "#A1E3F9" : "#E0E0E0"; // very light aqua blue or gray when disabled
-  const leftBrightEnd = account.enabled ? "#4FC1DB" : "#B0B0B0"; // seaSerpent or gray when disabled
+  const leftBrightStart = account.enabled ? "#A1E3F9" : "#E0E0E0";
+  const leftBrightEnd = account.enabled ? "#4FC1DB" : "#B0B0B0";
 
   // 🎨 Darker right gradient
-  const rightDarkStart = account.enabled ? "#3B556E" : "#666666"; // policeBlue or gray when disabled
-  const rightDarkEnd = account.enabled ? "#243545" : "#444444"; // deeper navy or gray when disabled
+  const rightDarkStart = account.enabled ? "#3B556E" : "#666666";
+  const rightDarkEnd = account.enabled ? "#243545" : "#444444";
 
   const handleCardClick = (event: React.MouseEvent) => {
     // Prevent toggle when clicking on the switch itself
@@ -44,14 +43,16 @@ const AccountCard: React.FC<AccountCardProps> = ({
       return;
     }
     // Toggle the account enabled state
-    onToggleEnabled(account.id, !account.enabled);
+    onToggleEnabled(account.id, !account.enabled); // ✅ Now works correctly
   };
 
   const handleToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    onToggleEnabled(account.id, event.target.checked);
+    onToggleEnabled(account.id, event.target.checked); // ✅ Now works correctly
   };
+
+  // ... rest of the component remains the same
 
   return (
     <Box display="flex" flexDirection="column" width="100%" position="relative">
@@ -73,7 +74,7 @@ const AccountCard: React.FC<AccountCardProps> = ({
           cursor: "pointer",
           "&:hover": {
             transform: "translateY(-8px) scale(1.02)",
-            boxShadow: `0 20px 40px ${colors.primary[900]}40, 0 0 20px ${colors.greenAccent[500]}20`,
+            boxShadow: `0 20px 40px ${colors.primary[900]}40, 0 0 20px ${colors.success[500]}20`,
           },
           "&::before": {
             content: '""',
@@ -82,7 +83,7 @@ const AccountCard: React.FC<AccountCardProps> = ({
             left: 0,
             right: 0,
             bottom: 0,
-            background: `linear-gradient(45deg, transparent 30%, ${colors.greenAccent[500]}10 50%, transparent 70%)`,
+            background: `linear-gradient(45deg, transparent 30%, ${colors.success[500]}10 50%, transparent 70%)`,
             opacity: 0,
             transition: "opacity 0.3s ease",
             pointerEvents: "none",
@@ -288,10 +289,10 @@ const AccountCard: React.FC<AccountCardProps> = ({
               color="success"
               sx={{
                 "& .MuiSwitch-switchBase.Mui-checked": {
-                  color: colors.greenAccent[600],
+                  color: colors.success[600],
                 },
                 "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                  backgroundColor: colors.greenAccent[600],
+                  backgroundColor: colors.success[600],
                 },
               }}
             />

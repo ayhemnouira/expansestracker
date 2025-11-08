@@ -28,8 +28,14 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             LocalDate endDate
     );
 
-    // Find by category
-    List<Transaction> findByUserIdAndCategoryOrderByDateDesc(Long userId, String category);
+    // ✅ FIXED: Case-insensitive category search
+    @Query("SELECT t FROM Transaction t WHERE t.user.id = :userId " +
+            "AND LOWER(t.category) = LOWER(:category) " +
+            "ORDER BY t.date DESC")
+    List<Transaction> findByUserIdAndCategoryOrderByDateDesc(
+            @Param("userId") Long userId,
+            @Param("category") String category
+    );
 
     // Find by type
     List<Transaction> findByUserIdAndTypeOrderByDateDesc(Long userId, TransactionType type);
@@ -44,15 +50,11 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             "GROUP BY YEAR(t.date), MONTH(t.date) ORDER BY year DESC, month DESC")
     List<Object[]> getMonthlySummary(@Param("userId") Long userId, @Param("type") TransactionType type);
 
-
-
-
-
-    // ✅ FIX: Return Double instead of Optional<BigDecimal>
+    // ✅ CRITICAL FIX: Case-insensitive category matching for budget calculations
     @Query("SELECT COALESCE(SUM(t.amount), 0.0) FROM Transaction t " +
             "WHERE t.user.id = :userId " +
             "AND t.type = 'EXPENSE' " +
-            "AND t.category = :category " +
+            "AND LOWER(t.category) = LOWER(:category) " +  // ✅ Changed from t.category = :category
             "AND t.date BETWEEN :startDate AND :endDate")
     Double sumExpensesByUserAndCategoryAndDateRange(
             @Param("userId") Long userId,

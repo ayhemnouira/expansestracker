@@ -75,4 +75,13 @@ public class Budget {
 
     @Transient
     private BudgetStatus status;
+
+    // ✅ NEW: Automatically lowercase category before saving
+    @PrePersist
+    @PreUpdate
+    private void normalizeCategory() {
+        if (this.category != null) {
+            this.category = this.category.toLowerCase().trim();
+        }
+    }
 }

@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import {
   AppBar,
   Toolbar,
@@ -13,6 +13,9 @@ import {
   Divider,
   useTheme,
   alpha,
+  Chip,
+  Button,
+  CircularProgress,
 } from "@mui/material";
 import {
   Search as SearchIcon,
@@ -22,10 +25,15 @@ import {
   Brightness7,
   Logout,
   Person,
+  Warning as WarningIcon,
+  Error as ErrorIcon,
+  DoneAll as DoneAllIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { ColorModeContext } from "../theme/theme";
 import { useAuth } from "../context/AuthContext";
+import type { BudgetAlert } from "../types/budget";
+import alertService from "../api/alertService";
 
 const Topbar = () => {
   const theme = useTheme();
@@ -36,6 +44,42 @@ const Topbar = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [notificationsAnchor, setNotificationsAnchor] =
     useState<null | HTMLElement>(null);
+  
+  // Budget alerts state
+  const [alerts, setAlerts] = useState<BudgetAlert[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [isLoadingAlerts, setIsLoadingAlerts] = useState(false);
+
+  // Fetch alerts on mount and poll every 30 seconds
+  useEffect(() => {
+    fetchAlerts();
+    fetchUnreadCount();
+    
+    const interval = setInterval(() => {
+      fetchAlerts();
+      fetchUnreadCount();
+    }, 30000); // 30 seconds
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  const fetchAlerts = async () => {
+    try {
+      const alertsData = await alertService.getUnreadAlerts();
+      setAlerts(alertsData);
+    } catch (error) {
+      console.error('Failed to fetch alerts', error);
+    }
+  };
+
+  const fetchUnreadCount = async () => {
+    try {
+      const count = await alertService.getUnreadCount();
+      setUnreadCount(count);
+    } catch (error) {
+      console.error('Failed to fetch alert count', error);
+    }
+  };
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -66,27 +110,51 @@ const Topbar = () => {
     navigate("/settings");
   };
 
-  // Mock notifications (replace with real data later)
-  const notifications = [
-    {
-      id: 1,
-      title: "Budget Alert",
-      message: "You've spent 85% of your monthly budget",
-      time: "5 min ago",
-    },
-    {
-      id: 2,
-      title: "New Transaction",
-      message: "Carrefour - 45.50 TND",
-      time: "1 hour ago",
-    },
-    {
-      id: 3,
-      title: "Bill Reminder",
-      message: "Internet bill due in 3 days",
-      time: "2 hours ago",
-    },
-  ];
+  const markAsRead = async (alertId: number) => {
+    try {
+      await alertService.markAsRead(alertId);
+      fetchAlerts();
+      fetchUnreadCount();
+    } catch (error) {
+      console.error('Failed to mark alert as read', error);
+    }
+  };
+
+  const markAllAsRead = async () => {
+    setIsLoadingAlerts(true);
+    try {
+      await alertService.markAllAsRead();
+      fetchAlerts();
+      fetchUnreadCount();
+    } catch (error) {
+      console.error('Failed to mark all as read', error);
+    } finally {
+      setIsLoadingAlerts(false);
+    }
+  };
+
+  const getAlertIcon = (type: string) => {
+    if (type === 'BUDGET_EXCEEDED') {
+      return <ErrorIcon sx={{ color: theme.palette.error.main, fontSize: 20 }} />;
+    }
+    return <WarningIcon sx={{ color: theme.palette.warning.main, fontSize: 20 }} />;
+  };
+
+  const formatTimeAgo = (dateString: string): string => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInMs = now.getTime() - date.getTime();
+    const diffInMins = Math.floor(diffInMs / 60000);
+    
+    if (diffInMins < 1) return 'Just now';
+    if (diffInMins < 60) return `${diffInMins}m ago`;
+    
+    const diffInHours = Math.floor(diffInMins / 60);
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+    
+    const diffInDays = Math.floor(diffInHours / 24);
+    return `${diffInDays}d ago`;
+  };
 
   return (
     <AppBar
@@ -146,7 +214,7 @@ const Topbar = () => {
             {theme.palette.mode === "dark" ? <Brightness7 /> : <Brightness4 />}
           </IconButton>
 
-          {/* Notifications */}
+          {/* Budget Alerts Notification */}
           <IconButton
             onClick={handleNotificationsOpen}
             sx={{
@@ -155,9 +223,9 @@ const Topbar = () => {
                 bgcolor: alpha(theme.palette.primary.main, 0.1),
               },
             }}
-            aria-label="notifications"
+            aria-label="budget notifications"
           >
-            <Badge badgeContent={notifications.length} color="error">
+            <Badge badgeContent={unreadCount} color="error">
               <NotificationsIcon />
             </Badge>
           </IconButton>
@@ -221,7 +289,6 @@ const Topbar = () => {
           },
         }}
       >
-        {/* User Info Header */}
         <Box sx={{ px: 2, py: 1.5 }}>
           <Typography variant="body1" fontWeight={600}>
             {user?.username || "Guest"}
@@ -232,7 +299,6 @@ const Topbar = () => {
         </Box>
         <Divider />
 
-        {/* Menu Items */}
         <MenuItem onClick={handleProfile} sx={{ py: 1.5 }}>
           <Person sx={{ mr: 1.5, fontSize: 20 }} />
           <Typography variant="body2">My Profile</Typography>
@@ -257,7 +323,7 @@ const Topbar = () => {
         </MenuItem>
       </Menu>
 
-      {/* Notifications Menu */}
+      {/* Budget Alerts Menu */}
       <Menu
         anchorEl={notificationsAnchor}
         open={Boolean(notificationsAnchor)}
@@ -267,70 +333,142 @@ const Topbar = () => {
         PaperProps={{
           sx: {
             mt: 1,
-            width: 360,
+            width: 380,
             maxWidth: "100%",
+            maxHeight: 500,
             borderRadius: 2,
             boxShadow: theme.shadows[8],
           },
         }}
       >
-        {/* Notifications Header */}
-        <Box sx={{ px: 2, py: 1.5 }}>
+        {/* Alerts Header */}
+        <Box
+          sx={{
+            px: 2,
+            py: 1.5,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            bgcolor: alpha(theme.palette.primary.main, 0.05),
+          }}
+        >
           <Typography variant="h6" fontWeight={600}>
-            Notifications
+            Budget Alerts
           </Typography>
+          {unreadCount > 0 && (
+            <Chip
+              label={`${unreadCount} new`}
+              size="small"
+              color="error"
+              sx={{ fontWeight: 600 }}
+            />
+          )}
         </Box>
         <Divider />
 
-        {/* Notification Items */}
-        {notifications.length > 0 ? (
-          notifications.map((notification) => (
-            <MenuItem
-              key={notification.id}
-              onClick={handleMenuClose}
-              sx={{
-                py: 1.5,
-                px: 2,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                "&:hover": {
-                  bgcolor: alpha(theme.palette.primary.main, 0.05),
-                },
-              }}
-            >
-              <Typography variant="body2" fontWeight={600} gutterBottom>
-                {notification.title}
+        {/* Alert Items */}
+        <Box sx={{ maxHeight: 350, overflow: "auto" }}>
+          {alerts.length > 0 ? (
+            alerts.map((alert) => (
+              <MenuItem
+                key={alert.id}
+                onClick={() => markAsRead(alert.id)}
+                sx={{
+                  py: 1.5,
+                  px: 2,
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: 1.5,
+                  borderBottom: `1px solid ${theme.palette.divider}`,
+                  "&:hover": {
+                    bgcolor: alpha(theme.palette.primary.main, 0.05),
+                  },
+                }}
+              >
+                {/* Alert Icon */}
+                <Box sx={{ mt: 0.5 }}>
+                  {getAlertIcon(alert.type)}
+                </Box>
+
+                {/* Alert Content */}
+                <Box sx={{ flex: 1, minWidth: 0 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontWeight: 500,
+                      color: theme.palette.text.primary,
+                      mb: 0.5,
+                    }}
+                  >
+                    {alert.budgetCategory} Budget
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: theme.palette.text.secondary,
+                      display: "block",
+                      mb: 0.5,
+                    }}
+                  >
+                    {alert.message}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: theme.palette.primary.main,
+                      fontWeight: 500,
+                    }}
+                  >
+                    {formatTimeAgo(alert.triggeredAt)}
+                  </Typography>
+                </Box>
+              </MenuItem>
+            ))
+          ) : (
+            <Box sx={{ px: 3, py: 6, textAlign: "center" }}>
+              <NotificationsIcon
+                sx={{
+                  fontSize: 48,
+                  color: theme.palette.text.disabled,
+                  mb: 1,
+                }}
+              />
+              <Typography variant="body2" color="text.secondary">
+                No new budget alerts
               </Typography>
-              <Typography variant="caption" color="text.secondary" gutterBottom>
-                {notification.message}
+              <Typography variant="caption" color="text.disabled">
+                You'll be notified when budgets reach their limits
               </Typography>
-              <Typography variant="caption" color="primary" sx={{ mt: 0.5 }}>
-                {notification.time}
-              </Typography>
-            </MenuItem>
-          ))
-        ) : (
-          <Box sx={{ px: 2, py: 3, textAlign: "center" }}>
-            <Typography variant="body2" color="text.secondary">
-              No new notifications
-            </Typography>
-          </Box>
+            </Box>
+          )}
+        </Box>
+
+        {/* Footer Actions */}
+        {alerts.length > 0 && (
+          <>
+            <Divider />
+            <Box sx={{ p: 1, display: "flex", justifyContent: "center" }}>
+              <Button
+                onClick={markAllAsRead}
+                disabled={isLoadingAlerts}
+                startIcon={
+                  isLoadingAlerts ? (
+                    <CircularProgress size={16} />
+                  ) : (
+                    <DoneAllIcon />
+                  )
+                }
+                sx={{
+                  color: theme.palette.primary.main,
+                  fontWeight: 600,
+                  textTransform: "none",
+                }}
+              >
+                Mark all as read
+              </Button>
+            </Box>
+          </>
         )}
-
-        <Divider />
-        <Box sx={{ p: 1 }}>
-          <MenuItem
-            onClick={handleMenuClose}
-            sx={{
-              justifyContent: "center",
-              color: theme.palette.primary.main,
-              fontWeight: 600,
-            }}
-          >
-            View All Notifications
-          </MenuItem>
-        </Box>
       </Menu>
     </AppBar>
   );

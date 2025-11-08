@@ -106,15 +106,15 @@ const TransactionsPage = () => {
         }
         calculateSummaries(transactionsData);
         setError(null);
-      } catch (err: any) {
-        setError(err.response?.data?.message || "Failed to load data");
+      } catch (err: unknown) {
+        const error = err as { response?: { data?: { message?: string } } };
+        setError(error.response?.data?.message || "Failed to load data");
       } finally {
         setLoading(false);
       }
     };
     fetchData();
   }, []);
-
   useEffect(() => {
     const filtered = transactions.filter(
       (t) =>
@@ -165,11 +165,12 @@ const TransactionsPage = () => {
       setFilteredTransactions(updatedTransactions);
       calculateSummaries(updatedTransactions);
       handleCloseDialog();
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Operation failed");
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || "Operation failed");
       setSnackbar({
         open: true,
-        message: err.response?.data?.message || "Operation failed",
+        message: error.response?.data?.message || "Operation failed",
         severity: "error",
       });
     }
@@ -190,11 +191,12 @@ const TransactionsPage = () => {
         message: "Transaction deleted successfully!",
         severity: "success",
       });
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Delete failed");
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || "Delete failed");
       setSnackbar({
         open: true,
-        message: err.response?.data?.message || "Delete failed",
+        message: error.response?.data?.message || "Delete failed",
         severity: "error",
       });
     }
