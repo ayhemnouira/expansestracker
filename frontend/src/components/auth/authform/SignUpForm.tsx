@@ -92,7 +92,7 @@ const SignUpForm = ({
           Create Account
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Join FinanceFlow today
+          Join ExpansesTracker today
         </Typography>
       </Box>
 

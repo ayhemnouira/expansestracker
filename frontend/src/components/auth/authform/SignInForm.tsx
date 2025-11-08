@@ -90,7 +90,7 @@ const SignInForm = ({
           Welcome Back
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Sign in to continue to FinanceFlow
+          Sign in to continue to ExpansesTracker
         </Typography>
       </Box>
 
