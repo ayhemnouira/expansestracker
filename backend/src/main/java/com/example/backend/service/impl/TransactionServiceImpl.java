@@ -3,15 +3,12 @@ package com.example.backend.service.impl;
 import com.example.backend.dto.transaction.CreateTransactionRequestDto;
 import com.example.backend.dto.transaction.TransactionResponseDto;
 import com.example.backend.dto.transaction.UpdateTransactionRequestDto;
-
 import com.example.backend.entity.Account;
 import com.example.backend.entity.Transaction;
-
 import com.example.backend.entity.User;
 import com.example.backend.enums.TransactionType;
 import com.example.backend.exception.ResourceNotFoundException;
 import com.example.backend.exception.UnauthorizedException;
-
 import com.example.backend.repo.AccountRepository;
 import com.example.backend.repo.TransactionRepository;
 import com.example.backend.repo.UserRepo;
@@ -34,10 +31,10 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
     private final UserRepo userRepository;
-    private final BudgetAlertService budgetAlertService; // ✅ Already added
-
+    private final BudgetAlertService budgetAlertService;
 
     @Override
+    @Transactional(readOnly = true)
     public List<TransactionResponseDto> getUserTransactions(Long userId) {
         log.info("Fetching all transactions for user: {}", userId);
 
@@ -48,6 +45,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TransactionResponseDto> getTransactionsByMonth(Long userId, int year, int month) {
         log.info("Fetching transactions for user: {} - {}/{}", userId, year, month);
 
@@ -67,6 +65,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TransactionResponseDto getTransactionById(Long transactionId, Long userId) {
         log.info("Fetching transaction: {} for user: {}", transactionId, userId);
 
@@ -225,6 +224,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TransactionResponseDto> getTransactionsByCategory(Long userId, String category) {
         log.info("Fetching transactions for user: {} in category: {}", userId, category);
 
@@ -235,6 +235,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Double getTotalIncome(Long userId) {
         log.info("Calculating total income for user: {}", userId);
 
@@ -243,6 +244,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Double getTotalExpenses(Long userId) {
         log.info("Calculating total expenses for user: {}", userId);
 
@@ -282,10 +284,14 @@ public class TransactionServiceImpl implements TransactionService {
 
     /**
      * Helper method: Convert Transaction entity to DTO
+     * Fixed: Accesses account properties within @Transactional boundary
      * @param transaction The transaction entity
      * @return TransactionResponseDto
      */
     private TransactionResponseDto convertToResponseDto(Transaction transaction) {
+        // Access account properties while session is still open
+        Account account = transaction.getAccount();
+
         return TransactionResponseDto.builder()
                 .id(transaction.getId())
                 .name(transaction.getName())
@@ -293,8 +299,8 @@ public class TransactionServiceImpl implements TransactionService {
                 .date(transaction.getDate())
                 .category(transaction.getCategory())
                 .type(transaction.getType())
-                .accountId(transaction.getAccount().getId())
-                .accountName(transaction.getAccount().getName())
+                .accountId(account.getId())
+                .accountName(account.getName())
                 .build();
     }
 }

@@ -54,7 +54,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query("SELECT COALESCE(SUM(t.amount), 0.0) FROM Transaction t " +
             "WHERE t.user.id = :userId " +
             "AND t.type = 'EXPENSE' " +
-            "AND LOWER(t.category) = LOWER(:category) " +  // ✅ Changed from t.category = :category
+            "AND LOWER(t.category) = LOWER(:category) " +
             "AND t.date BETWEEN :startDate AND :endDate")
     Double sumExpensesByUserAndCategoryAndDateRange(
             @Param("userId") Long userId,
@@ -62,4 +62,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate
     );
+
+    // ✅ NEW: Count transactions by account ID (fixes LazyInitializationException)
+    Long countByAccountId(Long accountId);
 }

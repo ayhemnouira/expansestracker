@@ -2,12 +2,9 @@ package com.example.backend.service.impl;
 
 import com.example.backend.dto.account.*;
 import com.example.backend.entity.Account;
-
 import com.example.backend.entity.User;
 import com.example.backend.enums.TransactionType;
 import com.example.backend.exception.ResourceNotFoundException;
-import com.example.backend.exception.UnauthorizedException;
-
 import com.example.backend.repo.AccountRepository;
 import com.example.backend.repo.TransactionRepository;
 import com.example.backend.repo.UserRepo;
@@ -30,6 +27,7 @@ public class AccountServiceImpl implements AccountService {
     private final TransactionRepository transactionRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<AccountResponseDto> getUserAccounts(Long userId) {
         log.info("Fetching all accounts for user: {}", userId);
 
@@ -40,6 +38,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<AccountResponseDto> getEnabledAccounts(Long userId) {
         log.info("Fetching enabled accounts for user: {}", userId);
 
@@ -50,6 +49,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AccountResponseDto getAccountById(Long accountId, Long userId) {
         log.info("Fetching account: {} for user: {}", accountId, userId);
 
@@ -62,6 +62,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AccountResponseDto getAccountByShareableId(String shareableId) {
         log.info("Fetching account by shareable ID: {}", shareableId);
 
@@ -144,12 +145,14 @@ public class AccountServiceImpl implements AccountService {
                         "Account not found with id: " + accountId
                 ));
 
-        // Check if account has transactions
-        if (!account.getTransactions().isEmpty()) {
+        // Check if account has transactions using count query
+        Long transactionCount = transactionRepository.countByAccountId(accountId);
+
+        if (transactionCount > 0) {
             // Soft delete - just disable the account
             account.setEnabled(false);
             accountRepository.save(account);
-            log.info("Account disabled (has transactions): {}", accountId);
+            log.info("Account disabled (has {} transactions): {}", transactionCount, accountId);
         } else {
             // Hard delete - no transactions
             accountRepository.delete(account);
@@ -158,6 +161,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AccountSummaryDto getAccountSummary(Long userId) {
         log.info("Calculating account summary for user: {}", userId);
 
@@ -177,6 +181,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<AccountResponseDto> getAccountsByType(Long userId, String type) {
         log.info("Fetching {} accounts for user: {}", type, userId);
 
@@ -188,8 +193,12 @@ public class AccountServiceImpl implements AccountService {
 
     /**
      * Helper: Convert Account entity to DTO
+     * Uses count query to avoid LazyInitializationException
      */
     private AccountResponseDto convertToResponseDto(Account account) {
+        // Get transaction count efficiently without loading all transactions
+        Long count = transactionRepository.countByAccountId(account.getId());
+
         return AccountResponseDto.builder()
                 .id(account.getId())
                 .name(account.getName())
@@ -202,7 +211,7 @@ public class AccountServiceImpl implements AccountService {
                 .institutionId(account.getInstitutionId())
                 .shareableId(account.getShareableId())
                 .enabled(account.getEnabled())
-                .transactionCount(account.getTransactions().size())
+                .transactionCount(count != null ? count.intValue() : 0)
                 .build();
     }
 }
