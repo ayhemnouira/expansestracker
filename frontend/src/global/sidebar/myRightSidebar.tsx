@@ -3,7 +3,6 @@ import {
   Box,
   Typography,
   IconButton,
-  useMediaQuery,
   useTheme,
   Card,
   CardContent,
@@ -74,7 +73,7 @@ const RightSidebar: React.FC<RightSidebarProps> = ({
   userEmail,
 }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const navigate = useNavigate();
 
   const headerImageUrl =

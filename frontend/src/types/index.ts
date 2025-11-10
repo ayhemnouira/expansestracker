@@ -9,6 +9,7 @@ export interface Account {
   mask?: string;
   institutionId?: string;
   shareableId: string;
+  appwriteItemId: string;  // ✅ Add this line
   enabled: boolean;
   transactionCount: number;
 }
