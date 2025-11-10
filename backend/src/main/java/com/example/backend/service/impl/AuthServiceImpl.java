@@ -48,31 +48,45 @@ public class AuthServiceImpl implements AuthService {
         );
     }
 
-
     @Override
     public AuthResponseDto register(RegisterRequestDto registerRequestDto) {
+        System.out.println("=== REGISTER START ===");
+        System.out.println("Email: " + registerRequestDto.getEmail());
+        System.out.println("Username: " + registerRequestDto.getUsername());
 
         String email = registerRequestDto.getEmail();
         if(userRepo.existsByEmail(email)){
+            System.out.println("Email already exists!");
             throw new IllegalArgumentException("Email already in use");
         }
-        User user = new User();
-        user.setEmail(registerRequestDto.getEmail());
-        user.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
-        user.setRole(Role.USER);
-        user.setUsername(registerRequestDto.getUsername());
+
+        System.out.println("Creating user with Builder...");
+        User user = User.builder()
+                .email(registerRequestDto.getEmail())
+                .username(registerRequestDto.getUsername())
+                .password(passwordEncoder.encode(registerRequestDto.getPassword()))
+                .role(Role.USER)
+                .build();
+
+        System.out.println("Saving user to database...");
         User savedUser = userRepo.save(user);
+        System.out.println("User saved! ID: " + savedUser.getId());
+
+        System.out.println("Generating tokens...");
         String accessToken = jwtTokenUtil.generateAccessToken(savedUser.getEmail());
         String refreshToken = jwtTokenUtil.generateRefreshToken(savedUser.getEmail());
+        System.out.println("Tokens generated!");
 
-        // Return response with tokens
-        return new AuthResponseDto(
+        System.out.println("Creating response DTO...");
+        AuthResponseDto response = new AuthResponseDto(
                 new UserDto(savedUser),
                 accessToken,
                 refreshToken
         );
-    }
 
+        System.out.println("=== REGISTER SUCCESS ===");
+        return response;
+    }
     @Override
     public AuthResponseDto refreshToken(String refreshToken) {
         if (!jwtTokenUtil.validateToken(refreshToken)) {

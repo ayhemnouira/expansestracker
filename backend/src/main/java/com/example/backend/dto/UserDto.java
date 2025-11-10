@@ -8,11 +8,12 @@ public class UserDto {
     private Long id;
     private String username;
     private String email;
-    private Role role;
+    private String role;  // ← CHANGE THIS TO String, NOT Role
+
     public UserDto(User user) {
         this.id = user.getId();
+        this.username = user.getDisplayUsername();
         this.email = user.getEmail();
-        this.username = user.getUsername();
-        this.role = user.getRole();
+        this.role = user.getRole().name();  // ← This returns String, so field must be String
     }
 }
