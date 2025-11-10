@@ -1,9 +1,7 @@
 [build]
-builder = "NIXPACKS"
-buildCommand = "mvn clean install -DskipTests"
+builder = "DOCKERFILE"
 
 [deploy]
-startCommand = "java -jar target/backend-0.0.1-SNAPSHOT.jar"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
 
