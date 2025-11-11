@@ -11,7 +11,4 @@ FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
-# Remove EXPOSE 8080 - Railway handles this dynamically
-
 ENTRYPOINT ["java", "-jar", "app.jar"]
-```
