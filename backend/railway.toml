@@ -4,8 +4,10 @@ builder = "DOCKERFILE"
 [deploy]
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
+startCommand = "java -jar app.jar"
 
 [[healthcheck]]
 path = "/actuator/health"
 timeout = 100
 interval = 60
+initialDelaySeconds = 30
