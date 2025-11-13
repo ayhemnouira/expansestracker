@@ -115,10 +115,10 @@ public class TransactionServiceImpl implements TransactionService {
         Transaction savedTransaction = transactionRepository.save(transaction);
 
         // 🔥 TRIGGER BUDGET ALERTS (ONLY FOR EXPENSES)
-        if (request.getType() == TransactionType.EXPENSE) {
+        if (request.getType() == TransactionType.EXPENSE && request.getCategory() != null) {
             log.debug("Checking budgets after expense creation for category: {}", request.getCategory());
             try {
-                budgetAlertService.checkBudgetForCategory(userId, request.getCategory());
+                budgetAlertService.checkBudgetsForCategory(userId, request.getCategory());
             } catch (Exception e) {
                 // Don't fail transaction if alert check fails
                 log.error("Failed to check budget alerts after transaction creation", e);
@@ -169,15 +169,16 @@ public class TransactionServiceImpl implements TransactionService {
         // 🔥 TRIGGER BUDGET ALERTS AFTER UPDATE
         // Check both old and new categories if they're different and expenses
         try {
-            if (oldType == TransactionType.EXPENSE) {
+            if (oldType == TransactionType.EXPENSE && oldCategory != null) {
                 log.debug("Checking old category budget: {}", oldCategory);
-                budgetAlertService.checkBudgetForCategory(userId, oldCategory);
+                budgetAlertService.checkBudgetsForCategory(userId, oldCategory);
             }
 
             if (request.getType() == TransactionType.EXPENSE &&
+                    request.getCategory() != null &&
                     !request.getCategory().equals(oldCategory)) {
                 log.debug("Checking new category budget: {}", request.getCategory());
-                budgetAlertService.checkBudgetForCategory(userId, request.getCategory());
+                budgetAlertService.checkBudgetsForCategory(userId, request.getCategory());
             }
         } catch (Exception e) {
             log.error("Failed to check budget alerts after transaction update", e);
@@ -211,10 +212,10 @@ public class TransactionServiceImpl implements TransactionService {
 
         // 🔥 TRIGGER BUDGET ALERTS AFTER DELETION
         // Budget might go from EXCEEDED back to WARNING or SAFE
-        if (type == TransactionType.EXPENSE) {
+        if (type == TransactionType.EXPENSE && category != null) {
             log.debug("Checking budget after expense deletion for category: {}", category);
             try {
-                budgetAlertService.checkBudgetForCategory(userId, category);
+                budgetAlertService.checkBudgetsForCategory(userId, category);
             } catch (Exception e) {
                 log.error("Failed to check budget alerts after transaction deletion", e);
             }

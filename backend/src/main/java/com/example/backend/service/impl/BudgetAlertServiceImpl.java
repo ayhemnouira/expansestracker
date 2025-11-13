@@ -5,13 +5,13 @@ import com.example.backend.entity.Budget;
 import com.example.backend.entity.BudgetAlert;
 import com.example.backend.entity.User;
 import com.example.backend.enums.AlertType;
-import com.example.backend.enums.BudgetStatus;
 import com.example.backend.exception.ResourceNotFoundException;
 import com.example.backend.exception.UnauthorizedException;
 import com.example.backend.repo.BudgetAlertRepository;
 import com.example.backend.repo.BudgetRepository;
 import com.example.backend.repo.TransactionRepository;
 import com.example.backend.service.BudgetAlertService;
+import com.example.backend.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,10 +32,11 @@ public class BudgetAlertServiceImpl implements BudgetAlertService {
     private final BudgetAlertRepository alertRepository;
     private final BudgetRepository budgetRepository;
     private final TransactionRepository transactionRepository;
+    private final EmailService emailService; // ← Inject email service
 
     @Override
     @Transactional
-    public void checkBudgetForCategory(Long userId, String category) {
+    public void checkBudgetsForCategory(Long userId, String category) {
         log.debug("Checking budgets for user {} and category {}", userId, category);
 
         List<Budget> budgets = budgetRepository
@@ -111,31 +112,52 @@ public class BudgetAlertServiceImpl implements BudgetAlertService {
     private void checkSingleBudgetAndAlert(Budget budget) {
         BigDecimal spent = calculateSpent(budget);
         BigDecimal amount = budget.getAmount();
-
         double percentage = calculatePercentage(spent, amount);
+
+        User user = budget.getUser();
 
         // Check if threshold reached (80% by default)
         if (percentage >= budget.getAlertThreshold() && percentage < 100) {
-            createAlertIfNotRecent(
+            boolean alertCreated = createAlertIfNotRecent(
                     budget,
                     AlertType.THRESHOLD_REACHED,
                     String.format("⚠️ You've used %.1f%% of your %s budget (%.2f TND / %.2f TND)",
                             percentage, budget.getCategory(), spent, amount)
             );
+
+            // 📧 Send email if alert was created
+            if (alertCreated) {
+                try {
+                    emailService.sendBudgetAlertEmail(user, budget, spent, percentage);
+                    log.info("Budget alert email sent to {}", user.getEmail());
+                } catch (Exception e) {
+                    log.error("Failed to send budget alert email: {}", e.getMessage());
+                }
+            }
         }
 
         // Check if budget exceeded
         if (percentage >= 100) {
-            createAlertIfNotRecent(
+            boolean alertCreated = createAlertIfNotRecent(
                     budget,
                     AlertType.BUDGET_EXCEEDED,
                     String.format("🚫 Your %s budget has been exceeded! Spent: %.2f TND / %.2f TND",
                             budget.getCategory(), spent, amount)
             );
+
+            // 📧 Send exceeded email if alert was created
+            if (alertCreated) {
+                try {
+                    emailService.sendBudgetExceededEmail(user, budget, spent, percentage);
+                    log.info("Budget exceeded email sent to {}", user.getEmail());
+                } catch (Exception e) {
+                    log.error("Failed to send budget exceeded email: {}", e.getMessage());
+                }
+            }
         }
     }
 
-    private void createAlertIfNotRecent(Budget budget, AlertType type, String message) {
+    private boolean createAlertIfNotRecent(Budget budget, AlertType type, String message) {
         // Don't spam - only alert once per day for same issue
         LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
 
@@ -152,7 +174,9 @@ public class BudgetAlertServiceImpl implements BudgetAlertService {
             alertRepository.save(alert);
             log.info("Created {} alert for budget {} (user {})",
                     type, budget.getId(), budget.getUser().getId());
+            return true; // Alert was created
         }
+        return false; // Alert already exists
     }
 
     private BigDecimal calculateSpent(Budget budget) {

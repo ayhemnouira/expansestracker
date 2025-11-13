@@ -10,8 +10,9 @@ public interface BudgetAlertService {
 
     /**
      * Check budgets and create alerts after transaction changes
+     * FIXED: Changed from checkBudgetForCategory to checkBudgetsForCategory
      */
-    void checkBudgetForCategory(Long userId, String category);
+    void checkBudgetsForCategory(Long userId, String category);
 
     /**
      * Get all unread alerts for a user

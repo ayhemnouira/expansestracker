@@ -20,4 +20,5 @@ public interface BudgetService {
 
     // ✅ ADD THIS METHOD
     BudgetSummaryDTO getBudgetSummary(Long userId);
+
 }

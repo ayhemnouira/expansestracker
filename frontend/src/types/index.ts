@@ -9,7 +9,7 @@ export interface Account {
   mask?: string;
   institutionId?: string;
   shareableId: string;
-  appwriteItemId: string;  // ✅ Add this line
+  appwriteItemId: string; // ✅ Add this line
   enabled: boolean;
   transactionCount: number;
 }
@@ -38,7 +38,6 @@ export interface AccountSummary {
   totalIncome: number;
   totalExpenses: number;
 }
-
 
 export interface UserProfile {
   id: string;
@@ -70,7 +69,7 @@ export interface Transaction {
 
 export interface CreateTransactionRequest {
   name: string;
-  amount: number;
+  amount: number | string;
   date: string;
   category: string;
   type: "INCOME" | "EXPENSE";

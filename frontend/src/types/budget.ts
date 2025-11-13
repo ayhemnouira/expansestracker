@@ -73,3 +73,19 @@ export interface ApiResponse<T> {
   message: string;
   data: T;
 }
+export interface BudgetAlert {
+  id: number;
+  budgetId: number;
+  budgetCategory: string;
+  type: 'THRESHOLD_REACHED' | 'BUDGET_EXCEEDED';
+  message: string;
+  isRead: boolean;
+  triggeredAt: string;
+  createdAt: string;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+}

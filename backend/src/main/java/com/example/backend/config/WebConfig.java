@@ -37,7 +37,7 @@ public class WebConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                        .requestMatchers("/actuator/health", "/actuator/info","/api/test/**").permitAll()
                         // Public endpoints (no JWT needed)
                         .requestMatchers(
                                 "/api/auth/register",

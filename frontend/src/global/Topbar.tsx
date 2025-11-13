@@ -67,8 +67,8 @@ const Topbar = () => {
     try {
       const alertsData = await alertService.getUnreadAlerts();
       setAlerts(alertsData);
-    } catch (error) {
-      console.error('Failed to fetch alerts', error);
+    } catch (err) {
+      console.error('Failed to fetch alerts', err);
     }
   };
 
@@ -76,8 +76,8 @@ const Topbar = () => {
     try {
       const count = await alertService.getUnreadCount();
       setUnreadCount(count);
-    } catch (error) {
-      console.error('Failed to fetch alert count', error);
+    } catch (err) {
+      console.error('Failed to fetch alert count', err);
     }
   };
 
@@ -115,8 +115,8 @@ const Topbar = () => {
       await alertService.markAsRead(alertId);
       fetchAlerts();
       fetchUnreadCount();
-    } catch (error) {
-      console.error('Failed to mark alert as read', error);
+    } catch (err) {
+      console.error('Failed to mark alert as read', err);
     }
   };
 
@@ -126,8 +126,8 @@ const Topbar = () => {
       await alertService.markAllAsRead();
       fetchAlerts();
       fetchUnreadCount();
-    } catch (error) {
-      console.error('Failed to mark all as read', error);
+    } catch (err) {
+      console.error('Failed to mark all as read', err);
     } finally {
       setIsLoadingAlerts(false);
     }
