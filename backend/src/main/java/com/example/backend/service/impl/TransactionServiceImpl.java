@@ -290,7 +290,6 @@ public class TransactionServiceImpl implements TransactionService {
      * @return TransactionResponseDto
      */
     private TransactionResponseDto convertToResponseDto(Transaction transaction) {
-        // Access account properties while session is still open
         Account account = transaction.getAccount();
 
         return TransactionResponseDto.builder()
@@ -302,6 +301,8 @@ public class TransactionServiceImpl implements TransactionService {
                 .type(transaction.getType())
                 .accountId(account.getId())
                 .accountName(account.getName())
+                .documentCount(transaction.getDocuments() != null ?
+                        transaction.getDocuments().size() : 0) // ✅ NEW
                 .build();
     }
 }

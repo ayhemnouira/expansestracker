@@ -20,4 +20,5 @@ public class TransactionResponseDto {
     private TransactionType type;
     private Long accountId;
     private String accountName;
+    private Integer documentCount;
 }
