@@ -65,6 +65,7 @@ export interface Transaction {
   type: "INCOME" | "EXPENSE";
   accountId: number;
   accountName: string;
+  documentCount?: number;
 }
 
 export interface CreateTransactionRequest {
@@ -82,4 +83,23 @@ export interface UpdateTransactionRequest {
   date: string;
   category: string;
   type: "INCOME" | "EXPENSE";
+}
+export interface Document {
+  id: number;
+  fileName: string;
+  fileType: string;
+  fileSize: number;
+  fileSizeFormatted: string;
+  documentType:
+    | "RECEIPT"
+    | "INVOICE"
+    | "BANK_STATEMENT"
+    | "CONTRACT"
+    | "PROOF_OF_PAYMENT"
+    | "OTHER";
+  description?: string;
+  transactionId?: number;
+  transactionName?: string;
+  uploadedAt: string;
+  downloadUrl: string;
 }

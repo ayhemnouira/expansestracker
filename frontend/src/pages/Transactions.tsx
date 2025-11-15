@@ -25,7 +25,6 @@ import {
   CardContent,
   Grid,
 } from "@mui/material";
-// ✅ MUI v6 Grid2
 import { useTheme } from "@mui/material/styles";
 import {
   Add,
@@ -39,6 +38,8 @@ import {
   TrendingUp,
   TrendingDown,
   AccountBalance,
+  AttachFile,
+  CloudUpload,
 } from "@mui/icons-material";
 
 import {
@@ -48,6 +49,7 @@ import {
   deleteTransaction,
 } from "../api/transactionService";
 import { getUserAccounts } from "../api/accountService";
+import { uploadDocument } from "../api/documentService";
 import type { Transaction, Account } from "../types";
 import { tokens } from "../theme/theme";
 
@@ -65,7 +67,6 @@ const categories = [
   "Other",
 ];
 
-// ✅ Local interface to avoid type conflicts
 interface FormDataType {
   name: string;
   amount: string;
@@ -75,7 +76,6 @@ interface FormDataType {
   accountId: number;
 }
 
-// Helper function for error handling
 const getErrorMessage = (error: unknown): string => {
   if (error instanceof Error) {
     return error.message;
@@ -108,8 +108,8 @@ const TransactionsPage = () => {
     severity: "success" as "success" | "error" | "info",
   });
   const [availableAccounts, setAvailableAccounts] = useState<Account[]>([]);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  // ✅ FIXED: Using local interface with string amount
   const [formData, setFormData] = useState<FormDataType>({
     name: "",
     amount: "",
@@ -169,7 +169,6 @@ const TransactionsPage = () => {
     setNetBalance(income - expenses);
   };
 
-  // ✅ FIXED: Converts string to number before sending to API
   const handleSubmit = async () => {
     try {
       const submitData = {
@@ -181,6 +180,8 @@ const TransactionsPage = () => {
         accountId: formData.accountId,
       };
 
+      let transactionId: number;
+
       if (editingTransaction) {
         await updateTransaction(editingTransaction.id, {
           name: submitData.name,
@@ -189,18 +190,43 @@ const TransactionsPage = () => {
           category: submitData.category,
           type: submitData.type,
         });
+        transactionId = editingTransaction.id;
         setSnackbar({
           open: true,
           message: "Transaction updated successfully!",
           severity: "success",
         });
       } else {
-        await createTransaction(submitData);
+        const newTransaction = await createTransaction(submitData);
+        transactionId = newTransaction.id;
         setSnackbar({
           open: true,
           message: "Transaction created successfully!",
           severity: "success",
         });
+      }
+
+      if (selectedFile) {
+        try {
+          await uploadDocument({
+            file: selectedFile,
+            documentType: "RECEIPT",
+            transactionId: transactionId,
+          });
+          setSnackbar({
+            open: true,
+            message: "Transaction and document saved successfully!",
+            severity: "success",
+          });
+        } catch (err) {
+          setSnackbar({
+            open: true,
+            message: `Transaction saved but document upload failed: ${
+              err instanceof Error ? err.message : "Unknown error"
+            }`,
+            severity: "error",
+          });
+        }
       }
 
       const updatedTransactions = await getUserTransactions();
@@ -245,7 +271,6 @@ const TransactionsPage = () => {
     }
   };
 
-  // ✅ FIXED: Handles empty string for new transactions
   const handleOpenDialog = (transaction?: Transaction) => {
     if (transaction) {
       setEditingTransaction(transaction);
@@ -268,16 +293,47 @@ const TransactionsPage = () => {
         accountId: availableAccounts[0]?.id || 0,
       });
     }
+    setSelectedFile(null);
     setOpenDialog(true);
   };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setEditingTransaction(null);
+    setSelectedFile(null);
   };
 
   const handleCloseSnackbar = () => {
     setSnackbar((prev) => ({ ...prev, open: false }));
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setSnackbar({
+          open: true,
+          message: "File size must be less than 5MB",
+          severity: "error",
+        });
+        return;
+      }
+      const allowedTypes = [
+        "application/pdf",
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+      ];
+      if (!allowedTypes.includes(file.type)) {
+        setSnackbar({
+          open: true,
+          message: "Only PDF, JPG, and PNG files are allowed",
+          severity: "error",
+        });
+        return;
+      }
+      setSelectedFile(file);
+    }
   };
 
   if (loading) {
@@ -304,36 +360,28 @@ const TransactionsPage = () => {
         p: { xs: 2, md: 4 },
       }}
     >
-      {/* Header */}
       <Box mb={4}>
         <Typography
           variant="h4"
           fontWeight="700"
-          sx={{
-            color: isDark ? "#fff" : "#1a1a2e",
-            mb: 1,
-          }}
+          sx={{ color: isDark ? "#fff" : "#1a1a2e", mb: 1 }}
         >
           Transactions
         </Typography>
         <Typography
           variant="body1"
-          sx={{
-            color: isDark ? "#a0a0a0" : "#64748b",
-          }}
+          sx={{ color: isDark ? "#a0a0a0" : "#64748b" }}
         >
           Track and manage your financial activities
         </Typography>
       </Box>
 
-      {/* Error Alert */}
       {error && (
         <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
 
-      {/* Summary Cards - ✅ FIXED: MUI v6 Grid2 syntax */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid size={{ xs: 12, md: 4 }}>
           <Card
@@ -471,7 +519,6 @@ const TransactionsPage = () => {
         </Grid>
       </Grid>
 
-      {/* Actions Bar */}
       <Card
         sx={{
           borderRadius: 3,
@@ -505,9 +552,7 @@ const TransactionsPage = () => {
                 "& .MuiOutlinedInput-root": {
                   borderRadius: 2,
                   bgcolor: isDark ? "#1a2332" : "#f8fafc",
-                  "& fieldset": {
-                    borderColor: isDark ? "#2a3441" : "#e2e8f0",
-                  },
+                  "& fieldset": { borderColor: isDark ? "#2a3441" : "#e2e8f0" },
                 },
               }}
             />
@@ -524,9 +569,7 @@ const TransactionsPage = () => {
                 fontWeight: 600,
                 fontSize: "1rem",
                 boxShadow: "0 4px 12px rgba(102, 126, 234, 0.4)",
-                "&:hover": {
-                  boxShadow: "0 6px 20px rgba(102, 126, 234, 0.6)",
-                },
+                "&:hover": { boxShadow: "0 6px 20px rgba(102, 126, 234, 0.6)" },
               }}
             >
               New Transaction
@@ -535,7 +578,6 @@ const TransactionsPage = () => {
         </CardContent>
       </Card>
 
-      {/* Transactions Table */}
       <Card
         sx={{
           borderRadius: 3,
@@ -547,11 +589,7 @@ const TransactionsPage = () => {
         <TableContainer>
           <Table>
             <TableHead>
-              <TableRow
-                sx={{
-                  bgcolor: isDark ? "#1a2332" : "#f8fafc",
-                }}
-              >
+              <TableRow sx={{ bgcolor: isDark ? "#1a2332" : "#f8fafc" }}>
                 <TableCell
                   sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
                 >
@@ -619,9 +657,7 @@ const TransactionsPage = () => {
                   <TableRow
                     key={transaction.id}
                     sx={{
-                      "&:hover": {
-                        bgcolor: isDark ? "#1a2332" : "#f8fafc",
-                      },
+                      "&:hover": { bgcolor: isDark ? "#1a2332" : "#f8fafc" },
                     }}
                   >
                     <TableCell sx={{ color: isDark ? "#a0a0a0" : "#64748b" }}>
@@ -703,7 +739,6 @@ const TransactionsPage = () => {
         </TableContainer>
       </Card>
 
-      {/* Modern Add/Edit Dialog */}
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
@@ -735,12 +770,9 @@ const TransactionsPage = () => {
               <Close />
             </IconButton>
           </Box>
-
           <Divider sx={{ mb: 3 }} />
-
           <DialogContent sx={{ p: 0 }}>
             <Stack spacing={3}>
-              {/* Transaction Type Toggle */}
               <Box>
                 <Typography
                   variant="body2"
@@ -795,8 +827,6 @@ const TransactionsPage = () => {
                   </Button>
                 </Box>
               </Box>
-
-              {/* ✅ FIXED: Label always visible */}
               <TextField
                 label="Transaction Name"
                 fullWidth
@@ -807,14 +837,8 @@ const TransactionsPage = () => {
                 }
                 placeholder="e.g., Grocery Shopping"
                 InputLabelProps={{ shrink: true }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 2,
-                  },
-                }}
+                sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
               />
-
-              {/* ✅ FIXED: Empty string prevents stuck "0" */}
               <TextField
                 label="Amount (TND)"
                 type="number"
@@ -831,13 +855,8 @@ const TransactionsPage = () => {
                     <InputAdornment position="start">TND</InputAdornment>
                   ),
                 }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 2,
-                  },
-                }}
+                sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
               />
-
               <TextField
                 label="Date"
                 type="date"
@@ -855,13 +874,8 @@ const TransactionsPage = () => {
                     </InputAdornment>
                   ),
                 }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 2,
-                  },
-                }}
+                sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
               />
-
               <TextField
                 select
                 label="Category"
@@ -879,11 +893,7 @@ const TransactionsPage = () => {
                     </InputAdornment>
                   ),
                 }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 2,
-                  },
-                }}
+                sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
               >
                 {categories.map((cat) => (
                   <MenuItem key={cat} value={cat}>
@@ -891,7 +901,6 @@ const TransactionsPage = () => {
                   </MenuItem>
                 ))}
               </TextField>
-
               <TextField
                 select
                 label="Account"
@@ -906,11 +915,7 @@ const TransactionsPage = () => {
                 }
                 disabled={!!editingTransaction}
                 InputLabelProps={{ shrink: true }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 2,
-                  },
-                }}
+                sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
               >
                 {availableAccounts.map((account) => (
                   <MenuItem key={account.id} value={account.id}>
@@ -918,9 +923,85 @@ const TransactionsPage = () => {
                   </MenuItem>
                 ))}
               </TextField>
+              <Box>
+                <Typography
+                  variant="body2"
+                  fontWeight="600"
+                  mb={1}
+                  sx={{ color: isDark ? "#a0a0a0" : "#64748b" }}
+                >
+                  Attach Document (Optional)
+                </Typography>
+                {selectedFile ? (
+                  <Box
+                    sx={{
+                      p: 2,
+                      borderRadius: 2,
+                      bgcolor: isDark ? "#1a2332" : "#f8fafc",
+                      border: `1px solid ${isDark ? "#3a4a5c" : "#cbd5e1"}`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <CloudUpload
+                        sx={{ color: isDark ? "#a0a0a0" : "#64748b" }}
+                      />
+                      <Box>
+                        <Typography
+                          variant="body2"
+                          fontWeight="600"
+                          sx={{ color: isDark ? "#fff" : "#1a1a2e" }}
+                        >
+                          {selectedFile.name}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: isDark ? "#707070" : "#94a3b8" }}
+                        >
+                          {(selectedFile.size / 1024).toFixed(2)} KB
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <IconButton
+                      size="small"
+                      onClick={() => setSelectedFile(null)}
+                    >
+                      <Close />
+                    </IconButton>
+                  </Box>
+                ) : (
+                  <Button
+                    variant="outlined"
+                    component="label"
+                    fullWidth
+                    startIcon={<AttachFile />}
+                    sx={{
+                      py: 1.5,
+                      borderRadius: 2,
+                      textTransform: "none",
+                      borderStyle: "dashed",
+                      color: isDark ? "#a0a0a0" : "#64748b",
+                      borderColor: isDark ? "#3a4a5c" : "#cbd5e1",
+                      "&:hover": {
+                        borderColor: "#667eea",
+                        bgcolor: isDark ? "#1a2332" : "#f8fafc",
+                      },
+                    }}
+                  >
+                    Choose File (PDF, JPG, PNG - Max 5MB)
+                    <input
+                      type="file"
+                      hidden
+                      accept="application/pdf,image/jpeg,image/jpg,image/png"
+                      onChange={handleFileSelect}
+                    />
+                  </Button>
+                )}
+              </Box>
             </Stack>
           </DialogContent>
-
           <Box display="flex" gap={2} mt={4}>
             <Button
               fullWidth
@@ -931,6 +1012,12 @@ const TransactionsPage = () => {
                 borderRadius: 2,
                 textTransform: "none",
                 fontWeight: 600,
+                borderColor: isDark ? "#3a4a5c" : "#cbd5e1",
+                color: isDark ? "#a0a0a0" : "#64748b",
+                "&:hover": {
+                  borderColor: isDark ? "#4a5a6c" : "#94a3b8",
+                  bgcolor: isDark ? "#1a2332" : "#f8fafc",
+                },
               }}
             >
               Cancel
@@ -951,8 +1038,12 @@ const TransactionsPage = () => {
                 background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                 textTransform: "none",
                 fontWeight: 600,
+                boxShadow: "0 4px 12px rgba(102, 126, 234, 0.4)",
+                "&:hover": { boxShadow: "0 6px 20px rgba(102, 126, 234, 0.6)" },
                 "&:disabled": {
                   background: isDark ? "#2a3441" : "#e2e8f0",
+                  color: isDark ? "#5a6a7c" : "#94a3b8",
+                  boxShadow: "none",
                 },
               }}
             >
@@ -962,7 +1053,6 @@ const TransactionsPage = () => {
         </Box>
       </Dialog>
 
-      {/* Snackbar */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}
@@ -972,7 +1062,11 @@ const TransactionsPage = () => {
         <Alert
           onClose={handleCloseSnackbar}
           severity={snackbar.severity}
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            borderRadius: 2,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+          }}
         >
           {snackbar.message}
         </Alert>
