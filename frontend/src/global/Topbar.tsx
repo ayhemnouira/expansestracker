@@ -16,6 +16,7 @@ import {
   Chip,
   Button,
   CircularProgress,
+  useMediaQuery,
 } from "@mui/material";
 import {
   Search as SearchIcon,
@@ -28,6 +29,7 @@ import {
   Warning as WarningIcon,
   Error as ErrorIcon,
   DoneAll as DoneAllIcon,
+  Menu as MenuIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { ColorModeContext } from "../theme/theme";
@@ -35,16 +37,21 @@ import { useAuth } from "../context/AuthContext";
 import type { BudgetAlert } from "../types/budget";
 import alertService from "../api/alertService";
 
-const Topbar = () => {
+interface TopbarProps {
+  onMenuClick?: () => void;
+}
+
+const Topbar = ({ onMenuClick }: TopbarProps) => {
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [notificationsAnchor, setNotificationsAnchor] =
     useState<null | HTMLElement>(null);
-  
+
   // Budget alerts state
   const [alerts, setAlerts] = useState<BudgetAlert[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -54,12 +61,12 @@ const Topbar = () => {
   useEffect(() => {
     fetchAlerts();
     fetchUnreadCount();
-    
+
     const interval = setInterval(() => {
       fetchAlerts();
       fetchUnreadCount();
     }, 30000); // 30 seconds
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -68,7 +75,7 @@ const Topbar = () => {
       const alertsData = await alertService.getUnreadAlerts();
       setAlerts(alertsData);
     } catch (err) {
-      console.error('Failed to fetch alerts', err);
+      console.error("Failed to fetch alerts", err);
     }
   };
 
@@ -77,7 +84,7 @@ const Topbar = () => {
       const count = await alertService.getUnreadCount();
       setUnreadCount(count);
     } catch (err) {
-      console.error('Failed to fetch alert count', err);
+      console.error("Failed to fetch alert count", err);
     }
   };
 
@@ -116,7 +123,7 @@ const Topbar = () => {
       fetchAlerts();
       fetchUnreadCount();
     } catch (err) {
-      console.error('Failed to mark alert as read', err);
+      console.error("Failed to mark alert as read", err);
     }
   };
 
@@ -127,17 +134,21 @@ const Topbar = () => {
       fetchAlerts();
       fetchUnreadCount();
     } catch (err) {
-      console.error('Failed to mark all as read', err);
+      console.error("Failed to mark all as read", err);
     } finally {
       setIsLoadingAlerts(false);
     }
   };
 
   const getAlertIcon = (type: string) => {
-    if (type === 'BUDGET_EXCEEDED') {
-      return <ErrorIcon sx={{ color: theme.palette.error.main, fontSize: 20 }} />;
+    if (type === "BUDGET_EXCEEDED") {
+      return (
+        <ErrorIcon sx={{ color: theme.palette.error.main, fontSize: 20 }} />
+      );
     }
-    return <WarningIcon sx={{ color: theme.palette.warning.main, fontSize: 20 }} />;
+    return (
+      <WarningIcon sx={{ color: theme.palette.warning.main, fontSize: 20 }} />
+    );
   };
 
   const formatTimeAgo = (dateString: string): string => {
@@ -145,13 +156,13 @@ const Topbar = () => {
     const now = new Date();
     const diffInMs = now.getTime() - date.getTime();
     const diffInMins = Math.floor(diffInMs / 60000);
-    
-    if (diffInMins < 1) return 'Just now';
+
+    if (diffInMins < 1) return "Just now";
     if (diffInMins < 60) return `${diffInMins}m ago`;
-    
+
     const diffInHours = Math.floor(diffInMins / 60);
     if (diffInHours < 24) return `${diffInHours}h ago`;
-    
+
     const diffInDays = Math.floor(diffInHours / 24);
     return `${diffInDays}d ago`;
   };
@@ -167,35 +178,59 @@ const Topbar = () => {
       }}
     >
       <Toolbar sx={{ justifyContent: "space-between" }}>
-        {/* Search Bar */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            bgcolor:
-              theme.palette.mode === "dark"
-                ? alpha(theme.palette.common.white, 0.05)
-                : alpha(theme.palette.common.black, 0.03),
-            borderRadius: 2,
-            px: 2,
-            py: 0.5,
-            width: { xs: "100%", sm: 400 },
-            transition: "all 0.3s ease",
-            "&:focus-within": {
+        {/* Left Side - Menu Button & Search */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, flex: 1 }}>
+          {/* Hamburger Menu for Mobile */}
+          {isMobile && (
+            <IconButton
+              onClick={onMenuClick}
+              edge="start"
+              sx={{
+                color: theme.palette.text.primary,
+                "&:hover": {
+                  bgcolor: alpha(theme.palette.primary.main, 0.1),
+                },
+              }}
+              aria-label="open menu"
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
+
+          {/* Search Bar */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
               bgcolor:
                 theme.palette.mode === "dark"
-                  ? alpha(theme.palette.common.white, 0.1)
-                  : alpha(theme.palette.common.black, 0.05),
-              boxShadow: `0 0 0 2px ${alpha(theme.palette.primary.main, 0.2)}`,
-            },
-          }}
-        >
-          <SearchIcon sx={{ color: "text.secondary", mr: 1 }} />
-          <InputBase
-            placeholder="Search transactions, budgets..."
-            sx={{ flex: 1, fontSize: 14 }}
-            inputProps={{ "aria-label": "search" }}
-          />
+                  ? alpha(theme.palette.common.white, 0.05)
+                  : alpha(theme.palette.common.black, 0.03),
+              borderRadius: 2,
+              px: 2,
+              py: 0.5,
+              width: { xs: "100%", sm: 400 },
+              maxWidth: { xs: "100%", sm: 400 },
+              transition: "all 0.3s ease",
+              "&:focus-within": {
+                bgcolor:
+                  theme.palette.mode === "dark"
+                    ? alpha(theme.palette.common.white, 0.1)
+                    : alpha(theme.palette.common.black, 0.05),
+                boxShadow: `0 0 0 2px ${alpha(
+                  theme.palette.primary.main,
+                  0.2
+                )}`,
+              },
+            }}
+          >
+            <SearchIcon sx={{ color: "text.secondary", mr: 1 }} />
+            <InputBase
+              placeholder="Search transactions, budgets..."
+              sx={{ flex: 1, fontSize: 14 }}
+              inputProps={{ "aria-label": "search" }}
+            />
+          </Box>
         </Box>
 
         {/* Right Side Actions */}
@@ -205,6 +240,7 @@ const Topbar = () => {
             onClick={colorMode.toggleColorMode}
             sx={{
               color: theme.palette.text.primary,
+              display: { xs: "none", sm: "flex" },
               "&:hover": {
                 bgcolor: alpha(theme.palette.primary.main, 0.1),
               },
@@ -229,8 +265,7 @@ const Topbar = () => {
               <NotificationsIcon />
             </Badge>
           </IconButton>
-
-          {/* Settings */}
+          {/* Settings 
           <IconButton
             onClick={handleSettings}
             sx={{
@@ -243,7 +278,7 @@ const Topbar = () => {
             aria-label="settings"
           >
             <SettingsIcon />
-          </IconButton>
+          </IconButton> */}
 
           {/* User Profile */}
           <IconButton
@@ -386,9 +421,7 @@ const Topbar = () => {
                 }}
               >
                 {/* Alert Icon */}
-                <Box sx={{ mt: 0.5 }}>
-                  {getAlertIcon(alert.type)}
-                </Box>
+                <Box sx={{ mt: 0.5 }}>{getAlertIcon(alert.type)}</Box>
 
                 {/* Alert Content */}
                 <Box sx={{ flex: 1, minWidth: 0 }}>

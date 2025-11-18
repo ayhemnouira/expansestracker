@@ -80,7 +80,7 @@ const Dashboard = () => {
   const totalBalance = summary?.totalBalance || 0;
 
   return (
-    <Box sx={{ height: "100%", overflow: "auto", p: 3 }}>
+    <Box sx={{ height: "100%", overflow: "auto", p: 3, pl: 0 }}>
       <Grid container spacing={3}>
         {/* Left Column - Main Content */}
         <Grid size={{ xs: 12, lg: 8.5 }}>

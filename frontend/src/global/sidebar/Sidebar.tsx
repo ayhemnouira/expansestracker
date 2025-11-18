@@ -19,7 +19,7 @@ import {
   ReceiptLong,
   AccountBalanceWallet,
   UploadFile,
-  PersonOutlined,
+  //PersonOutlined,
   Menu as MenuIcon,
   ChevronLeft,
   ExitToApp,
@@ -39,6 +39,11 @@ interface MenuItem {
   to: string;
   icon: React.ReactNode;
   category?: string;
+}
+
+interface SidebarProps {
+  mobileOpen?: boolean;
+  onMobileToggle?: () => void;
 }
 
 const menuItems: MenuItem[] = [
@@ -61,12 +66,13 @@ const menuItems: MenuItem[] = [
     icon: <UploadFile />,
     category: "Data",
   },
+  /*
   {
     title: "Profile",
     to: "/profile",
     icon: <PersonOutlined />,
     category: "Pages",
-  },
+  },*/
   {
     title: "Accounts",
     to: "/accounts",
@@ -75,7 +81,7 @@ const menuItems: MenuItem[] = [
   },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ mobileOpen = false, onMobileToggle }: SidebarProps) => {
   const [collapsed, setCollapsed] = useState(false);
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
@@ -83,11 +89,10 @@ const Sidebar = () => {
   const location = useLocation();
   const { user, logout } = useAuth();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleToggle = () => {
-    if (isMobile) {
-      setMobileOpen(!mobileOpen);
+    if (isMobile && onMobileToggle) {
+      onMobileToggle();
     } else {
       setCollapsed(!collapsed);
     }
@@ -100,8 +105,8 @@ const Sidebar = () => {
 
   const handleNavigation = (path: string) => {
     navigate(path);
-    if (isMobile) {
-      setMobileOpen(false);
+    if (isMobile && onMobileToggle) {
+      onMobileToggle(); // Close drawer after navigation on mobile
     }
   };
 
@@ -363,7 +368,7 @@ const Sidebar = () => {
         <Drawer
           variant="temporary"
           open={mobileOpen}
-          onClose={handleToggle}
+          onClose={onMobileToggle}
           ModalProps={{
             keepMounted: true, // Better mobile performance
           }}

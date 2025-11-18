@@ -357,7 +357,7 @@ const TransactionsPage = () => {
       sx={{
         minHeight: "100vh",
         bgcolor: isDark ? "#0a0e27" : "#f5f7fa",
-        p: { xs: 2, md: 4 },
+        pr: { xs: 2, md: 4 }, // Keep right padding
       }}
     >
       <Box mb={4}>
@@ -561,7 +561,7 @@ const TransactionsPage = () => {
               startIcon={<Add />}
               onClick={() => handleOpenDialog()}
               sx={{
-                minWidth: 200,
+                minWidth: { xs: "100%", sm: 200 },
                 py: 1.5,
                 borderRadius: 2,
                 background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
@@ -578,166 +578,319 @@ const TransactionsPage = () => {
         </CardContent>
       </Card>
 
-      <Card
-        sx={{
-          borderRadius: 3,
-          boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
-          bgcolor: isDark ? "#16213e" : "#fff",
-          overflow: "hidden",
-        }}
-      >
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow sx={{ bgcolor: isDark ? "#1a2332" : "#f8fafc" }}>
-                <TableCell
-                  sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
-                >
-                  Date
-                </TableCell>
-                <TableCell
-                  sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
-                >
-                  Transaction
-                </TableCell>
-                <TableCell
-                  sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
-                >
-                  Category
-                </TableCell>
-                <TableCell
-                  sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
-                >
-                  Account
-                </TableCell>
-                <TableCell
-                  align="right"
-                  sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
-                >
-                  Amount
-                </TableCell>
-                <TableCell
-                  align="right"
-                  sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
-                >
-                  Actions
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredTransactions.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} align="center" sx={{ py: 8 }}>
-                    <Receipt
-                      sx={{
-                        fontSize: 64,
-                        color: isDark ? "#3a4a5c" : "#cbd5e1",
-                        mb: 2,
-                      }}
-                    />
-                    <Typography
-                      variant="h6"
-                      color={isDark ? "#a0a0a0" : "#64748b"}
-                    >
-                      No transactions found
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color={isDark ? "#707070" : "#94a3b8"}
-                      mt={1}
-                    >
-                      {searchQuery
-                        ? "Try adjusting your search"
-                        : "Create your first transaction"}
-                    </Typography>
+      {/* Desktop Table View */}
+      <Box sx={{ display: { xs: "none", md: "block" } }}>
+        <Card
+          sx={{
+            borderRadius: 3,
+            boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+            bgcolor: isDark ? "#16213e" : "#fff",
+            overflow: "hidden",
+          }}
+        >
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow sx={{ bgcolor: isDark ? "#1a2332" : "#f8fafc" }}>
+                  <TableCell
+                    sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
+                  >
+                    Date
+                  </TableCell>
+                  <TableCell
+                    sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
+                  >
+                    Transaction
+                  </TableCell>
+                  <TableCell
+                    sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
+                  >
+                    Category
+                  </TableCell>
+                  <TableCell
+                    sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
+                  >
+                    Account
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
+                  >
+                    Amount
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
+                  >
+                    Actions
                   </TableCell>
                 </TableRow>
-              ) : (
-                filteredTransactions.map((transaction) => (
-                  <TableRow
-                    key={transaction.id}
-                    sx={{
-                      "&:hover": { bgcolor: isDark ? "#1a2332" : "#f8fafc" },
-                    }}
-                  >
-                    <TableCell sx={{ color: isDark ? "#a0a0a0" : "#64748b" }}>
+              </TableHead>
+              <TableBody>
+                {filteredTransactions.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center" sx={{ py: 8 }}>
+                      <Receipt
+                        sx={{
+                          fontSize: 64,
+                          color: isDark ? "#3a4a5c" : "#cbd5e1",
+                          mb: 2,
+                        }}
+                      />
+                      <Typography
+                        variant="h6"
+                        color={isDark ? "#a0a0a0" : "#64748b"}
+                      >
+                        No transactions found
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color={isDark ? "#707070" : "#94a3b8"}
+                        mt={1}
+                      >
+                        {searchQuery
+                          ? "Try adjusting your search"
+                          : "Create your first transaction"}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredTransactions.map((transaction) => (
+                    <TableRow
+                      key={transaction.id}
+                      sx={{
+                        "&:hover": { bgcolor: isDark ? "#1a2332" : "#f8fafc" },
+                      }}
+                    >
+                      <TableCell sx={{ color: isDark ? "#a0a0a0" : "#64748b" }}>
+                        {new Date(transaction.date).toLocaleDateString(
+                          "en-GB",
+                          {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                          }
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <Typography
+                          variant="body1"
+                          fontWeight="600"
+                          sx={{ color: isDark ? "#fff" : "#1a1a2e" }}
+                        >
+                          {transaction.name}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          label={transaction.category}
+                          size="small"
+                          sx={{
+                            bgcolor: isDark ? "#2a3441" : "#f1f5f9",
+                            color: isDark ? "#a0a0a0" : "#64748b",
+                            fontWeight: 600,
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell sx={{ color: isDark ? "#a0a0a0" : "#64748b" }}>
+                        {transaction.accountName || "N/A"}
+                      </TableCell>
+                      <TableCell align="right">
+                        <Typography
+                          variant="body1"
+                          fontWeight="700"
+                          sx={{
+                            color:
+                              transaction.type === "INCOME"
+                                ? "#10b981"
+                                : "#ef4444",
+                          }}
+                        >
+                          {transaction.type === "INCOME" ? "+" : "-"}
+                          {transaction.amount.toFixed(2)} TND
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="right">
+                        <IconButton
+                          size="small"
+                          onClick={() => handleOpenDialog(transaction)}
+                          sx={{
+                            color: isDark ? "#667eea" : "#667eea",
+                            "&:hover": {
+                              bgcolor: isDark ? "#2a3441" : "#f1f5f9",
+                            },
+                          }}
+                        >
+                          <Edit fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleDelete(transaction.id)}
+                          sx={{
+                            color: "#ef4444",
+                            "&:hover": {
+                              bgcolor: isDark ? "#2a3441" : "#fef2f2",
+                            },
+                          }}
+                        >
+                          <Delete fontSize="small" />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Card>
+      </Box>
+
+      {/* Mobile Card View */}
+      <Box sx={{ display: { xs: "block", md: "none" } }}>
+        {filteredTransactions.length === 0 ? (
+          <Card
+            sx={{
+              borderRadius: 3,
+              boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+              bgcolor: isDark ? "#16213e" : "#fff",
+              p: 6,
+              textAlign: "center",
+            }}
+          >
+            <Receipt
+              sx={{
+                fontSize: 64,
+                color: isDark ? "#3a4a5c" : "#cbd5e1",
+                mb: 2,
+              }}
+            />
+            <Typography variant="h6" color={isDark ? "#a0a0a0" : "#64748b"}>
+              No transactions found
+            </Typography>
+            <Typography
+              variant="body2"
+              color={isDark ? "#707070" : "#94a3b8"}
+              mt={1}
+            >
+              {searchQuery
+                ? "Try adjusting your search"
+                : "Create your first transaction"}
+            </Typography>
+          </Card>
+        ) : (
+          <Stack spacing={2}>
+            {filteredTransactions.map((transaction) => (
+              <Card
+                key={transaction.id}
+                sx={{
+                  borderRadius: 3,
+                  boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+                  bgcolor: isDark ? "#16213e" : "#fff",
+                  p: 2,
+                }}
+              >
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="start"
+                  mb={2}
+                >
+                  <Box flex={1}>
+                    <Typography
+                      variant="body1"
+                      fontWeight="700"
+                      sx={{ color: isDark ? "#fff" : "#1a1a2e", mb: 0.5 }}
+                    >
+                      {transaction.name}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{ color: isDark ? "#a0a0a0" : "#64748b" }}
+                    >
                       {new Date(transaction.date).toLocaleDateString("en-GB", {
                         day: "2-digit",
                         month: "short",
                         year: "numeric",
                       })}
-                    </TableCell>
-                    <TableCell>
-                      <Typography
-                        variant="body1"
-                        fontWeight="600"
-                        sx={{ color: isDark ? "#fff" : "#1a1a2e" }}
-                      >
-                        {transaction.name}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label={transaction.category}
-                        size="small"
-                        sx={{
-                          bgcolor: isDark ? "#2a3441" : "#f1f5f9",
-                          color: isDark ? "#a0a0a0" : "#64748b",
-                          fontWeight: 600,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell sx={{ color: isDark ? "#a0a0a0" : "#64748b" }}>
-                      {transaction.accountName || "N/A"}
-                    </TableCell>
-                    <TableCell align="right">
-                      <Typography
-                        variant="body1"
-                        fontWeight="700"
-                        sx={{
-                          color:
-                            transaction.type === "INCOME"
-                              ? "#10b981"
-                              : "#ef4444",
-                        }}
-                      >
-                        {transaction.type === "INCOME" ? "+" : "-"}
-                        {transaction.amount.toFixed(2)} TND
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        size="small"
-                        onClick={() => handleOpenDialog(transaction)}
-                        sx={{
-                          color: isDark ? "#667eea" : "#667eea",
-                          "&:hover": {
-                            bgcolor: isDark ? "#2a3441" : "#f1f5f9",
-                          },
-                        }}
-                      >
-                        <Edit fontSize="small" />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        onClick={() => handleDelete(transaction.id)}
-                        sx={{
-                          color: "#ef4444",
-                          "&:hover": {
-                            bgcolor: isDark ? "#2a3441" : "#fef2f2",
-                          },
-                        }}
-                      >
-                        <Delete fontSize="small" />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Card>
+                    </Typography>
+                  </Box>
+                  <Typography
+                    variant="h6"
+                    fontWeight="700"
+                    sx={{
+                      color:
+                        transaction.type === "INCOME" ? "#10b981" : "#ef4444",
+                    }}
+                  >
+                    {transaction.type === "INCOME" ? "+" : "-"}
+                    {transaction.amount.toFixed(2)}
+                  </Typography>
+                </Box>
+                <Box display="flex" gap={1} mb={2} flexWrap="wrap">
+                  <Chip
+                    label={transaction.category}
+                    size="small"
+                    sx={{
+                      bgcolor: isDark ? "#2a3441" : "#f1f5f9",
+                      color: isDark ? "#a0a0a0" : "#64748b",
+                      fontWeight: 600,
+                    }}
+                  />
+                  <Chip
+                    label={transaction.accountName || "N/A"}
+                    size="small"
+                    sx={{
+                      bgcolor: isDark ? "#2a3441" : "#f1f5f9",
+                      color: isDark ? "#a0a0a0" : "#64748b",
+                      fontWeight: 600,
+                    }}
+                  />
+                </Box>
+                <Box display="flex" gap={1}>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    size="small"
+                    startIcon={<Edit />}
+                    onClick={() => handleOpenDialog(transaction)}
+                    sx={{
+                      borderRadius: 2,
+                      textTransform: "none",
+                      borderColor: isDark ? "#667eea" : "#667eea",
+                      color: isDark ? "#667eea" : "#667eea",
+                      "&:hover": {
+                        borderColor: isDark ? "#7e8efa" : "#7e8efa",
+                        bgcolor: isDark ? "#1a2332" : "#f1f5f9",
+                      },
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    size="small"
+                    startIcon={<Delete />}
+                    onClick={() => handleDelete(transaction.id)}
+                    sx={{
+                      borderRadius: 2,
+                      textTransform: "none",
+                      borderColor: "#ef4444",
+                      color: "#ef4444",
+                      "&:hover": {
+                        borderColor: "#dc2626",
+                        bgcolor: isDark ? "#2a3441" : "#fef2f2",
+                      },
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </Box>
+              </Card>
+            ))}
+          </Stack>
+        )}
+      </Box>
 
       <Dialog
         open={openDialog}

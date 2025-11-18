@@ -1,13 +1,19 @@
 import { Box } from "@mui/material";
-
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../../global/sidebar/Sidebar";
 import Topbar from "../../global/Topbar";
 
 const MainLayout = () => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
-      <Sidebar />
+      <Sidebar mobileOpen={mobileOpen} onMobileToggle={handleDrawerToggle} />
 
       <Box
         component="main"
@@ -18,8 +24,8 @@ const MainLayout = () => {
           minHeight: "100vh",
         }}
       >
-        {/* Topbar */}
-        <Topbar />
+        {/* Topbar with hamburger menu */}
+        <Topbar onMenuClick={handleDrawerToggle} />
 
         {/* Main Content */}
         <Box
