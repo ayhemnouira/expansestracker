@@ -2,7 +2,7 @@
 
 A modern, full-stack financial management application built with **Spring Boot** and **React** that helps users track expenses, manage budgets, and gain insights into their spending habits with intelligent alerts and beautiful visualizations.
 
-![ExpensesTracker Dashboard](screenshots/dashboard.png)
+![ExpensesTracker Dashboard](screenshots/dashboard1.png)
 
 ## ✨ Key Features
 
