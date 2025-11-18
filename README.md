@@ -58,7 +58,7 @@ A modern, full-stack financial management application built with **Spring Boot**
 - **Spring Boot 3.x** - Application framework
 - **Spring Security** - Authentication & Authorization
 - **JWT** - Token-based authentication
-- **PostgreSQL** - Relational database
+- **MYSQL** - Relational database
 - **Hibernate/JPA** - ORM
 - **Maven** - Dependency management
 - **RESTful API** - Clean API design
@@ -80,26 +80,27 @@ A modern, full-stack financial management application built with **Spring Boot**
 ## 📸 Screenshots
 
 ### Dashboard
-![Dashboard Light Mode](screenshots/dashboard-light.png)
-![Dashboard Dark Mode](screenshots/dashboard-dark.png)
+![Dashboard Light Mode](screenshots/dashboard1.png)
+![Dashboard Dark Mode](screenshots/dashboard-darkmode.png)
 
 ### Transactions
-![Transactions Page](screenshots/transactions.png)
+![Transactions Page](screenshots/TransactionPage.png)
 ![New Transaction Form](screenshots/transaction-form.png)
 
 ### Budget Management
 ![Budget Overview](screenshots/budgets.png)
-![Budget Alerts](screenshots/budget-alerts.png)
+![New Budget Form](screenshots/budgetform.png)
+![Budget Alerts](screenshots/alert.png)
 
 ### Account Management
-![Accounts Page](screenshots/accounts.png)
+![Accounts Page](screenshots/AccountPage.png)
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 - **Java 17+**
 - **Node.js 18+**
-- **PostgreSQL 14+**
+- **MYSQL 7+**
 - **Maven 3.8+**
 
 ### Backend Setup
@@ -265,13 +266,10 @@ Password: Demo123!
 ## 👨‍💻 Author
 
 **Your Name**
-- Portfolio: [yourportfolio.com](https://yourportfolio.com)
-- LinkedIn: [linkedin.com/in/yourprofile](https://linkedin.com/in/yourprofile)
-- GitHub: [@yourusername](https://github.com/yourusername)
+- Portfolio: ((https://portfolio-roan-psi-26.vercel.app/))
+- LinkedIn: ([https://linkedin.com/in/yourprofile](https://www.linkedin.com/in/ayhemnouira/))
+- GitHub: ([https://github.com/yourusername](https://github.com/ayhemnouira))
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
