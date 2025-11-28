@@ -102,7 +102,7 @@ A modern, full-stack financial management application built with **Spring Boot**
 ![New Transaction Form](screenshots/transaction-form.png)
 
 ### Budget Management
-![Budget Overview](screenshots/budgets.png)
+![Budget Overview](screenshots/budgetpage.png)
 ![New Budget Form](screenshots/budgetform.png)
 ![Budget Alerts](screenshots/alert.png)
 
