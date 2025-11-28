@@ -4,6 +4,7 @@ A modern, full-stack financial management application built with **Spring Boot**
 
 ![ExpensesTracker Dashboard](screenshots/dashboard1.png)
 **[Live Demo](https://expansestrackera.vercel.app/)**
+
 ## ✨ Key Features
 
 ### 🔐 Authentication & Security
@@ -195,6 +196,7 @@ Frontend runs on: `http://localhost:5173`
 
 ### Transactions
 - `GET /api/transactions` - Get all transactions
+- `GET /api/transactions/{id}` - Get transaction by ID
 - `GET /api/transactions/month?year={year}&month={month}` - Get transactions by month
 - `GET /api/transactions/category/{category}` - Get transactions by category
 - `GET /api/transactions/summary` - Get income/expense summary
@@ -205,6 +207,7 @@ Frontend runs on: `http://localhost:5173`
 ### Budgets
 - `GET /api/budgets` - Get all budgets
 - `GET /api/budgets?activeOnly=true` - Get active budgets only
+- `GET /api/budgets/{id}` - Get specific budget by ID
 - `GET /api/budgets/summary` - Get budget summary
 - `POST /api/budgets` - Create budget
 - `PUT /api/budgets/{id}` - Update budget
@@ -213,6 +216,7 @@ Frontend runs on: `http://localhost:5173`
 ### Accounts
 - `GET /api/accounts` - Get all accounts
 - `GET /api/accounts?enabledOnly=true` - Get enabled accounts only
+- `GET /api/accounts/{id}` - Get account by ID
 - `GET /api/accounts/summary` - Get account summary
 - `GET /api/accounts/type/{type}` - Get accounts by type
 - `GET /api/accounts/share/{shareableId}` - Get shareable account
@@ -222,6 +226,8 @@ Frontend runs on: `http://localhost:5173`
 
 ### Documents
 - `POST /api/documents` - Upload document (multipart/form-data)
+  - **Required fields:** `file` (MultipartFile), `documentType` (DocumentType enum)
+  - **Optional fields:** `description` (String), `transactionId` (Long)
 - `GET /api/documents` - Get all user documents
 - `GET /api/documents?type={type}` - Get documents by type
 - `GET /api/documents/{id}` - Get document details
@@ -231,7 +237,7 @@ Frontend runs on: `http://localhost:5173`
 
 ### Budget Alerts
 - `GET /api/alerts` - Get unread alerts
-- `GET /api/alerts/all?limit={limit}` - Get all alerts (paginated)
+- `GET /api/alerts/all?limit={limit}` - Get all alerts (paginated, default limit=10)
 - `GET /api/alerts/count` - Get unread alert count
 - `PUT /api/alerts/{id}/read` - Mark alert as read
 - `PUT /api/alerts/read-all` - Mark all alerts as read
