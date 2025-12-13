@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Avatar,
   Box,
@@ -8,16 +9,13 @@ import {
   CardContent,
   Stack,
 } from "@mui/material";
-import {
-  Add as AddIcon,
-  Savings as SavingsIcon,
-  Subscriptions as SubscriptionsIcon,
-  Restaurant as RestaurantIcon,
-  ShoppingCart as ShoppingCartIcon,
-} from "@mui/icons-material";
+import { Add as AddIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import type { Account } from "../../types";
+import type { Account, Transaction } from "../../types";
 import BankCard from "../../components/BankCard";
+import { getUserTransactions } from "../../api/transactionService";
+import { getCategoryInfo } from "../../utils/categories";
+
 
 interface RightSidebarProps {
   imageUrl?: string;
@@ -26,45 +24,38 @@ interface RightSidebarProps {
   userEmail?: string;
 }
 
-// Mock categories data
-const mockCategories = [
-  {
-    id: "savings",
-    name: "Savings",
-    icon: <SavingsIcon />,
-    amount: 2450,
-    period: "This month",
-    gradient: ["#10B981", "#059669"],
-    type: "positive" as const,
-  },
-  {
-    id: "subscriptions",
-    name: "Subscriptions",
-    icon: <SubscriptionsIcon />,
-    amount: -285,
-    period: "Monthly",
-    gradient: ["#3B82F6", "#2563EB"],
-    type: "negative" as const,
-  },
-  {
-    id: "food",
-    name: "Food & Dining",
-    icon: <RestaurantIcon />,
-    amount: -156,
-    period: "This week",
-    gradient: ["#EF4444", "#DC2626"],
-    type: "negative" as const,
-  },
-  {
-    id: "shopping",
-    name: "Shopping",
-    icon: <ShoppingCartIcon />,
-    amount: -423,
-    period: "This month",
-    gradient: ["#8B5CF6", "#7C3AED"],
-    type: "negative" as const,
-  },
-];
+// Create gradient mapping based on your category colors
+const getGradientForCategory = (categoryName: string): string[] => {
+  const info = getCategoryInfo(categoryName);
+  
+  const gradientMap: Record<string, string[]> = {
+    "bg-green-500": ["#22C55E", "#16A34A"],
+    "bg-amber-500": ["#F59E0B", "#D97706"],
+    "bg-blue-500": ["#3B82F6", "#2563EB"],
+    "bg-yellow-600": ["#EAB308", "#CA8A04"],
+    "bg-pink-500": ["#EC4899", "#DB2777"],
+    "bg-red-500": ["#EF4444", "#DC2626"],
+    "bg-purple-500": ["#A855F7", "#9333EA"],
+    "bg-teal-500": ["#14B8A6", "#0D9488"],
+    "bg-emerald-500": ["#10B981", "#059669"],
+    "bg-indigo-500": ["#6366F1", "#4F46E5"],
+    "bg-orange-500": ["#F97316", "#EA580C"],
+    "bg-yellow-500": ["#EAB308", "#CA8A04"],
+    "bg-gray-500": ["#6B7280", "#4B5563"],
+  };
+  
+  return gradientMap[info.color] || ["#6B7280", "#4B5563"];
+};
+
+interface CategoryData {
+  id: string;
+  name: string;
+  icon: string;
+  amount: number;
+  period: string;
+  gradient: string[];
+  type: "positive" | "negative";
+}
 
 const RightSidebar: React.FC<RightSidebarProps> = ({
   imageUrl,
@@ -73,12 +64,60 @@ const RightSidebar: React.FC<RightSidebarProps> = ({
   userEmail,
 }) => {
   const theme = useTheme();
-
   const navigate = useNavigate();
+  const [topCategories, setTopCategories] = useState<CategoryData[]>([]);
 
   const headerImageUrl =
     imageUrl ||
     "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=800&q=60";
+
+  useEffect(() => {
+    const fetchTopCategories = async () => {
+      try {
+        const transactions = await getUserTransactions();
+
+        // Calculate total spending per category
+        const categoryTotals: Record<string, number> = {};
+
+        transactions.forEach((transaction: Transaction) => {
+          const category = transaction.category;
+          if (!categoryTotals[category]) {
+            categoryTotals[category] = 0;
+          }
+
+          // Add amount (negative for expenses, positive for income)
+          if (transaction.type === "EXPENSE") {
+            categoryTotals[category] -= transaction.amount;
+          } else {
+            categoryTotals[category] += transaction.amount;
+          }
+        });
+
+        // Convert to array and sort by absolute value (highest spending first)
+        const sortedCategories = Object.entries(categoryTotals)
+          .map(([name, amount]) => {
+            const categoryInfo = getCategoryInfo(name);
+            return {
+              id: name.toLowerCase(),
+              name,
+              icon: categoryInfo.icon,
+              amount,
+              period: "This month",
+              gradient: getGradientForCategory(name),
+              type: (amount >= 0 ? "positive" : "negative") as "positive" | "negative",
+            };
+          })
+          .sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount))
+          .slice(0, 4); // Get top 4 categories
+
+        setTopCategories(sortedCategories);
+      } catch (error) {
+        console.error("Failed to fetch top categories:", error);
+      }
+    };
+
+    fetchTopCategories();
+  }, []);
 
   return (
     <Box
@@ -278,61 +317,91 @@ const RightSidebar: React.FC<RightSidebarProps> = ({
           Top Categories
         </Typography>
 
-        <Stack spacing={1.5}>
-          {mockCategories.map((category) => (
-            <Card
-              key={category.id}
+        {topCategories.length === 0 ? (
+          <Box
+            sx={{
+              p: 3,
+              textAlign: "center",
+              bgcolor: theme.palette.background.default,
+              borderRadius: 2,
+              border: `1px dashed ${theme.palette.divider}`,
+            }}
+          >
+            <Typography variant="body2" color="text.secondary">
+              No transactions yet
+            </Typography>
+            <Typography
+              variant="caption"
+              color="primary"
               sx={{
-                background: `linear-gradient(135deg, ${category.gradient[0]} 0%, ${category.gradient[1]} 100%)`,
-                color: "white",
-                borderRadius: 2,
                 cursor: "pointer",
-                transition: "all 0.2s ease",
-                border: "none",
-                "&:hover": {
-                  transform: "translateY(-2px)",
-                  boxShadow: theme.shadows[8],
-                },
+                mt: 1,
+                display: "block",
+                fontWeight: 500,
               }}
+              onClick={() => navigate("/transactions")}
             >
-              <CardContent sx={{ p: 2 }}>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Stack direction="row" spacing={1.5} alignItems="center">
-                    <Box
-                      sx={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: "50%",
-                        bgcolor: "rgba(255,255,255,0.2)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {category.icon}
-                    </Box>
-                    <Box>
-                      <Typography variant="body2" fontWeight={600}>
-                        {category.name}
-                      </Typography>
-                      <Typography variant="caption" sx={{ opacity: 0.9 }}>
-                        {category.period}
-                      </Typography>
-                    </Box>
+              Create your first transaction
+            </Typography>
+          </Box>
+        ) : (
+          <Stack spacing={1.5}>
+            {topCategories.map((category) => (
+              <Card
+                key={category.id}
+                sx={{
+                  background: `linear-gradient(135deg, ${category.gradient[0]} 0%, ${category.gradient[1]} 100%)`,
+                  color: "white",
+                  borderRadius: 2,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  border: "none",
+                  "&:hover": {
+                    transform: "translateY(-2px)",
+                    boxShadow: theme.shadows[8],
+                  },
+                }}
+              >
+                <CardContent sx={{ p: 2 }}>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Stack direction="row" spacing={1.5} alignItems="center">
+                      <Box
+                        sx={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: "50%",
+                          bgcolor: "rgba(255,255,255,0.2)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "1.5rem",
+                        }}
+                      >
+                        {category.icon}
+                      </Box>
+                      <Box>
+                        <Typography variant="body2" fontWeight={600}>
+                          {category.name}
+                        </Typography>
+                        <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                          {category.period}
+                        </Typography>
+                      </Box>
+                    </Stack>
+                    <Typography variant="h6" fontWeight={700}>
+                      {category.amount > 0 ? "+" : ""}
+                      {category.amount.toFixed(0)} TND
+                    </Typography>
                   </Stack>
-                  <Typography variant="h6" fontWeight={700}>
-                    {category.amount > 0 ? "+" : ""}
-                    {category.amount.toFixed(0)} TND
-                  </Typography>
-                </Stack>
-              </CardContent>
-            </Card>
-          ))}
-        </Stack>
+                </CardContent>
+              </Card>
+            ))}
+          </Stack>
+        )}
       </Box>
     </Box>
   );

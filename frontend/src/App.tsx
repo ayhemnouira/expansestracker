@@ -2,7 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import { Toaster } from "react-hot-toast";
 import { ColorModeContext, useMode } from "./theme/theme";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./context/auth-provider";
 
 import SignInPage from "./components/auth/SignInPage/SignInPage";
 import SignUpPage from "./components/auth/SignUpPage/SignUpPage";
@@ -13,7 +13,6 @@ import TransactionsPage from "./pages/Transactions";
 import AccountsPage from "./pages/AccountsPage";
 import Budgets from "./pages/Budgets";
 import DocumentsPage from "./pages/DocumentsPage"; // Add this import
-
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -52,12 +51,10 @@ const App = () => {
                   <Route path="/transactions" element={<TransactionsPage />} />
                   <Route path="/accounts" element={<AccountsPage />} />
                   <Route path="/budgets" element={<Budgets />} />
-                  <Route path="/documents" element={<DocumentsPage />} /> 
-                 
+                  <Route path="/documents" element={<DocumentsPage />} />
                 </Route>
               </Routes>
 
-        
               <Toaster
                 position="top-right"
                 toastOptions={{

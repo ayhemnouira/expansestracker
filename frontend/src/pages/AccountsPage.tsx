@@ -5,9 +5,7 @@ import {
   Typography,
   Grid,
   Dialog,
-  DialogTitle,
   DialogContent,
-  DialogActions,
   TextField,
   MenuItem,
   Fab,
@@ -24,7 +22,6 @@ import {
   Delete,
   Person,
   Business,
-  Category,
   SubdirectoryArrowRight,
   AttachMoney,
   CreditCard,
@@ -40,6 +37,8 @@ import {
 } from "../api/accountService";
 import type { Account, CreateAccountRequest, AccountSummary } from "../types";
 import { tokens } from "../theme/theme";
+import BankCard from "../components/BankCard";
+import { useAuth } from "../context/use-auth";
 
 const accountTypes = [
   { value: "depository", label: "Depository (Checking/Savings)" },
@@ -56,6 +55,7 @@ const subtypes = {
 };
 
 const AccountsPage = () => {
+  const { user } = useAuth();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -129,10 +129,10 @@ const AccountsPage = () => {
       handleCloseDialog();
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
-      setError(error.response?.data?.message || "Delete failed");
+      setError(error.response?.data?.message || "Operation failed");
       setSnackbar({
         open: true,
-        message: error.response?.data?.message || "Delete failed",
+        message: error.response?.data?.message || "Operation failed",
         severity: "error",
       });
     }
@@ -182,10 +182,10 @@ const AccountsPage = () => {
       });
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
-      setError(error.response?.data?.message || "Delete failed");
+      setError(error.response?.data?.message || "Toggle failed");
       setSnackbar({
         open: true,
-        message: error.response?.data?.message || "Delete failed",
+        message: error.response?.data?.message || "Toggle failed",
         severity: "error",
       });
     }
@@ -617,152 +617,67 @@ const AccountsPage = () => {
             <Grid container spacing={3}>
               {enabledAccounts.map((account) => (
                 <Grid size={{ xs: 12, sm: 6, md: 4 }} key={account.id}>
-                  <Box
-                    sx={{
-                      background:
-                        theme.palette.mode === "dark"
-                          ? `linear-gradient(135deg, ${colors.grey[800]} 0%, ${colors.grey[700]} 100%)`
-                          : `linear-gradient(135deg, ${colors.primary[500]} 0%, ${colors.primary[700]} 100%)`,
-                      borderRadius: "20px",
-                      p: 3,
-                      height: "240px",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between",
-                      position: "relative",
-                      overflow: "hidden",
-                      boxShadow:
-                        theme.palette.mode === "dark"
-                          ? `0 8px 32px ${colors.grey[900]}60`
-                          : `0 8px 32px ${colors.primary[700]}40`,
-                      transition: "all 0.3s ease",
-                      "&:hover": {
-                        transform: "translateY(-8px)",
-                        boxShadow:
-                          theme.palette.mode === "dark"
-                            ? `0 12px 48px ${colors.grey[900]}80`
-                            : `0 12px 48px ${colors.primary[700]}60`,
-                      },
-                      "&::before": {
-                        content: '""',
+                  <Box sx={{ position: "relative" }}>
+                    <BankCard
+                      account={account}
+                      userName={user?.username || "Guest"}
+                      showBalance={true}
+                    />
+                    <Box
+                      sx={{
                         position: "absolute",
-                        top: -100,
-                        right: -100,
-                        width: 200,
-                        height: 200,
-                        background:
-                          theme.palette.mode === "dark"
-                            ? "rgba(255, 255, 255, 0.05)"
-                            : "rgba(255, 255, 255, 0.2)",
-                        borderRadius: "50%",
-                      },
-                    }}
-                  >
-                    {/* Card Header */}
-                    <Box
-                      display="flex"
-                      justifyContent="space-between"
-                      alignItems="flex-start"
+                        top: 8,
+                        right: 8,
+                        display: "flex",
+                        gap: 0.5,
+                        zIndex: 20,
+                      }}
                     >
-                      <Box>
-                        <Typography
-                          variant="body2"
-                          sx={{ color: "rgba(255, 255, 255, 0.8)", mb: 0.5 }}
-                        >
-                          {account.type.toUpperCase()}
-                        </Typography>
-                        <Typography variant="h6" color="white" fontWeight="600">
-                          {account.name}
-                        </Typography>
-                        {account.officialName && (
-                          <Typography
-                            variant="caption"
-                            sx={{ color: "rgba(255, 255, 255, 0.7)" }}
-                          >
-                            {account.officialName}
-                          </Typography>
-                        )}
-                      </Box>
-                      <Box sx={{ display: "flex", gap: 0.5 }}>
-                        <IconButton
-                          size="small"
-                          onClick={() => handleOpenDialog(account)}
-                          sx={{
-                            color: "white",
-                            backgroundColor: "rgba(255, 255, 255, 0.1)",
-                            "&:hover": {
-                              backgroundColor: "rgba(255, 255, 255, 0.2)",
-                            },
-                          }}
-                        >
-                          <Edit fontSize="small" />
-                        </IconButton>
-                        <IconButton
-                          size="small"
-                          onClick={() => handleDelete(account.id, account.name)}
-                          sx={{
-                            color: "white",
-                            backgroundColor: "rgba(255, 255, 255, 0.1)",
-                            "&:hover": {
-                              backgroundColor: "rgba(255, 255, 255, 0.2)",
-                            },
-                          }}
-                        >
-                          <Delete fontSize="small" />
-                        </IconButton>
-                      </Box>
-                    </Box>
-                    {/* Card Middle - Balance */}
-                    <Box>
-                      <Typography
-                        variant="body2"
-                        sx={{ color: "rgba(255, 255, 255, 0.8)", mb: 1 }}
+                      <IconButton
+                        size="small"
+                        onClick={() => handleOpenDialog(account)}
+                        sx={{
+                          color: "white",
+                          backgroundColor: "rgba(0, 0, 0, 0.3)",
+                          backdropFilter: "blur(4px)",
+                          "&:hover": {
+                            backgroundColor: "rgba(0, 0, 0, 0.5)",
+                          },
+                        }}
                       >
-                        Current Balance
-                      </Typography>
-                      <Typography
-                        variant="h4"
-                        fontWeight="bold"
-                        color="white"
-                        sx={{ fontSize: "2rem", letterSpacing: "0.5px" }}
+                        <Edit fontSize="small" />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={() => handleDelete(account.id, account.name)}
+                        sx={{
+                          color: "white",
+                          backgroundColor: "rgba(0, 0, 0, 0.3)",
+                          backdropFilter: "blur(4px)",
+                          "&:hover": {
+                            backgroundColor: "rgba(0, 0, 0, 0.5)",
+                          },
+                        }}
                       >
-                        {account.currentBalance.toFixed(2)} TND
-                      </Typography>
+                        <Delete fontSize="small" />
+                      </IconButton>
                     </Box>
-                    {/* Card Footer */}
                     <Box
-                      display="flex"
-                      justifyContent="space-between"
-                      alignItems="center"
+                      sx={{
+                        mt: 2,
+                        display: "flex",
+                        justifyContent: "flex-end",
+                      }}
                     >
-                      <Box>
-                        {account.mask && (
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              color: "rgba(255, 255, 255, 0.9)",
-                              letterSpacing: "2px",
-                            }}
-                          >
-                            •••• {account.mask}
-                          </Typography>
-                        )}
-                        <Typography
-                          variant="caption"
-                          sx={{ color: "rgba(255, 255, 255, 0.7)" }}
-                        >
-                          {account.transactionCount} transactions
-                        </Typography>
-                      </Box>
                       <Button
                         size="small"
                         onClick={() => handleToggleAccount(account.id, false)}
                         sx={{
-                          color: "white",
-                          borderColor: "rgba(255, 255, 255, 0.3)",
+                          color: colors.grey[700],
+                          borderColor: colors.grey[400],
                           "&:hover": {
-                            borderColor: "rgba(255, 255, 255, 0.5)",
-                            backgroundColor: "rgba(255, 255, 255, 0.1)",
+                            borderColor: colors.grey[600],
+                            backgroundColor: colors.grey[100],
                           },
                         }}
                         variant="outlined"
@@ -1043,244 +958,463 @@ const AccountsPage = () => {
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
-        maxWidth="sm"
+        maxWidth="md"
         fullWidth
         PaperProps={{
           sx: {
             background:
-              theme.palette.mode === "dark"
-                ? `linear-gradient(135deg, ${colors.grey[800]} 0%, ${colors.grey[700]} 100%)`
-                : `linear-gradient(135deg, #ffffff 0%, ${colors.grey[100]} 100%)`,
-            borderRadius: "20px",
-            border: `1px solid ${
-              theme.palette.mode === "dark"
-                ? colors.grey[700]
-                : colors.grey[300]
-            }`,
+              theme.palette.mode === "dark" ? colors.grey[900] : "#ffffff",
+            borderRadius: "24px",
+            overflow: "hidden",
             boxShadow:
               theme.palette.mode === "dark"
-                ? `0 24px 64px ${colors.grey[900]}40`
-                : `0 24px 64px ${colors.grey[400]}40`,
+                ? "0 24px 64px rgba(0,0,0,0.6)"
+                : "0 24px 64px rgba(0,0,0,0.15)",
           },
         }}
       >
-        <DialogTitle
+        {/* Header with Gradient Background */}
+        <Box
           sx={{
-            color:
-              theme.palette.mode === "dark"
-                ? colors.grey[100]
-                : colors.grey[900],
-            fontWeight: "bold",
-            fontSize: "1.5rem",
-            textAlign: "center",
-            pb: 1,
+            background: `linear-gradient(135deg, ${colors.primary[500]} 0%, ${colors.primary[700]} 100%)`,
+            p: 4,
+            position: "relative",
+            overflow: "hidden",
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              top: 0,
+              right: 0,
+              width: "300px",
+              height: "300px",
+              background:
+                "radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)",
+              borderRadius: "50%",
+              transform: "translate(30%, -30%)",
+            },
           }}
         >
-          {editingAccount ? "Edit Account" : "Add New Account"}
-        </DialogTitle>
-        <DialogContent sx={{ pt: 1 }}>
+          <Box sx={{ position: "relative", zIndex: 1 }}>
+            <Box display="flex" alignItems="center" gap={2} mb={1}>
+              <Box
+                sx={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: "16px",
+                  background: "rgba(255,255,255,0.2)",
+                  backdropFilter: "blur(10px)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <AttachMoney sx={{ fontSize: 32, color: "white" }} />
+              </Box>
+              <Box>
+                <Typography
+                  variant="h4"
+                  fontWeight="700"
+                  color="white"
+                  sx={{ mb: 0.5 }}
+                >
+                  {editingAccount ? "Edit Account" : "Add New Account"}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ color: "rgba(255,255,255,0.9)" }}
+                >
+                  {editingAccount
+                    ? "Update your account information"
+                    : "Fill in the details to create a new account"}
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+
+        <DialogContent sx={{ p: 4 }}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-            <TextField
-              label="Account Name"
-              fullWidth
-              required
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-              helperText="e.g., BNA Checking, STB Savings"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Person sx={{ color: colors.primary[500] }} />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "12px",
-                },
-              }}
-            />
+            {/* Account Type Selection - Card Style */}
+            <Box>
+              <Typography
+                variant="subtitle2"
+                fontWeight="600"
+                mb={1.5}
+                color={
+                  theme.palette.mode === "dark"
+                    ? colors.grey[300]
+                    : colors.grey[700]
+                }
+              >
+                Account Type *
+              </Typography>
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+                  gap: 2,
+                }}
+              >
+                {accountTypes.map((type) => (
+                  <Box
+                    key={type.value}
+                    onClick={() => {
+                      if (!editingAccount) {
+                        const newType = type.value as keyof typeof subtypes;
+                        setFormData({
+                          ...formData,
+                          type: newType,
+                          subtype: subtypes[newType][0],
+                        });
+                      }
+                    }}
+                    sx={{
+                      p: 2,
+                      borderRadius: "16px",
+                      border: `2px solid ${
+                        formData.type === type.value
+                          ? colors.primary[500]
+                          : theme.palette.mode === "dark"
+                          ? colors.grey[700]
+                          : colors.grey[300]
+                      }`,
+                      background:
+                        formData.type === type.value
+                          ? theme.palette.mode === "dark"
+                            ? `linear-gradient(135deg, ${colors.primary[900]}40, ${colors.primary[800]}40)`
+                            : `linear-gradient(135deg, ${colors.primary[50]}, ${colors.primary[100]})`
+                          : theme.palette.mode === "dark"
+                          ? colors.grey[800]
+                          : colors.grey[50],
+                      cursor: editingAccount ? "not-allowed" : "pointer",
+                      opacity: editingAccount ? 0.5 : 1,
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        transform: editingAccount ? "none" : "translateY(-2px)",
+                        borderColor: editingAccount
+                          ? undefined
+                          : colors.primary[400],
+                        boxShadow: editingAccount
+                          ? undefined
+                          : `0 4px 12px ${colors.primary[500]}20`,
+                      },
+                    }}
+                  >
+                    <Typography
+                      variant="body2"
+                      fontWeight="600"
+                      textAlign="center"
+                      color={
+                        formData.type === type.value
+                          ? colors.primary[500]
+                          : theme.palette.mode === "dark"
+                          ? colors.grey[300]
+                          : colors.grey[700]
+                      }
+                    >
+                      {type.label.split(" ")[0]}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
 
-            <TextField
-              label="Official Name"
-              fullWidth
-              value={formData.officialName}
-              onChange={(e) =>
-                setFormData({ ...formData, officialName: e.target.value })
-              }
-              helperText="Full bank name (optional)"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Business sx={{ color: colors.primary[500] }} />
-                  </InputAdornment>
-                ),
-              }}
+            {/* Two Column Layout for Main Fields */}
+            <Box
               sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "12px",
-                },
-              }}
-            />
-
-            <TextField
-              select
-              label="Account Type"
-              fullWidth
-              required
-              value={formData.type}
-              onChange={(e) => {
-                const newType = e.target.value as keyof typeof subtypes;
-                setFormData({
-                  ...formData,
-                  type: newType,
-                  subtype: subtypes[newType][0],
-                });
-              }}
-              disabled={!!editingAccount}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Category sx={{ color: colors.primary[500] }} />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "12px",
-                },
+                display: "grid",
+                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                gap: 3,
               }}
             >
-              {accountTypes.map((type) => (
-                <MenuItem key={type.value} value={type.value}>
-                  {type.label}
-                </MenuItem>
-              ))}
-            </TextField>
-
-            <TextField
-              select
-              label="Subtype"
-              fullWidth
-              value={formData.subtype}
-              onChange={(e) =>
-                setFormData({ ...formData, subtype: e.target.value })
-              }
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SubdirectoryArrowRight
-                      sx={{ color: colors.primary[500] }}
-                    />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "12px",
-                },
-              }}
-            >
-              {subtypes[formData.type as keyof typeof subtypes].map(
-                (subtype) => (
-                  <MenuItem key={subtype} value={subtype}>
-                    {subtype.charAt(0).toUpperCase() + subtype.slice(1)}
-                  </MenuItem>
-                )
-              )}
-            </TextField>
-
-            {!editingAccount && (
               <TextField
-                label="Initial Balance"
-                type="number"
+                label="Account Name"
                 fullWidth
                 required
-                value={formData.initialBalance}
+                value={formData.name}
                 onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    initialBalance: parseFloat(e.target.value) || 0,
-                  })
+                  setFormData({ ...formData, name: e.target.value })
                 }
-                helperText="Starting balance in TND"
+                placeholder="My Checking Account"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <AttachMoney sx={{ color: colors.primary[500] }} />
+                      <Person sx={{ color: colors.primary[500] }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "12px",
+                    background:
+                      theme.palette.mode === "dark"
+                        ? colors.grey[800]
+                        : colors.grey[50],
+                    "& fieldset": {
+                      borderColor:
+                        theme.palette.mode === "dark"
+                          ? colors.grey[700]
+                          : colors.grey[300],
+                    },
                   },
                 }}
               />
-            )}
 
-            <TextField
-              label="Last 4 Digits"
-              fullWidth
-              value={formData.mask}
-              onChange={(e) =>
-                setFormData({ ...formData, mask: e.target.value })
-              }
-              inputProps={{ maxLength: 4 }}
-              helperText="Last 4 digits of account number (optional)"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <CreditCard sx={{ color: colors.primary[500] }} />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "12px",
-                },
-              }}
-            />
+              <TextField
+                label="Official Name"
+                fullWidth
+                value={formData.officialName}
+                onChange={(e) =>
+                  setFormData({ ...formData, officialName: e.target.value })
+                }
+                placeholder="Banque Nationale Agricole"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Business sx={{ color: colors.primary[500] }} />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "12px",
+                    background:
+                      theme.palette.mode === "dark"
+                        ? colors.grey[800]
+                        : colors.grey[50],
+                    "& fieldset": {
+                      borderColor:
+                        theme.palette.mode === "dark"
+                          ? colors.grey[700]
+                          : colors.grey[300],
+                    },
+                  },
+                }}
+              />
+            </Box>
 
-            <TextField
-              label="Institution ID"
-              fullWidth
-              value={formData.institutionId}
-              onChange={(e) =>
-                setFormData({ ...formData, institutionId: e.target.value })
-              }
-              helperText="e.g., bna_001, stb_001 (optional)"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Apartment sx={{ color: colors.primary[500] }} />
-                  </InputAdornment>
-                ),
-              }}
+            {/* Subtype and Institution */}
+            <Box
               sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "12px",
-                },
+                display: "grid",
+                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                gap: 3,
               }}
-            />
+            >
+              <TextField
+                select
+                label="Subtype"
+                fullWidth
+                value={formData.subtype}
+                onChange={(e) =>
+                  setFormData({ ...formData, subtype: e.target.value })
+                }
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SubdirectoryArrowRight
+                        sx={{ color: colors.primary[500] }}
+                      />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "12px",
+                    background:
+                      theme.palette.mode === "dark"
+                        ? colors.grey[800]
+                        : colors.grey[50],
+                    "& fieldset": {
+                      borderColor:
+                        theme.palette.mode === "dark"
+                          ? colors.grey[700]
+                          : colors.grey[300],
+                    },
+                  },
+                }}
+              >
+                {subtypes[formData.type as keyof typeof subtypes].map(
+                  (subtype) => (
+                    <MenuItem key={subtype} value={subtype}>
+                      {subtype.charAt(0).toUpperCase() + subtype.slice(1)}
+                    </MenuItem>
+                  )
+                )}
+              </TextField>
+
+              <TextField
+                label="Institution ID"
+                fullWidth
+                value={formData.institutionId}
+                onChange={(e) =>
+                  setFormData({ ...formData, institutionId: e.target.value })
+                }
+                placeholder="bna_001"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Apartment sx={{ color: colors.primary[500] }} />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "12px",
+                    background:
+                      theme.palette.mode === "dark"
+                        ? colors.grey[800]
+                        : colors.grey[50],
+                    "& fieldset": {
+                      borderColor:
+                        theme.palette.mode === "dark"
+                          ? colors.grey[700]
+                          : colors.grey[300],
+                    },
+                  },
+                }}
+              />
+            </Box>
+
+            {/* Balance and Last 4 Digits */}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                gap: 3,
+              }}
+            >
+              {!editingAccount && (
+                <TextField
+                  label="Initial Balance"
+                  type="number"
+                  fullWidth
+                  required
+                  value={
+                    formData.initialBalance === 0 ? "" : formData.initialBalance
+                  }
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      initialBalance:
+                        e.target.value === "" ? 0 : parseFloat(e.target.value),
+                    })
+                  }
+                  placeholder="0.00"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AttachMoney sx={{ color: colors.primary[500] }} />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Typography
+                          variant="body2"
+                          color={colors.grey[500]}
+                          fontWeight="600"
+                        >
+                          TND
+                        </Typography>
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "12px",
+                      background:
+                        theme.palette.mode === "dark"
+                          ? colors.grey[800]
+                          : colors.grey[50],
+                      "& fieldset": {
+                        borderColor:
+                          theme.palette.mode === "dark"
+                            ? colors.grey[700]
+                            : colors.grey[300],
+                      },
+                    },
+                  }}
+                />
+              )}
+
+              <TextField
+                label="Last 4 Digits"
+                fullWidth
+                value={formData.mask}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, "");
+                  setFormData({ ...formData, mask: value });
+                }}
+                placeholder="1234"
+                inputProps={{ maxLength: 4 }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <CreditCard sx={{ color: colors.primary[500] }} />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "12px",
+                    background:
+                      theme.palette.mode === "dark"
+                        ? colors.grey[800]
+                        : colors.grey[50],
+                    "& fieldset": {
+                      borderColor:
+                        theme.palette.mode === "dark"
+                          ? colors.grey[700]
+                          : colors.grey[300],
+                    },
+                  },
+                }}
+              />
+            </Box>
           </Box>
         </DialogContent>
-        <DialogActions sx={{ p: 3, justifyContent: "center", gap: 2 }}>
+
+        {/* Footer Actions */}
+        <Box
+          sx={{
+            p: 3,
+            background:
+              theme.palette.mode === "dark"
+                ? colors.grey[800]
+                : colors.grey[50],
+            borderTop: `1px solid ${
+              theme.palette.mode === "dark"
+                ? colors.grey[700]
+                : colors.grey[200]
+            }`,
+            display: "flex",
+            gap: 2,
+            justifyContent: "flex-end",
+          }}
+        >
           <Button
             onClick={handleCloseDialog}
             variant="outlined"
+            size="large"
             sx={{
               borderRadius: "12px",
               px: 4,
-              py: 1.2,
-              fontWeight: "bold",
-              borderColor: colors.primary[500],
-              color: colors.primary[500],
+              py: 1.5,
+              fontWeight: "600",
+              borderColor:
+                theme.palette.mode === "dark"
+                  ? colors.grey[600]
+                  : colors.grey[400],
+              color:
+                theme.palette.mode === "dark"
+                  ? colors.grey[300]
+                  : colors.grey[700],
               "&:hover": {
-                borderColor: colors.primary[700],
-                color: colors.primary[700],
+                borderColor: colors.grey[500],
+                background:
+                  theme.palette.mode === "dark"
+                    ? colors.grey[700]
+                    : colors.grey[200],
               },
             }}
           >
@@ -1288,27 +1422,31 @@ const AccountsPage = () => {
           </Button>
           <Button
             variant="contained"
+            size="large"
             onClick={handleSubmit}
             disabled={!formData.name || !formData.type}
             sx={{
-              background: `linear-gradient(135deg, ${colors.primary[500]}, ${colors.primary[600]})`,
+              background: `linear-gradient(135deg, ${colors.primary[500]}, ${colors.primary[700]})`,
               borderRadius: "12px",
               px: 4,
-              py: 1.2,
-              fontWeight: "bold",
-              boxShadow: `0 4px 12px ${colors.primary[500]}30`,
+              py: 1.5,
+              fontWeight: "600",
+              boxShadow: `0 4px 16px ${colors.primary[500]}40`,
               "&:hover": {
-                background: `linear-gradient(135deg, ${colors.primary[600]}, ${colors.primary[700]})`,
-                boxShadow: `0 6px 16px ${colors.primary[500]}40`,
+                background: `linear-gradient(135deg, ${colors.primary[600]}, ${colors.primary[800]})`,
+                boxShadow: `0 6px 20px ${colors.primary[500]}50`,
+                transform: "translateY(-2px)",
               },
               "&:disabled": {
-                background: `linear-gradient(135deg, ${colors.grey[500]}, ${colors.grey[600]})`,
+                background: colors.grey[500],
+                color: colors.grey[300],
+                boxShadow: "none",
               },
             }}
           >
-            {editingAccount ? "Update" : "Create"}
+            {editingAccount ? "Update Account" : "Create Account"}
           </Button>
-        </DialogActions>
+        </Box>
       </Dialog>
 
       {/* Snackbar for notifications */}

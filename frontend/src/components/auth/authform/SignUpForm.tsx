@@ -7,6 +7,7 @@ import {
   IconButton,
   alpha,
   useTheme,
+  Divider,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -47,52 +48,76 @@ const SignUpForm = ({
 
   return (
     <Paper
-      elevation={24}
+      elevation={0}
       sx={{
-        maxWidth: 480,
+        maxWidth: 450,
         width: "100%",
-        mx: 2,
-        p: 5,
-        borderRadius: 4,
-        background: "rgba(255, 255, 255, 0.95)",
-        backdropFilter: "blur(20px)",
+        mx: { xs: 1, sm: 2 },
+        p: { xs: 3, sm: 4 },
+        borderRadius: { xs: 3, sm: 4 },
+        background: "#FFFFFF",
+        border: "1px solid",
+        borderColor: "rgba(0, 0, 0, 0.06)",
         position: "relative",
         zIndex: 1,
-        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
+        boxShadow:
+          "0 25px 70px rgba(0, 0, 0, 0.12), 0 10px 30px rgba(0, 0, 0, 0.08)",
       }}
     >
       {/* Logo & Title */}
-      <Box sx={{ textAlign: "center", mb: 4 }}>
+      <Box sx={{ textAlign: "center", mb: { xs: 2.5, sm: 3 } }}>
         <Box
           sx={{
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
-            width: 80,
-            height: 80,
-            borderRadius: "20px",
-            background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-            mb: 2,
-            boxShadow: `0 8px 24px ${alpha(theme.palette.primary.main, 0.4)}`,
+            width: { xs: 64, sm: 80 },
+            height: { xs: 64, sm: 80 },
+            borderRadius: "22px",
+            background: "linear-gradient(135deg, #FDB751 0%, #F59E0B 100%)",
+            mb: { xs: 1.5, sm: 2 },
+            boxShadow: "0 12px 35px rgba(253, 183, 81, 0.4)",
+            position: "relative",
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              inset: 0,
+              borderRadius: "22px",
+              padding: "2px",
+              background:
+                "linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.1))",
+              WebkitMask:
+                "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+              WebkitMaskComposite: "xor",
+              maskComposite: "exclude",
+            },
           }}
         >
-          <TrendingUp sx={{ fontSize: 48, color: "white" }} />
+          <TrendingUp
+            sx={{
+              fontSize: { xs: 36, sm: 42 },
+              color: "white",
+              filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))",
+            }}
+          />
         </Box>
         <Typography
           variant="h4"
-          fontWeight="800"
+          fontWeight="700"
           sx={{
-            background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-            backgroundClip: "text",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            mb: 1,
+            color: theme.palette.text.primary,
+            mb: 0.5,
+            fontSize: { xs: "1.75rem", sm: "2rem" },
           }}
         >
           Create Account
         </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Join ExpansesTracker today
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ fontSize: "0.95rem" }}
+        >
+          Join ExpensesTracker today
         </Typography>
       </Box>
 
@@ -105,162 +130,266 @@ const SignUpForm = ({
 
       {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-          <InputField
-            label="Username"
-            type="text"
-            fullWidth
-            error={!!errors.username}
-            helperText={errors.username?.message}
-            {...register("username")}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <AccountCircle sx={{ color: theme.palette.primary.main }} />
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 2,
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  boxShadow: `0 0 0 2px ${alpha(
-                    theme.palette.primary.main,
-                    0.1
-                  )}`,
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: { xs: 1.5, sm: 2 },
+          }}
+        >
+          <Box>
+            <Typography
+              variant="body2"
+              fontWeight="600"
+              sx={{ mb: 0.5, color: theme.palette.text.primary }}
+            >
+              Username
+            </Typography>
+            <InputField
+              label=""
+              type="text"
+              fullWidth
+              placeholder="Enter your username"
+              error={!!errors.username}
+              helperText={errors.username?.message}
+              {...register("username")}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AccountCircle
+                      sx={{
+                        color: alpha(theme.palette.text.primary, 0.5),
+                        fontSize: 20,
+                      }}
+                    />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 2,
+                  backgroundColor: alpha(theme.palette.primary.main, 0.02),
+                  transition: "all 0.2s ease",
+                  "& fieldset": {
+                    borderColor: alpha(theme.palette.primary.main, 0.15),
+                  },
+                  "&:hover fieldset": {
+                    borderColor: alpha(theme.palette.primary.main, 0.3),
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: theme.palette.primary.main,
+                    borderWidth: "2px",
+                  },
                 },
-                "&.Mui-focused": {
-                  boxShadow: `0 0 0 2px ${alpha(
-                    theme.palette.primary.main,
-                    0.2
-                  )}`,
+                "& .MuiOutlinedInput-input": {
+                  py: 1.5,
                 },
-              },
-            }}
-          />
+              }}
+            />
+          </Box>
 
-          <InputField
-            label="Email Address"
-            type="email"
-            fullWidth
-            error={!!errors.email}
-            helperText={errors.email?.message}
-            {...register("email")}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Email sx={{ color: theme.palette.primary.main }} />
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 2,
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  boxShadow: `0 0 0 2px ${alpha(
-                    theme.palette.primary.main,
-                    0.1
-                  )}`,
+          <Box>
+            <Typography
+              variant="body2"
+              fontWeight="600"
+              sx={{ mb: 1, color: theme.palette.text.primary }}
+            >
+              Email Address
+            </Typography>
+            <InputField
+              label=""
+              type="email"
+              fullWidth
+              placeholder="Enter your email"
+              error={!!errors.email}
+              helperText={errors.email?.message}
+              {...register("email")}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Email
+                      sx={{
+                        color: alpha(theme.palette.text.primary, 0.5),
+                        fontSize: 20,
+                      }}
+                    />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 2,
+                  backgroundColor: alpha(theme.palette.primary.main, 0.02),
+                  transition: "all 0.2s ease",
+                  "& fieldset": {
+                    borderColor: alpha(theme.palette.primary.main, 0.15),
+                  },
+                  "&:hover fieldset": {
+                    borderColor: alpha(theme.palette.primary.main, 0.3),
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: theme.palette.primary.main,
+                    borderWidth: "2px",
+                  },
                 },
-                "&.Mui-focused": {
-                  boxShadow: `0 0 0 2px ${alpha(
-                    theme.palette.primary.main,
-                    0.2
-                  )}`,
+                "& .MuiOutlinedInput-input": {
+                  py: 1.5,
                 },
-              },
-            }}
-          />
+              }}
+            />
+          </Box>
 
-          <InputField
-            label="Password"
-            type={showPassword ? "text" : "password"}
-            fullWidth
-            error={!!errors.password}
-            helperText={errors.password?.message}
-            {...register("password")}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Lock sx={{ color: theme.palette.primary.main }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 2,
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  boxShadow: `0 0 0 2px ${alpha(
-                    theme.palette.primary.main,
-                    0.1
-                  )}`,
+          <Box>
+            <Typography
+              variant="body2"
+              fontWeight="600"
+              sx={{ mb: 1, color: theme.palette.text.primary }}
+            >
+              Password
+            </Typography>
+            <InputField
+              label=""
+              type={showPassword ? "text" : "password"}
+              fullWidth
+              placeholder="Enter your password"
+              error={!!errors.password}
+              helperText={errors.password?.message}
+              {...register("password")}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock
+                      sx={{
+                        color: alpha(theme.palette.text.primary, 0.5),
+                        fontSize: 20,
+                      }}
+                    />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                      size="small"
+                      sx={{
+                        color: alpha(theme.palette.text.primary, 0.6),
+                        "&:hover": {
+                          backgroundColor: alpha(
+                            theme.palette.primary.main,
+                            0.08
+                          ),
+                        },
+                      }}
+                    >
+                      {showPassword ? (
+                        <VisibilityOff fontSize="small" />
+                      ) : (
+                        <Visibility fontSize="small" />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 2,
+                  backgroundColor: alpha(theme.palette.primary.main, 0.02),
+                  transition: "all 0.2s ease",
+                  "& fieldset": {
+                    borderColor: alpha(theme.palette.primary.main, 0.15),
+                  },
+                  "&:hover fieldset": {
+                    borderColor: alpha(theme.palette.primary.main, 0.3),
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: theme.palette.primary.main,
+                    borderWidth: "2px",
+                  },
                 },
-                "&.Mui-focused": {
-                  boxShadow: `0 0 0 2px ${alpha(
-                    theme.palette.primary.main,
-                    0.2
-                  )}`,
+                "& .MuiOutlinedInput-input": {
+                  py: 1.5,
                 },
-              },
-            }}
-          />
+              }}
+            />
+          </Box>
 
-          <InputField
-            label="Confirm Password"
-            type={showConfirmPassword ? "text" : "password"}
-            fullWidth
-            error={!!errors.confirmPassword}
-            helperText={errors.confirmPassword?.message}
-            {...register("confirmPassword")}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Lock sx={{ color: theme.palette.primary.main }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    edge="end"
-                  >
-                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 2,
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  boxShadow: `0 0 0 2px ${alpha(
-                    theme.palette.primary.main,
-                    0.1
-                  )}`,
+          <Box>
+            <Typography
+              variant="body2"
+              fontWeight="600"
+              sx={{ mb: 1, color: theme.palette.text.primary }}
+            >
+              Confirm Password
+            </Typography>
+            <InputField
+              label=""
+              type={showConfirmPassword ? "text" : "password"}
+              fullWidth
+              placeholder="Confirm your password"
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword?.message}
+              {...register("confirmPassword")}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock
+                      sx={{
+                        color: alpha(theme.palette.text.primary, 0.5),
+                        fontSize: 20,
+                      }}
+                    />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                      edge="end"
+                      size="small"
+                      sx={{
+                        color: alpha(theme.palette.text.primary, 0.6),
+                        "&:hover": {
+                          backgroundColor: alpha(
+                            theme.palette.primary.main,
+                            0.08
+                          ),
+                        },
+                      }}
+                    >
+                      {showConfirmPassword ? (
+                        <VisibilityOff fontSize="small" />
+                      ) : (
+                        <Visibility fontSize="small" />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 2,
+                  backgroundColor: alpha(theme.palette.primary.main, 0.02),
+                  transition: "all 0.2s ease",
+                  "& fieldset": {
+                    borderColor: alpha(theme.palette.primary.main, 0.15),
+                  },
+                  "&:hover fieldset": {
+                    borderColor: alpha(theme.palette.primary.main, 0.3),
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: theme.palette.primary.main,
+                    borderWidth: "2px",
+                  },
                 },
-                "&.Mui-focused": {
-                  boxShadow: `0 0 0 2px ${alpha(
-                    theme.palette.primary.main,
-                    0.2
-                  )}`,
+                "& .MuiOutlinedInput-input": {
+                  py: 1.5,
                 },
-              },
-            }}
-          />
+              }}
+            />
+          </Box>
 
           <ReButton
             loading={isLoading}
@@ -270,26 +399,50 @@ const SignUpForm = ({
             variant="contained"
             size="large"
             sx={{
-              py: 1.5,
-              borderRadius: 2,
-              fontWeight: 600,
-              fontSize: "1rem",
+              py: 1.75,
+              mt: 1,
+              borderRadius: 2.5,
+              fontWeight: 700,
+              fontSize: "1.05rem",
               textTransform: "none",
-              background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-              boxShadow: `0 4px 16px ${alpha(theme.palette.primary.main, 0.4)}`,
-              transition: "all 0.3s ease",
+              background: "linear-gradient(135deg, #FDB751 0%, #F59E0B 100%)",
+              boxShadow: "0 10px 25px rgba(253, 183, 81, 0.4)",
+              transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+              position: "relative",
+              overflow: "hidden",
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                top: 0,
+                left: "-100%",
+                width: "100%",
+                height: "100%",
+                background:
+                  "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)",
+                transition: "left 0.5s",
+              },
               "&:hover": {
-                boxShadow: `0 6px 24px ${alpha(
-                  theme.palette.primary.main,
-                  0.5
-                )}`,
-                transform: "translateY(-2px)",
+                boxShadow: "0 14px 35px rgba(253, 183, 81, 0.5)",
+                transform: "translateY(-3px)",
+                "&::before": {
+                  left: "100%",
+                },
+              },
+              "&:active": {
+                transform: "translateY(-1px)",
               },
             }}
           />
 
+          {/* Divider */}
+          <Divider sx={{ my: 0.5 }}>
+            <Typography variant="caption" color="text.secondary">
+              OR
+            </Typography>
+          </Divider>
+
           {/* Sign In Link */}
-          <Box sx={{ textAlign: "center", mt: 2 }}>
+          <Box sx={{ textAlign: "center" }}>
             <Typography variant="body2" color="text.secondary">
               Already have an account?{" "}
               <Link
@@ -298,7 +451,10 @@ const SignUpForm = ({
                   color: theme.palette.primary.main,
                   textDecoration: "none",
                   fontWeight: 600,
+                  transition: "opacity 0.2s",
                 }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.8")}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
               >
                 Sign In
               </Link>

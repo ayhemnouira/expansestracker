@@ -1,5 +1,4 @@
 import { Box, Grid, CircularProgress, Alert } from "@mui/material";
-import { useAuth } from "../context/AuthContext";
 import { useState, useEffect } from "react";
 import { getUserAccounts, getAccountSummary } from "../api/accountService";
 import { getUserTransactions } from "../api/transactionService";
@@ -10,6 +9,7 @@ import MonthlyExpensesChart from "../components/MonthlyExpensesChart";
 import RightSidebar from "../global/sidebar/myRightSidebar";
 import RecentTransactions from "../components/RecentTransactions";
 import TransactionOverviewChart from "../components/TransactionOverviewChart";
+import { useAuth } from "../context/use-auth";
 
 const Dashboard = () => {
   const { user } = useAuth();

@@ -33,9 +33,10 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { ColorModeContext } from "../theme/theme";
-import { useAuth } from "../context/AuthContext";
+
 import type { BudgetAlert } from "../types/budget";
 import alertService from "../api/alertService";
+import { useAuth } from "../context/use-auth";
 
 interface TopbarProps {
   onMenuClick?: () => void;

@@ -27,9 +27,10 @@ import {
   Brightness7,
 } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+
 import { ColorModeContext } from "../../theme/theme";
 import { useContext } from "react";
+import { useAuth } from "../../context/use-auth";
 
 const DRAWER_WIDTH = 280;
 const DRAWER_WIDTH_COLLAPSED = 70;
