@@ -50,8 +50,9 @@ public class BudgetAlertServiceImpl implements BudgetAlertService {
     public List<BudgetAlertDTO> getUnreadAlerts(Long userId) {
         log.debug("Fetching unread alerts for user {}", userId);
 
+        // 🔥 CHANGED: Use optimized method
         return alertRepository
-                .findByUserIdAndIsReadFalseOrderByCreatedAtDesc(userId)
+                .findUnreadAlertsWithBudget(userId)
                 .stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
@@ -62,8 +63,9 @@ public class BudgetAlertServiceImpl implements BudgetAlertService {
     public List<BudgetAlertDTO> getAllAlerts(Long userId, int limit) {
         log.debug("Fetching all alerts for user {} with limit {}", userId, limit);
 
+        // 🔥 CHANGED: Use optimized method
         return alertRepository
-                .findByUserIdOrderByCreatedAtDesc(userId)
+                .findAllAlertsWithBudget(userId)
                 .stream()
                 .limit(limit)
                 .map(this::toDTO)

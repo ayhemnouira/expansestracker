@@ -40,10 +40,12 @@ public class Transaction {
     @Column(nullable = false)
     private TransactionType type;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    // 🔥 CRITICAL FIX: Changed to EAGER to prevent N+1
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
+    // ✅ Keep LAZY - not used in list views
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -51,23 +53,22 @@ public class Transaction {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true)
+    // 🔥 CRITICAL FIX: Changed to EAGER to prevent N+1 for document count
+    @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Builder.Default
     private List<Document> documents = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        // ✅ Automatically lowercase category before saving
         normalizeCategory();
     }
 
-    // ✅ Also normalize on update
     @PreUpdate
     protected void onUpdate() {
         normalizeCategory();
     }
 
-    // ✅ Helper method to normalize category
     private void normalizeCategory() {
         if (this.category != null) {
             this.category = this.category.toLowerCase().trim();

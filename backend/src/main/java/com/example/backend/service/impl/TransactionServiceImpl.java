@@ -38,7 +38,8 @@ public class TransactionServiceImpl implements TransactionService {
     public List<TransactionResponseDto> getUserTransactions(Long userId) {
         log.info("Fetching all transactions for user: {}", userId);
 
-        return transactionRepository.findByUserIdOrderByDateDesc(userId)
+        // 🔥 CHANGED: Use optimized method
+        return transactionRepository.findByUserIdWithDetailsOrderByDateDesc(userId)
                 .stream()
                 .map(this::convertToResponseDto)
                 .collect(Collectors.toList());
@@ -49,7 +50,6 @@ public class TransactionServiceImpl implements TransactionService {
     public List<TransactionResponseDto> getTransactionsByMonth(Long userId, int year, int month) {
         log.info("Fetching transactions for user: {} - {}/{}", userId, year, month);
 
-        // Validate month
         if (month < 1 || month > 12) {
             throw new IllegalArgumentException("Month must be between 1 and 12");
         }
@@ -57,8 +57,9 @@ public class TransactionServiceImpl implements TransactionService {
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.plusMonths(1).minusDays(1);
 
+        // 🔥 CHANGED: Use optimized method
         return transactionRepository
-                .findByUserIdAndDateBetweenOrderByDateDesc(userId, startDate, endDate)
+                .findByUserIdAndDateBetweenWithDetails(userId, startDate, endDate)
                 .stream()
                 .map(this::convertToResponseDto)
                 .collect(Collectors.toList());
@@ -229,7 +230,8 @@ public class TransactionServiceImpl implements TransactionService {
     public List<TransactionResponseDto> getTransactionsByCategory(Long userId, String category) {
         log.info("Fetching transactions for user: {} in category: {}", userId, category);
 
-        return transactionRepository.findByUserIdAndCategoryOrderByDateDesc(userId, category)
+        // 🔥 CHANGED: Use optimized method
+        return transactionRepository.findByUserIdAndCategoryWithDetails(userId, category)
                 .stream()
                 .map(this::convertToResponseDto)
                 .collect(Collectors.toList());

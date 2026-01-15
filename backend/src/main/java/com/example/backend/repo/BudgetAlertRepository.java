@@ -13,8 +13,23 @@ import java.util.List;
 @Repository
 public interface BudgetAlertRepository extends JpaRepository<BudgetAlert, Long> {
 
-    List<BudgetAlert> findByUserIdAndIsReadFalseOrderByCreatedAtDesc(Long userId);
+    // 🔥 NEW OPTIMIZED METHOD
+    @Query("SELECT a FROM BudgetAlert a " +
+            "LEFT JOIN FETCH a.budget " +
+            "WHERE a.user.id = :userId " +
+            "AND a.isRead = false " +
+            "ORDER BY a.createdAt DESC")
+    List<BudgetAlert> findUnreadAlertsWithBudget(@Param("userId") Long userId);
 
+    // 🔥 NEW OPTIMIZED METHOD
+    @Query("SELECT a FROM BudgetAlert a " +
+            "LEFT JOIN FETCH a.budget " +
+            "WHERE a.user.id = :userId " +
+            "ORDER BY a.createdAt DESC")
+    List<BudgetAlert> findAllAlertsWithBudget(@Param("userId") Long userId);
+
+    // Keep old methods for backward compatibility
+    List<BudgetAlert> findByUserIdAndIsReadFalseOrderByCreatedAtDesc(Long userId);
     List<BudgetAlert> findByUserIdOrderByCreatedAtDesc(Long userId);
 
     @Query("SELECT COUNT(a) FROM BudgetAlert a WHERE a.user.id = :userId AND a.isRead = false")

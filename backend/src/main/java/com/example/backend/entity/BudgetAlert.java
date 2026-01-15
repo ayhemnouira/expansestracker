@@ -22,16 +22,18 @@ public class BudgetAlert {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    // 🔥 CHANGED: EAGER to prevent N+1
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "budget_id", nullable = false)
     private Budget budget;
 
+    // ✅ Keep LAZY - not always needed
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Enumerated(EnumType.STRING)
-    private AlertType type; // THRESHOLD_REACHED, BUDGET_EXCEEDED
+    private AlertType type;
 
     private String message;
 
@@ -43,4 +45,3 @@ public class BudgetAlert {
     @CreationTimestamp
     private LocalDateTime createdAt;
 }
-
