@@ -23,6 +23,7 @@ jobs:
     
     - name: Build with Maven
       run: mvn clean package -DskipTests
+      working-directory: ./backend
     
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
