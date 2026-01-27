@@ -1,12 +1,14 @@
 package com.example.backend.service;
-import com.example.backend.dto.AuthResponseDto;
-import com.example.backend.dto.LoginRequestDto;
-import com.example.backend.dto.RegisterRequestDto;
-import com.example.backend.dto.UserDto;
-import org.springframework.stereotype.Service;
+
+import com.example.backend.dto.*;
 
 public interface AuthService {
-    AuthResponseDto login(LoginRequestDto loginRequestDto);
-    AuthResponseDto register(RegisterRequestDto registerRequestDto);
+    MessageResponseDto register(RegisterRequestDto request);
+    MessageResponseDto verifyEmail(VerifyEmailRequestDto request);
+    AuthResponseDto login(LoginRequestDto request);
     AuthResponseDto refreshToken(String refreshToken);
+    MessageResponseDto forgotPassword(ForgotPasswordRequestDto request);
+    MessageResponseDto resetPassword(ResetPasswordRequestDto request);
+    MessageResponseDto logout(String email);  // Changed from Long userId to String email
+    MessageResponseDto validateToken(String token);  // NEW METHOD
 }

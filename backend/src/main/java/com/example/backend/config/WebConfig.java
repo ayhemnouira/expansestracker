@@ -29,6 +29,7 @@ public class WebConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final UserDetailsService userDetailsService;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -36,31 +37,45 @@ public class WebConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
+                        // Health check
+                        .requestMatchers("/actuator/health", "/actuator/info", "/api/test/**").permitAll()
 
-                        .requestMatchers("/actuator/health", "/actuator/info","/api/test/**").permitAll()
-                        // Public endpoints (no JWT needed)
+                        // Public auth endpoints
                         .requestMatchers(
                                 "/api/auth/register",
+                                "/api/auth/verify-email",
                                 "/api/auth/login",
+                                "/api/auth/refresh-token",
+                                "/api/auth/forgot-password",
+                                "/api/auth/reset-password",
+                                "/api/auth/validate-token",
+                                "/api/auth/2fa/**",
                                 "/error"
                         ).permitAll()
 
-                        // Protected endpoints (JWT required)
+                        // Protected endpoints
                         .requestMatchers(
                                 "/api/accounts/**",
-                                "/api/transactions/**"
+                                "/api/transactions/**",
+                                "/api/budgets/**",
+                                "/api/auth/logout",
+                                "/api/documents/**",
+                                "/api/user/**"  // Add this line to protect user endpoints
                         ).authenticated()
 
-                        // All other requests need authentication
                         .anyRequest().authenticated()
                 )
-                // Stateless session (use JWT, not sessions)
+                // OAuth2 Login Configuration
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .successHandler(oAuth2LoginSuccessHandler)
+                        .failureUrl("/login?error=oauth_failed")
+                )
+                // Stateless session
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                // Add authentication provider
                 .authenticationProvider(authenticationProvider())
-                // Add JWT filter BEFORE Spring Security's authentication
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -69,7 +84,11 @@ public class WebConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173","https://expansestrackera.vercel.app/"));
+        config.setAllowedOrigins(List.of(
+                "http://localhost:5173",
+                "http://localhost:3000",
+                "https://expansestrackera.vercel.app"
+        ));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

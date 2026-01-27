@@ -1,0 +1,18 @@
+package com.example.backend.enums;
+
+// AuditEventType Enum
+
+
+public enum AuditEventType {
+    LOGIN_SUCCESS,
+    LOGIN_FAILED,
+    LOGOUT,
+    REGISTRATION,
+    EMAIL_VERIFICATION,
+    PASSWORD_RESET_REQUESTED,
+    PASSWORD_RESET_COMPLETED,
+    ACCOUNT_LOCKED,
+    ACCOUNT_UNLOCKED,
+    TOKEN_REFRESH,
+    SUSPICIOUS_ACTIVITY
+}

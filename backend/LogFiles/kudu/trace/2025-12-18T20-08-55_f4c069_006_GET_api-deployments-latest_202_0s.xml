@@ -1,0 +1,9 @@
+<step title="Incoming Request" date="2025-12-18T20:08:55.054" instance="f4c069" url="/api/deployments/latest?deployer=OneDeploy&amp;time=2025-12-18_20-08-48Z" method="GET" type="request" pid="770,1,26" Host="expense-tracker-api-dbbzh6dsc6fbhzaz.scm.francecentral-01.azurewebsites.net" User-Agent="GITHUBACTIONS_DeployWebAppToAzure_7456e5cb169f089a496d5e0941ef65191dbabb4d23b85b26e8a38aed7c058699" Authorization="Bea..." Content-Type="application/json; charset=utf-8" Cookie="ARRAffinity=f4c06971145d0d0ebcb7f3489285b28cbf186b279804820d07f9fea67c8e2cfe;Path=/;HttpOnly;Secure;Domain=expense-tracker-api-dbbzh6dsc6fbhzaz.scm.francecentral-01.azurewebsites.net; ARRAffinitySameSite=f4c06971145d0d0ebcb7f3489285b28cbf186b279804820d07f9fea67c8e2cfe;Path=/;HttpOnly;SameSite=None;Secure;Domain=expense-tracker-api-dbbzh6dsc6fbhzaz.scm.francecentral-01.azurewebsites.net" Content-Length="0" X-ARR-LOG-ID="a87dab17-da63-4ddb-8624-06500a5a9ef1" CLIENT-IP="135.119.239.133:16385" X-SITE-DEPLOYMENT-ID="expense-tracker-api" WAS-DEFAULT-HOSTNAME="expense-tracker-api-dbbzh6dsc6fbhzaz.scm.francecentral-01.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/deployments/latest?deployer=OneDeploy&amp;time=2025-12-18_20-08-48Z" X-Client-IP="135.119.239.133" X-Client-Port="16385" >
+  <step title="Cleanup Xml Logs" date="2025-12-18T20:08:55.056" /><!-- duration: 5ms -->
+  <step title="DeploymentService.GetResult" date="2025-12-18T20:08:55.068" >
+    <step title="DeploymentService.GetLatestDeployment" date="2025-12-18T20:08:55.071" >
+      <step title="DeploymentManager.GetResults" date="2025-12-18T20:08:55.074" /><!-- duration: 275ms -->
+    </step><!-- duration: 298ms -->
+  </step><!-- duration: 329ms -->
+  <step title="Outgoing response" date="2025-12-18T20:08:55.417" type="response" statusCode="202" statusText="Accepted" /><!-- duration: 2ms -->
+</step><!-- duration: 375ms -->
