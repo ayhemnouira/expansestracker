@@ -3,26 +3,35 @@ import { useNavigate } from "react-router-dom";
 import { Box, Fade } from "@mui/material";
 import type { SignUpFormData } from "./schema";
 import SignUpForm from "../authform/SignUpForm";
-import { registerUser } from "../../../api/authApi";
+import { registerUser, loginUser } from "../../../api/authApi";
+import { useAuth } from "../../../context/use-auth";
 import backgroundImg from "../../../assets/background.jpg";
 
 const SignUpPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSignUp = async (data: SignUpFormData) => {
     try {
       setIsLoading(true);
       setError(null);
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { confirmPassword, ...registerData } = data;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+const { confirmPassword, ...registerData } = data;
 
       await registerUser(registerData);
 
-      // Go straight to login
-      navigate("/signIn");
+      // Auto-login after signup
+      const loginResponse = await loginUser({
+        email: data.email,
+        password: data.password,
+      });
+      
+      login(loginResponse.user, loginResponse.accessToken, loginResponse.refreshToken);
+      navigate("/dashboard");
+      
     } catch (err) {
       const error = err as {
         response?: { data?: { message?: string } };
