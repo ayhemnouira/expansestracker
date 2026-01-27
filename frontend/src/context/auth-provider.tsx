@@ -1,3 +1,5 @@
+// src/context/auth-provider.tsx
+
 import { useState, useEffect, type ReactNode } from "react";
 import type { UserDto } from "../types/auth";
 import { AuthContext } from "./auth-context";
@@ -20,13 +22,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     }
 
-    setIsLoading(false); // Done checking
+    setIsLoading(false);
   }, []);
 
-  const login = (user: UserDto, accessToken: string, refreshToken: string) => {
+  const login = (
+    user: UserDto,
+    accessToken: string,
+    refreshToken: string | null
+  ) => {
     localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
     localStorage.setItem("user", JSON.stringify(user));
+    
+    // Only store refresh token if it exists
+    if (refreshToken) {
+      localStorage.setItem("refreshToken", refreshToken);
+    } else {
+      // Remove refresh token from storage if it's null (OAuth flow)
+      localStorage.removeItem("refreshToken");
+    }
+    
     setUser(user);
   };
 

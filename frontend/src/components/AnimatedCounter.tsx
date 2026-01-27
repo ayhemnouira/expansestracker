@@ -7,7 +7,7 @@ function AnimatedCounter({ amount }: { amount: number }) {
       duration={1.5}
       separator=","
       decimals={2}
-      prefix="$"
+      prefix=""
       style={{ fontWeight: "bold" }}
     />
   );

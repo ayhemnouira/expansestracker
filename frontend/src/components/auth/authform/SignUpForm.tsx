@@ -50,10 +50,10 @@ const SignUpForm = ({
     <Paper
       elevation={0}
       sx={{
-        maxWidth: 450,
         width: "100%",
-        mx: { xs: 1, sm: 2 },
-        p: { xs: 3, sm: 4 },
+        maxWidth: { xs: "100%", sm: 480, md: 520 },
+        mx: "auto",
+        p: { xs: 3, sm: 4, md: 5 },
         borderRadius: { xs: 3, sm: 4 },
         background: "#FFFFFF",
         border: "1px solid",
@@ -65,57 +65,41 @@ const SignUpForm = ({
       }}
     >
       {/* Logo & Title */}
-      <Box sx={{ textAlign: "center", mb: { xs: 2.5, sm: 3 } }}>
+      <Box sx={{ textAlign: "center", mb: { xs: 3, sm: 4 } }}>
         <Box
           sx={{
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
-            width: { xs: 64, sm: 80 },
-            height: { xs: 64, sm: 80 },
-            borderRadius: "22px",
+            width: { xs: 64, sm: 72 },
+            height: { xs: 64, sm: 72 },
+            borderRadius: 3,
             background: "linear-gradient(135deg, #FDB751 0%, #F59E0B 100%)",
-            mb: { xs: 1.5, sm: 2 },
-            boxShadow: "0 12px 35px rgba(253, 183, 81, 0.4)",
-            position: "relative",
-            "&::before": {
-              content: '""',
-              position: "absolute",
-              inset: 0,
-              borderRadius: "22px",
-              padding: "2px",
-              background:
-                "linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.1))",
-              WebkitMask:
-                "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-              WebkitMaskComposite: "xor",
-              maskComposite: "exclude",
-            },
+            mb: { xs: 2, sm: 2.5 },
+            boxShadow: "0 10px 30px rgba(253, 183, 81, 0.3)",
           }}
         >
-          <TrendingUp
-            sx={{
-              fontSize: { xs: 36, sm: 42 },
-              color: "white",
-              filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))",
-            }}
-          />
+          <TrendingUp sx={{ fontSize: { xs: 36, sm: 40 }, color: "white" }} />
         </Box>
         <Typography
           variant="h4"
           fontWeight="700"
           sx={{
-            color: theme.palette.text.primary,
-            mb: 0.5,
-            fontSize: { xs: "1.75rem", sm: "2rem" },
+            color: "#1a1a1a",
+            mb: 1,
+            fontSize: { xs: "1.5rem", sm: "1.75rem", md: "2rem" },
+            letterSpacing: "-0.02em",
           }}
         >
           Create Account
         </Typography>
         <Typography
           variant="body2"
-          color="text.secondary"
-          sx={{ fontSize: "0.95rem" }}
+          sx={{
+            fontSize: { xs: "0.875rem", sm: "0.95rem" },
+            color: "#6B7280",
+            fontWeight: 400,
+          }}
         >
           Join ExpensesTracker today
         </Typography>
@@ -130,18 +114,12 @@ const SignUpForm = ({
 
       {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: { xs: 1.5, sm: 2 },
-          }}
-        >
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
           <Box>
             <Typography
               variant="body2"
               fontWeight="600"
-              sx={{ mb: 0.5, color: theme.palette.text.primary }}
+              sx={{ mb: 1, color: "#374151", fontSize: "0.875rem" }}
             >
               Username
             </Typography>
@@ -158,7 +136,7 @@ const SignUpForm = ({
                   <InputAdornment position="start">
                     <AccountCircle
                       sx={{
-                        color: alpha(theme.palette.text.primary, 0.5),
+                        color: "#9CA3AF",
                         fontSize: 20,
                       }}
                     />
@@ -182,7 +160,8 @@ const SignUpForm = ({
                   },
                 },
                 "& .MuiOutlinedInput-input": {
-                  py: 1.5,
+                  py: { xs: 1.25, sm: 1.5 },
+                  fontSize: { xs: "0.875rem", sm: "1rem" },
                 },
               }}
             />
@@ -192,7 +171,7 @@ const SignUpForm = ({
             <Typography
               variant="body2"
               fontWeight="600"
-              sx={{ mb: 1, color: theme.palette.text.primary }}
+              sx={{ mb: 1, color: "#374151", fontSize: "0.875rem" }}
             >
               Email Address
             </Typography>
@@ -209,7 +188,7 @@ const SignUpForm = ({
                   <InputAdornment position="start">
                     <Email
                       sx={{
-                        color: alpha(theme.palette.text.primary, 0.5),
+                        color: "#9CA3AF",
                         fontSize: 20,
                       }}
                     />
@@ -233,7 +212,8 @@ const SignUpForm = ({
                   },
                 },
                 "& .MuiOutlinedInput-input": {
-                  py: 1.5,
+                  py: { xs: 1.25, sm: 1.5 },
+                  fontSize: { xs: "0.875rem", sm: "1rem" },
                 },
               }}
             />
@@ -243,7 +223,7 @@ const SignUpForm = ({
             <Typography
               variant="body2"
               fontWeight="600"
-              sx={{ mb: 1, color: theme.palette.text.primary }}
+              sx={{ mb: 1, color: "#374151", fontSize: "0.875rem" }}
             >
               Password
             </Typography>
@@ -260,7 +240,7 @@ const SignUpForm = ({
                   <InputAdornment position="start">
                     <Lock
                       sx={{
-                        color: alpha(theme.palette.text.primary, 0.5),
+                        color: "#9CA3AF",
                         fontSize: 20,
                       }}
                     />
@@ -273,11 +253,11 @@ const SignUpForm = ({
                       edge="end"
                       size="small"
                       sx={{
-                        color: alpha(theme.palette.text.primary, 0.6),
+                        color: "#9CA3AF",
                         "&:hover": {
                           backgroundColor: alpha(
                             theme.palette.primary.main,
-                            0.08
+                            0.08,
                           ),
                         },
                       }}
@@ -308,7 +288,8 @@ const SignUpForm = ({
                   },
                 },
                 "& .MuiOutlinedInput-input": {
-                  py: 1.5,
+                  py: { xs: 1.25, sm: 1.5 },
+                  fontSize: { xs: "0.875rem", sm: "1rem" },
                 },
               }}
             />
@@ -318,7 +299,7 @@ const SignUpForm = ({
             <Typography
               variant="body2"
               fontWeight="600"
-              sx={{ mb: 1, color: theme.palette.text.primary }}
+              sx={{ mb: 1, color: "#374151", fontSize: "0.875rem" }}
             >
               Confirm Password
             </Typography>
@@ -335,7 +316,7 @@ const SignUpForm = ({
                   <InputAdornment position="start">
                     <Lock
                       sx={{
-                        color: alpha(theme.palette.text.primary, 0.5),
+                        color: "#9CA3AF",
                         fontSize: 20,
                       }}
                     />
@@ -350,11 +331,11 @@ const SignUpForm = ({
                       edge="end"
                       size="small"
                       sx={{
-                        color: alpha(theme.palette.text.primary, 0.6),
+                        color: "#9CA3AF",
                         "&:hover": {
                           backgroundColor: alpha(
                             theme.palette.primary.main,
-                            0.08
+                            0.08,
                           ),
                         },
                       }}
@@ -385,7 +366,8 @@ const SignUpForm = ({
                   },
                 },
                 "& .MuiOutlinedInput-input": {
-                  py: 1.5,
+                  py: { xs: 1.25, sm: 1.5 },
+                  fontSize: { xs: "0.875rem", sm: "1rem" },
                 },
               }}
             />
@@ -399,11 +381,11 @@ const SignUpForm = ({
             variant="contained"
             size="large"
             sx={{
-              py: 1.75,
+              py: { xs: 1.5, sm: 1.75 },
               mt: 1,
               borderRadius: 2.5,
               fontWeight: 700,
-              fontSize: "1.05rem",
+              fontSize: { xs: "0.95rem", sm: "1.05rem" },
               textTransform: "none",
               background: "linear-gradient(135deg, #FDB751 0%, #F59E0B 100%)",
               boxShadow: "0 10px 25px rgba(253, 183, 81, 0.4)",
@@ -435,26 +417,45 @@ const SignUpForm = ({
           />
 
           {/* Divider */}
-          <Divider sx={{ my: 0.5 }}>
-            <Typography variant="caption" color="text.secondary">
+          <Divider sx={{ my: { xs: 0.5, sm: 1 } }}>
+            <Typography
+              variant="caption"
+              sx={{
+                color: "#9CA3AF",
+                fontWeight: 500,
+                fontSize: { xs: "0.75rem", sm: "0.8rem" },
+              }}
+            >
               OR
             </Typography>
           </Divider>
 
           {/* Sign In Link */}
           <Box sx={{ textAlign: "center" }}>
-            <Typography variant="body2" color="text.secondary">
+            <Typography
+              variant="body2"
+              sx={{
+                color: "#6B7280",
+                fontSize: { xs: "0.85rem", sm: "0.9rem" },
+              }}
+            >
               Already have an account?{" "}
               <Link
                 to="/signIn"
                 style={{
-                  color: theme.palette.primary.main,
+                  color: "#F59E0B",
                   textDecoration: "none",
-                  fontWeight: 600,
-                  transition: "opacity 0.2s",
+                  fontWeight: 700,
+                  transition: "all 0.2s ease",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.8")}
-                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "#D97706";
+                  e.currentTarget.style.textDecoration = "underline";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "#F59E0B";
+                  e.currentTarget.style.textDecoration = "none";
+                }}
               >
                 Sign In
               </Link>

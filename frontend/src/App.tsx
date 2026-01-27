@@ -12,7 +12,12 @@ import Dashboard from "./pages/dashboard";
 import TransactionsPage from "./pages/Transactions";
 import AccountsPage from "./pages/AccountsPage";
 import Budgets from "./pages/Budgets";
-import DocumentsPage from "./pages/DocumentsPage"; // Add this import
+import DocumentsPage from "./pages/DocumentsPage";
+import EmailVerificationPage from "./components/auth/EmailVerificationPage";
+import ForgotPasswordPage from "./components/auth/ForgotPasswordPage";
+import ResetPasswordPage from "./components/auth/ResetPasswordPage";
+import Verify2FAPage from "./components/auth/Verify2FAPage";
+import OAuthCallback from "./components/auth/OAuthCallback";
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -31,11 +36,22 @@ const App = () => {
               }}
             >
               <Routes>
-                {/* Public routes */}
+                {/* Public Auth Routes */}
                 <Route path="/signIn" element={<SignInPage />} />
                 <Route path="/signUp" element={<SignUpPage />} />
+                <Route
+                  path="/verify-email"
+                  element={<EmailVerificationPage />}
+                />
+                <Route
+                  path="/forgot-password"
+                  element={<ForgotPasswordPage />}
+                />
+                <Route path="/reset-password" element={<ResetPasswordPage />} />
+                <Route path="/auth/callback" element={<OAuthCallback />} />
+                <Route path="/verify-2fa" element={<Verify2FAPage />} />
 
-                {/* Protected routes */}
+                {/* Protected Routes */}
                 <Route
                   element={
                     <ProtectedRoute>
