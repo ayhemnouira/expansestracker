@@ -316,7 +316,7 @@ const SignInForm = ({
             startIcon={<GoogleIcon />}
             onClick={() => {
               window.location.href =
-                "http://localhost:8080/oauth2/authorization/google";
+                "https://expense-tracker-api-dbbzh6dsc6fbhzaz.francecentral-01.azurewebsites.net/oauth2/authorization/google";
             }}
             sx={{
               py: { xs: 1.5, sm: 1.75 },
