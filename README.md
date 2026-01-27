@@ -376,7 +376,6 @@ VITE_API_URL=http://localhost:8080/api
 - Portfolio: [https://portfolio-roan-psi-26.vercel.app/](https://portfolio-roan-psi-26.vercel.app/)
 - LinkedIn: [https://www.linkedin.com/in/ayhemnouira/](https://www.linkedin.com/in/ayhemnouira/)
 - GitHub: [https://github.com/ayhemnouira](https://github.com/ayhemnouira)
-- Email: ayhemnouira9@gmail.com
 
 ## 📄 License
 
