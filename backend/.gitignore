@@ -43,3 +43,24 @@ application-*.properties
 ### Runtime Files ###
 uploads/
 *.log
+# Log files
+LogFiles/
+*.log
+*.log.*
+*.gz
+
+# Build artifacts
+target/
+*.zip
+
+# Deployment files
+deployments/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
