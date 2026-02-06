@@ -37,7 +37,6 @@ import {
   Article,
   AttachMoney,
   FolderOpen,
-  Image as ImageIcon,
   PictureAsPdf,
   Close,
   Link as LinkIcon,
