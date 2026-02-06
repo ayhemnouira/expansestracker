@@ -26,7 +26,7 @@ public class AccountServiceImpl implements AccountService {
     private final UserRepo userRepository;
     private final TransactionRepository transactionRepository;
 
-    @Override
+@Override
     @Transactional(readOnly = true)
     public List<AccountResponseDto> getUserAccounts(Long userId) {
         log.info("Fetching all accounts for user: {}", userId);

@@ -19,13 +19,16 @@ import {
   TableRow,
   Chip,
   InputAdornment,
-  Divider,
   Stack,
   Card,
   CardContent,
   Grid,
+  Fade,
+  Avatar,
+  Slide,
+  Grow,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { useTheme, alpha } from "@mui/material/styles";
 import {
   Add,
   Edit,
@@ -66,6 +69,34 @@ const categories = [
   "Investment",
   "Other",
 ];
+
+const categoryColors: Record<string, string> = {
+  Groceries: "#10b981",
+  Dining: "#f59e0b",
+  Transport: "#3b82f6",
+  Utilities: "#8b5cf6",
+  Shopping: "#ec4899",
+  Healthcare: "#ef4444",
+  Entertainment: "#06b6d4",
+  Housing: "#6366f1",
+  Salary: "#22c55e",
+  Investment: "#14b8a6",
+  Other: "#64748b",
+};
+
+const categoryIcons: Record<string, string> = {
+  Groceries: "🛒",
+  Dining: "🍽️",
+  Transport: "🚗",
+  Utilities: "💡",
+  Shopping: "🛍️",
+  Healthcare: "🏥",
+  Entertainment: "🎬",
+  Housing: "🏠",
+  Salary: "💰",
+  Investment: "📈",
+  Other: "📋",
+};
 
 interface FormDataType {
   name: string;
@@ -151,7 +182,7 @@ const TransactionsPage = () => {
     const filtered = transactions.filter(
       (t) =>
         t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        t.category.toLowerCase().includes(searchQuery.toLowerCase())
+        t.category.toLowerCase().includes(searchQuery.toLowerCase()),
     );
     setFilteredTransactions(filtered);
     calculateSummaries(filtered);
@@ -341,13 +372,50 @@ const TransactionsPage = () => {
       <Box
         sx={{
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           minHeight: "100vh",
-          bgcolor: isDark ? "#0a0e27" : "#f5f7fa",
+          gap: 3,
+          bgcolor: isDark ? "#060918" : "#ffffff",
         }}
       >
-        <CircularProgress size={60} thickness={4} />
+        <Box
+          sx={{
+            position: "relative",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress
+            size={70}
+            thickness={3}
+            sx={{
+              color: "#6366f1",
+            }}
+          />
+          <Box
+            sx={{
+              position: "absolute",
+              width: 50,
+              height: 50,
+              borderRadius: "50%",
+              bgcolor: alpha("#6366f1", 0.1),
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Receipt sx={{ fontSize: 24, color: "#6366f1" }} />
+          </Box>
+        </Box>
+        <Typography
+          variant="body1"
+          sx={{ color: isDark ? "#94a3b8" : "#64748b", fontWeight: 600 }}
+        >
+          Loading transactions...
+        </Typography>
       </Box>
     );
   }
@@ -356,349 +424,961 @@ const TransactionsPage = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        bgcolor: isDark ? "#0a0e27" : "#f5f7fa",
-        pr: { xs: 2, md: 4 }, // Keep right padding
+        bgcolor: isDark ? "#060918" : "#ffffff",
+        position: "relative",
       }}
     >
-      <Box mb={4}>
-        <Typography
-          variant="h4"
-          fontWeight="700"
-          sx={{ color: isDark ? "#fff" : "#1a1a2e", mb: 1 }}
-        >
-          Transactions
-        </Typography>
-        <Typography
-          variant="body1"
-          sx={{ color: isDark ? "#a0a0a0" : "#64748b" }}
-        >
-          Track and manage your financial activities
-        </Typography>
-      </Box>
-
-      {error && (
-        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
-          {error}
-        </Alert>
-      )}
-
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid size={{ xs: 12, md: 4 }}>
-          <Card
-            sx={{
-              background: isDark
-                ? "linear-gradient(135deg, #1e3a5f 0%, #2a5298 100%)"
-                : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-              color: "#fff",
-              borderRadius: 3,
-              boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
-            }}
-          >
-            <CardContent>
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <Box>
-                  <Typography variant="body2" sx={{ opacity: 0.9, mb: 1 }}>
-                    Total Income
-                  </Typography>
-                  <Typography variant="h4" fontWeight="700">
-                    {totalIncome.toFixed(2)} TND
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    width: 56,
-                    height: 56,
-                    borderRadius: "50%",
-                    bgcolor: "rgba(255,255,255,0.2)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <TrendingUp fontSize="large" />
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 4 }}>
-          <Card
-            sx={{
-              background: isDark
-                ? "linear-gradient(135deg, #5f1e3a 0%, #982a5c 100%)"
-                : "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-              color: "#fff",
-              borderRadius: 3,
-              boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
-            }}
-          >
-            <CardContent>
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <Box>
-                  <Typography variant="body2" sx={{ opacity: 0.9, mb: 1 }}>
-                    Total Expenses
-                  </Typography>
-                  <Typography variant="h4" fontWeight="700">
-                    {totalExpenses.toFixed(2)} TND
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    width: 56,
-                    height: 56,
-                    borderRadius: "50%",
-                    bgcolor: "rgba(255,255,255,0.2)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <TrendingDown fontSize="large" />
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 4 }}>
-          <Card
-            sx={{
-              background:
-                netBalance >= 0
-                  ? isDark
-                    ? "linear-gradient(135deg, #1e5f3a 0%, #2a9862 100%)"
-                    : "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
-                  : isDark
-                  ? "linear-gradient(135deg, #5f1e1e 0%, #982a2a 100%)"
-                  : "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
-              color: "#fff",
-              borderRadius: 3,
-              boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
-            }}
-          >
-            <CardContent>
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <Box>
-                  <Typography variant="body2" sx={{ opacity: 0.9, mb: 1 }}>
-                    Net Balance
-                  </Typography>
-                  <Typography variant="h4" fontWeight="700">
-                    {netBalance >= 0 ? "+" : ""}
-                    {netBalance.toFixed(2)} TND
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    width: 56,
-                    height: 56,
-                    borderRadius: "50%",
-                    bgcolor: "rgba(255,255,255,0.2)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <AccountBalance fontSize="large" />
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-      <Card
+      <Box
         sx={{
-          borderRadius: 3,
-          mb: 3,
-          boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
-          bgcolor: isDark ? "#16213e" : "#fff",
+          maxWidth: 1400,
+          mx: "auto",
+          px: { xs: 2, sm: 3, md: 4 },
+          py: 4,
+          position: "relative",
         }}
       >
-        <CardContent>
-          <Stack
-            direction={{ xs: "column", sm: "row" }}
-            spacing={2}
-            alignItems="center"
-          >
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder="Search transactions..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon
-                      sx={{ color: isDark ? "#a0a0a0" : "#64748b" }}
-                    />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: 2,
-                  bgcolor: isDark ? "#1a2332" : "#f8fafc",
-                  "& fieldset": { borderColor: isDark ? "#2a3441" : "#e2e8f0" },
-                },
-              }}
-            />
-            <Button
-              variant="contained"
-              startIcon={<Add />}
-              onClick={() => handleOpenDialog()}
-              sx={{
-                minWidth: { xs: "100%", sm: 200 },
-                py: 1.5,
-                borderRadius: 2,
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                textTransform: "none",
-                fontWeight: 600,
-                fontSize: "1rem",
-                boxShadow: "0 4px 12px rgba(102, 126, 234, 0.4)",
-                "&:hover": { boxShadow: "0 6px 20px rgba(102, 126, 234, 0.6)" },
-              }}
+        {/* Modern Header with Gradient */}
+        <Fade in timeout={600}>
+          <Box mb={5}>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              mb={1}
             >
-              New Transaction
-            </Button>
-          </Stack>
-        </CardContent>
-      </Card>
+              <Box>
+                <Typography
+                  variant="h3"
+                  sx={{
+                    fontWeight: 800,
+                    fontSize: { xs: "2rem", md: "2.5rem" },
+                    background:
+                      theme.palette.mode === "dark"
+                        ? "linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%)"
+                        : "linear-gradient(135deg, #1e293b 0%, #6366f1 100%)",
+                    backgroundClip: "text",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    mb: 0.5,
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  Transactions
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: isDark ? "#64748b" : "#64748b",
+                    fontWeight: 500,
+                    fontSize: "1.05rem",
+                  }}
+                >
+                  Track and manage your financial activities
+                </Typography>
+              </Box>
+              <Chip
+                icon={<Receipt sx={{ fontSize: 20 }} />}
+                label={`${filteredTransactions.length} Total`}
+                sx={{
+                  background: isDark
+                    ? "rgba(99, 102, 241, 0.15)"
+                    : "rgba(99, 102, 241, 0.1)",
+                  color: isDark ? colors.primary[300] : colors.primary[700],
+                  fontWeight: 700,
+                  fontSize: "0.9rem",
+                  px: 1,
+                  py: 2.5,
+                  borderRadius: "12px",
+                  border: `1px solid ${
+                    isDark
+                      ? "rgba(99, 102, 241, 0.2)"
+                      : "rgba(99, 102, 241, 0.15)"
+                  }`,
+                }}
+              />
+            </Stack>
 
-      {/* Desktop Table View */}
-      <Box sx={{ display: { xs: "none", md: "block" } }}>
-        <Card
-          sx={{
-            borderRadius: 3,
-            boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
-            bgcolor: isDark ? "#16213e" : "#fff",
-            overflow: "hidden",
-          }}
-        >
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow sx={{ bgcolor: isDark ? "#1a2332" : "#f8fafc" }}>
-                  <TableCell
-                    sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
+            {error && (
+              <Alert
+                severity="error"
+                sx={{
+                  mt: 3,
+                  borderRadius: "16px",
+                  border: `1px solid ${colors.error[400]}40`,
+                  backdropFilter: "blur(10px)",
+                }}
+                onClose={() => setError(null)}
+              >
+                {error}
+              </Alert>
+            )}
+          </Box>
+        </Fade>
+
+        {/* Enhanced Stats Cards */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <Grow in timeout={800}>
+              <Card
+                sx={{
+                  background:
+                    "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+                  borderRadius: "20px",
+                  p: 3,
+                  position: "relative",
+                  overflow: "hidden",
+                  border: "none",
+                  boxShadow: "0 8px 32px rgba(16, 185, 129, 0.3)",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: "translateY(-4px)",
+                    boxShadow: "0 12px 48px rgba(16, 185, 129, 0.4)",
+                  },
+                  "&::before": {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    width: "200px",
+                    height: "200px",
+                    background:
+                      "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
+                    borderRadius: "50%",
+                    transform: "translate(30%, -30%)",
+                  },
+                }}
+              >
+                <Box sx={{ position: "relative", zIndex: 1 }}>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    mb={2}
                   >
-                    Date
-                  </TableCell>
-                  <TableCell
-                    sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
-                  >
-                    Transaction
-                  </TableCell>
-                  <TableCell
-                    sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
-                  >
-                    Category
-                  </TableCell>
-                  <TableCell
-                    sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
-                  >
-                    Account
-                  </TableCell>
-                  <TableCell
-                    align="right"
-                    sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
-                  >
-                    Amount
-                  </TableCell>
-                  <TableCell
-                    align="right"
-                    sx={{ fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}
-                  >
-                    Actions
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredTransactions.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={6} align="center" sx={{ py: 8 }}>
-                      <Receipt
-                        sx={{
-                          fontSize: 64,
-                          color: isDark ? "#3a4a5c" : "#cbd5e1",
-                          mb: 2,
-                        }}
-                      />
-                      <Typography
-                        variant="h6"
-                        color={isDark ? "#a0a0a0" : "#64748b"}
-                      >
-                        No transactions found
-                      </Typography>
+                    <Box>
                       <Typography
                         variant="body2"
-                        color={isDark ? "#707070" : "#94a3b8"}
-                        mt={1}
+                        sx={{
+                          color: "rgba(255,255,255,0.9)",
+                          fontWeight: 700,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.5px",
+                          fontSize: "0.75rem",
+                          mb: 1,
+                        }}
                       >
-                        {searchQuery
-                          ? "Try adjusting your search"
-                          : "Create your first transaction"}
+                        Total Income
                       </Typography>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  filteredTransactions.map((transaction) => (
-                    <TableRow
-                      key={transaction.id}
+                      <Typography
+                        variant="h3"
+                        sx={{
+                          color: "white",
+                          fontWeight: 800,
+                          fontSize: { xs: "1.75rem", md: "2.25rem" },
+                          letterSpacing: "-0.02em",
+                        }}
+                      >
+                        {totalIncome.toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: "rgba(255,255,255,0.8)", fontWeight: 600 }}
+                      >
+                        TND
+                      </Typography>
+                    </Box>
+                    <Box
                       sx={{
-                        "&:hover": { bgcolor: isDark ? "#1a2332" : "#f8fafc" },
+                        width: 56,
+                        height: 56,
+                        borderRadius: "14px",
+                        background: "rgba(255,255,255,0.2)",
+                        backdropFilter: "blur(10px)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                       }}
                     >
-                      <TableCell sx={{ color: isDark ? "#a0a0a0" : "#64748b" }}>
-                        {new Date(transaction.date).toLocaleDateString(
-                          "en-GB",
-                          {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                          }
-                        )}
+                      <TrendingUp sx={{ fontSize: 28, color: "white" }} />
+                    </Box>
+                  </Stack>
+                </Box>
+              </Card>
+            </Grow>
+          </Grid>
+
+          <Grid size={{ xs: 12, md: 4 }}>
+            <Grow in timeout={1000}>
+              <Card
+                sx={{
+                  background:
+                    "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
+                  borderRadius: "20px",
+                  p: 3,
+                  position: "relative",
+                  overflow: "hidden",
+                  border: "none",
+                  boxShadow: "0 8px 32px rgba(239, 68, 68, 0.3)",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: "translateY(-4px)",
+                    boxShadow: "0 12px 48px rgba(239, 68, 68, 0.4)",
+                  },
+                  "&::before": {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    width: "200px",
+                    height: "200px",
+                    background:
+                      "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
+                    borderRadius: "50%",
+                    transform: "translate(30%, -30%)",
+                  },
+                }}
+              >
+                <Box sx={{ position: "relative", zIndex: 1 }}>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    mb={2}
+                  >
+                    <Box>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: "rgba(255,255,255,0.9)",
+                          fontWeight: 700,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.5px",
+                          fontSize: "0.75rem",
+                          mb: 1,
+                        }}
+                      >
+                        Total Expenses
+                      </Typography>
+                      <Typography
+                        variant="h3"
+                        sx={{
+                          color: "white",
+                          fontWeight: 800,
+                          fontSize: { xs: "1.75rem", md: "2.25rem" },
+                          letterSpacing: "-0.02em",
+                        }}
+                      >
+                        {totalExpenses.toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: "rgba(255,255,255,0.8)", fontWeight: 600 }}
+                      >
+                        TND
+                      </Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        width: 56,
+                        height: 56,
+                        borderRadius: "14px",
+                        background: "rgba(255,255,255,0.2)",
+                        backdropFilter: "blur(10px)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <TrendingDown sx={{ fontSize: 28, color: "white" }} />
+                    </Box>
+                  </Stack>
+                </Box>
+              </Card>
+            </Grow>
+          </Grid>
+
+          <Grid size={{ xs: 12, md: 4 }}>
+            <Grow in timeout={1200}>
+              <Card
+                sx={{
+                  background:
+                    "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                  borderRadius: "20px",
+                  p: 3,
+                  position: "relative",
+                  overflow: "hidden",
+                  border: "none",
+                  boxShadow: "0 8px 32px rgba(99, 102, 241, 0.3)",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: "translateY(-4px)",
+                    boxShadow: "0 12px 48px rgba(99, 102, 241, 0.4)",
+                  },
+                  "&::before": {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    width: "200px",
+                    height: "200px",
+                    background:
+                      "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
+                    borderRadius: "50%",
+                    transform: "translate(30%, -30%)",
+                  },
+                }}
+              >
+                <Box sx={{ position: "relative", zIndex: 1 }}>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    mb={2}
+                  >
+                    <Box>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: "rgba(255,255,255,0.9)",
+                          fontWeight: 700,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.5px",
+                          fontSize: "0.75rem",
+                          mb: 1,
+                        }}
+                      >
+                        Net Balance
+                      </Typography>
+                      <Typography
+                        variant="h3"
+                        sx={{
+                          color: "white",
+                          fontWeight: 800,
+                          fontSize: { xs: "1.75rem", md: "2.25rem" },
+                          letterSpacing: "-0.02em",
+                        }}
+                      >
+                        {netBalance >= 0 ? "+" : ""}
+                        {netBalance.toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: "rgba(255,255,255,0.8)", fontWeight: 600 }}
+                      >
+                        TND
+                      </Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        width: 56,
+                        height: 56,
+                        borderRadius: "14px",
+                        background: "rgba(255,255,255,0.2)",
+                        backdropFilter: "blur(10px)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <AccountBalance sx={{ fontSize: 28, color: "white" }} />
+                    </Box>
+                  </Stack>
+                </Box>
+              </Card>
+            </Grow>
+          </Grid>
+        </Grid>
+
+        {/* Modern Search & Add Button */}
+        <Fade in timeout={1400}>
+          <Card
+            sx={{
+              borderRadius: "20px",
+              mb: 4,
+              boxShadow: isDark
+                ? "0 4px 24px rgba(0,0,0,0.3)"
+                : "0 4px 24px rgba(0,0,0,0.08)",
+              bgcolor: isDark ? alpha("#1e293b", 0.6) : "#fff",
+              backdropFilter: "blur(20px)",
+              border: `1px solid ${isDark ? alpha("#fff", 0.05) : alpha("#000", 0.05)}`,
+              transition: "all 0.3s ease",
+              "&:hover": {
+                boxShadow: isDark
+                  ? "0 8px 32px rgba(0,0,0,0.4)"
+                  : "0 8px 32px rgba(0,0,0,0.12)",
+              },
+            }}
+          >
+            <CardContent sx={{ p: 3 }}>
+              <Stack
+                direction={{ xs: "column", sm: "row" }}
+                spacing={2}
+                alignItems="center"
+              >
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  placeholder="Search transactions by name or category..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon sx={{ color: "#6366f1", fontSize: 24 }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "14px",
+                      bgcolor: isDark ? alpha("#0f172a", 0.5) : "#f8fafc",
+                      transition: "all 0.3s ease",
+                      "& fieldset": {
+                        borderColor: isDark
+                          ? alpha("#fff", 0.08)
+                          : alpha("#6366f1", 0.2),
+                        borderWidth: "2px",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#6366f1",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#6366f1",
+                        borderWidth: "2px",
+                      },
+                    },
+                  }}
+                />
+                <Button
+                  variant="contained"
+                  startIcon={<Add />}
+                  onClick={() => handleOpenDialog()}
+                  sx={{
+                    minWidth: { xs: "100%", sm: 220 },
+                    py: 2,
+                    borderRadius: "14px",
+                    background:
+                      "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                    textTransform: "none",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    boxShadow: "0 8px 24px rgba(99, 102, 241, 0.4)",
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      background:
+                        "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                      boxShadow: "0 12px 32px rgba(99, 102, 241, 0.5)",
+                      transform: "translateY(-2px)",
+                    },
+                  }}
+                >
+                  New Transaction
+                </Button>
+              </Stack>
+            </CardContent>
+          </Card>
+        </Fade>
+
+        {/* Desktop Table View - Enhanced */}
+        <Fade in timeout={1600}>
+          <Box sx={{ display: { xs: "none", md: "block" } }}>
+            <Card
+              sx={{
+                borderRadius: "20px",
+                boxShadow: isDark
+                  ? "0 4px 24px rgba(0,0,0,0.3)"
+                  : "0 4px 24px rgba(0,0,0,0.08)",
+                bgcolor: isDark ? alpha("#1e293b", 0.6) : "#fff",
+                backdropFilter: "blur(20px)",
+                border: `1px solid ${isDark ? alpha("#fff", 0.05) : alpha("#000", 0.05)}`,
+                overflow: "hidden",
+              }}
+            >
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow
+                      sx={{
+                        bgcolor: isDark ? alpha("#0f172a", 0.5) : "#f8fafc",
+                      }}
+                    >
+                      <TableCell
+                        sx={{
+                          fontWeight: 800,
+                          color: isDark ? "#94a3b8" : "#475569",
+                          textTransform: "uppercase",
+                          fontSize: "0.75rem",
+                          letterSpacing: "0.1em",
+                          py: 2.5,
+                          borderBottom: `2px solid ${isDark ? alpha("#fff", 0.08) : "#e2e8f0"}`,
+                        }}
+                      >
+                        Transaction
                       </TableCell>
-                      <TableCell>
-                        <Typography
-                          variant="body1"
-                          fontWeight="600"
-                          sx={{ color: isDark ? "#fff" : "#1a1a2e" }}
-                        >
-                          {transaction.name}
-                        </Typography>
+                      <TableCell
+                        sx={{
+                          fontWeight: 800,
+                          color: isDark ? "#94a3b8" : "#475569",
+                          textTransform: "uppercase",
+                          fontSize: "0.75rem",
+                          letterSpacing: "0.1em",
+                          py: 2.5,
+                          borderBottom: `2px solid ${isDark ? alpha("#fff", 0.08) : "#e2e8f0"}`,
+                        }}
+                      >
+                        Category
                       </TableCell>
-                      <TableCell>
-                        <Chip
-                          label={transaction.category}
-                          size="small"
+                      <TableCell
+                        sx={{
+                          fontWeight: 800,
+                          color: isDark ? "#94a3b8" : "#475569",
+                          textTransform: "uppercase",
+                          fontSize: "0.75rem",
+                          letterSpacing: "0.1em",
+                          py: 2.5,
+                          borderBottom: `2px solid ${isDark ? alpha("#fff", 0.08) : "#e2e8f0"}`,
+                        }}
+                      >
+                        Account
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          fontWeight: 800,
+                          color: isDark ? "#94a3b8" : "#475569",
+                          textTransform: "uppercase",
+                          fontSize: "0.75rem",
+                          letterSpacing: "0.1em",
+                          py: 2.5,
+                          borderBottom: `2px solid ${isDark ? alpha("#fff", 0.08) : "#e2e8f0"}`,
+                        }}
+                      >
+                        Date
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        sx={{
+                          fontWeight: 800,
+                          color: isDark ? "#94a3b8" : "#475569",
+                          textTransform: "uppercase",
+                          fontSize: "0.75rem",
+                          letterSpacing: "0.1em",
+                          py: 2.5,
+                          borderBottom: `2px solid ${isDark ? alpha("#fff", 0.08) : "#e2e8f0"}`,
+                        }}
+                      >
+                        Amount
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        sx={{
+                          fontWeight: 800,
+                          color: isDark ? "#94a3b8" : "#475569",
+                          textTransform: "uppercase",
+                          fontSize: "0.75rem",
+                          letterSpacing: "0.1em",
+                          py: 2.5,
+                          borderBottom: `2px solid ${isDark ? alpha("#fff", 0.08) : "#e2e8f0"}`,
+                        }}
+                      >
+                        Actions
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {filteredTransactions.length === 0 ? (
+                      <TableRow>
+                        <TableCell
+                          colSpan={6}
+                          align="center"
                           sx={{
-                            bgcolor: isDark ? "#2a3441" : "#f1f5f9",
-                            color: isDark ? "#a0a0a0" : "#64748b",
-                            fontWeight: 600,
+                            py: 12,
+                            borderBottom: "none",
                           }}
-                        />
-                      </TableCell>
-                      <TableCell sx={{ color: isDark ? "#a0a0a0" : "#64748b" }}>
-                        {transaction.accountName || "N/A"}
-                      </TableCell>
-                      <TableCell align="right">
+                        >
+                          <Box
+                            sx={{
+                              width: 100,
+                              height: 100,
+                              borderRadius: "24px",
+                              bgcolor: isDark
+                                ? alpha("#6366f1", 0.1)
+                                : alpha("#6366f1", 0.08),
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              mx: "auto",
+                              mb: 3,
+                            }}
+                          >
+                            <Receipt
+                              sx={{
+                                fontSize: 48,
+                                color: "#6366f1",
+                              }}
+                            />
+                          </Box>
+                          <Typography
+                            variant="h5"
+                            fontWeight="800"
+                            sx={{
+                              color: isDark ? "#fff" : "#0f172a",
+                              mb: 1.5,
+                              letterSpacing: "-0.01em",
+                            }}
+                          >
+                            No transactions found
+                          </Typography>
+                          <Typography
+                            variant="body1"
+                            sx={{
+                              color: isDark ? "#64748b" : "#94a3b8",
+                              maxWidth: 400,
+                              mx: "auto",
+                              lineHeight: 1.7,
+                            }}
+                          >
+                            {searchQuery
+                              ? "Try adjusting your search terms or filters"
+                              : "Create your first transaction to start tracking your finances"}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      filteredTransactions.map((transaction) => (
+                        <TableRow
+                          key={transaction.id}
+                          sx={{
+                            transition: "all 0.3s ease",
+                            "&:hover": {
+                              bgcolor: isDark
+                                ? alpha("#6366f1", 0.08)
+                                : alpha("#6366f1", 0.03),
+                              transform: "scale(1.005)",
+                            },
+                            "& td": {
+                              borderBottom: `1px solid ${isDark ? alpha("#fff", 0.05) : "#f1f5f9"}`,
+                            },
+                          }}
+                        >
+                          <TableCell sx={{ py: 3 }}>
+                            <Box display="flex" alignItems="center" gap={2.5}>
+                              <Avatar
+                                sx={{
+                                  width: 52,
+                                  height: 52,
+                                  bgcolor:
+                                    transaction.type === "INCOME"
+                                      ? alpha("#10b981", 0.15)
+                                      : alpha("#ef4444", 0.15),
+                                  borderRadius: "14px",
+                                  fontSize: "1.5rem",
+                                }}
+                              >
+                                {categoryIcons[transaction.category] || "📋"}
+                              </Avatar>
+                              <Box>
+                                <Typography
+                                  variant="body1"
+                                  fontWeight="700"
+                                  sx={{
+                                    color: isDark ? "#fff" : "#0f172a",
+                                    mb: 0.5,
+                                    fontSize: "1rem",
+                                  }}
+                                >
+                                  {transaction.name}
+                                </Typography>
+                                <Chip
+                                  label={
+                                    transaction.type === "INCOME"
+                                      ? "Income"
+                                      : "Expense"
+                                  }
+                                  size="small"
+                                  sx={{
+                                    bgcolor:
+                                      transaction.type === "INCOME"
+                                        ? alpha("#10b981", 0.1)
+                                        : alpha("#ef4444", 0.1),
+                                    color:
+                                      transaction.type === "INCOME"
+                                        ? "#10b981"
+                                        : "#ef4444",
+                                    fontWeight: 700,
+                                    fontSize: "0.7rem",
+                                    height: "20px",
+                                    borderRadius: "8px",
+                                  }}
+                                />
+                              </Box>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Chip
+                              label={transaction.category}
+                              size="small"
+                              sx={{
+                                bgcolor: alpha(
+                                  categoryColors[transaction.category] ||
+                                    "#64748b",
+                                  0.15,
+                                ),
+                                color:
+                                  categoryColors[transaction.category] ||
+                                  "#64748b",
+                                fontWeight: 700,
+                                fontSize: "0.8rem",
+                                borderRadius: "10px",
+                                px: 1.5,
+                                py: 0.25,
+                                border: `1px solid ${alpha(
+                                  categoryColors[transaction.category] ||
+                                    "#64748b",
+                                  0.3,
+                                )}`,
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Typography
+                              variant="body2"
+                              fontWeight="600"
+                              sx={{ color: isDark ? "#94a3b8" : "#64748b" }}
+                            >
+                              {transaction.accountName || "N/A"}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography
+                              variant="body2"
+                              fontWeight="600"
+                              sx={{ color: isDark ? "#94a3b8" : "#64748b" }}
+                            >
+                              {new Date(transaction.date).toLocaleDateString(
+                                "en-GB",
+                                {
+                                  day: "2-digit",
+                                  month: "short",
+                                  year: "numeric",
+                                },
+                              )}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="right">
+                            <Typography
+                              variant="h6"
+                              fontWeight="800"
+                              sx={{
+                                color:
+                                  transaction.type === "INCOME"
+                                    ? "#10b981"
+                                    : "#ef4444",
+                                fontSize: "1.1rem",
+                              }}
+                            >
+                              {transaction.type === "INCOME" ? "+" : "-"}
+                              {transaction.amount.toLocaleString("en-US", {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              })}{" "}
+                              <Typography
+                                component="span"
+                                variant="caption"
+                                sx={{
+                                  color: isDark ? "#64748b" : "#94a3b8",
+                                  fontWeight: 600,
+                                }}
+                              >
+                                TND
+                              </Typography>
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="right">
+                            <Stack
+                              direction="row"
+                              spacing={1}
+                              justifyContent="flex-end"
+                            >
+                              <IconButton
+                                size="small"
+                                onClick={() => handleOpenDialog(transaction)}
+                                sx={{
+                                  color: "white",
+                                  bgcolor: "#6366f1",
+                                  borderRadius: "10px",
+                                  width: 36,
+                                  height: 36,
+                                  transition: "all 0.2s ease",
+                                  "&:hover": {
+                                    bgcolor: "#4f46e5",
+                                    transform: "scale(1.1)",
+                                  },
+                                }}
+                              >
+                                <Edit fontSize="small" />
+                              </IconButton>
+                              <IconButton
+                                size="small"
+                                onClick={() => handleDelete(transaction.id)}
+                                sx={{
+                                  color: "white",
+                                  bgcolor: "#ef4444",
+                                  borderRadius: "10px",
+                                  width: 36,
+                                  height: 36,
+                                  transition: "all 0.2s ease",
+                                  "&:hover": {
+                                    bgcolor: "#dc2626",
+                                    transform: "scale(1.1)",
+                                  },
+                                }}
+                              >
+                                <Delete fontSize="small" />
+                              </IconButton>
+                            </Stack>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Card>
+          </Box>
+        </Fade>
+
+        {/* Mobile Card View - Enhanced */}
+        <Box sx={{ display: { xs: "block", md: "none" } }}>
+          {filteredTransactions.length === 0 ? (
+            <Card
+              sx={{
+                borderRadius: "20px",
+                boxShadow: isDark
+                  ? "0 4px 24px rgba(0,0,0,0.3)"
+                  : "0 4px 24px rgba(0,0,0,0.08)",
+                bgcolor: isDark ? alpha("#1e293b", 0.6) : "#fff",
+                p: 6,
+                textAlign: "center",
+              }}
+            >
+              <Box
+                sx={{
+                  width: 100,
+                  height: 100,
+                  borderRadius: "24px",
+                  bgcolor: isDark
+                    ? alpha("#6366f1", 0.1)
+                    : alpha("#6366f1", 0.08),
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  mx: "auto",
+                  mb: 3,
+                }}
+              >
+                <Receipt sx={{ fontSize: 48, color: "#6366f1" }} />
+              </Box>
+              <Typography
+                variant="h5"
+                fontWeight="800"
+                sx={{ color: isDark ? "#fff" : "#0f172a", mb: 1.5 }}
+              >
+                No transactions found
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{ color: isDark ? "#64748b" : "#94a3b8" }}
+              >
+                {searchQuery
+                  ? "Try adjusting your search"
+                  : "Create your first transaction"}
+              </Typography>
+            </Card>
+          ) : (
+            <Stack spacing={3}>
+              {filteredTransactions.map((transaction, index) => (
+                <Grow key={transaction.id} in timeout={600 + index * 100}>
+                  <Card
+                    sx={{
+                      borderRadius: "20px",
+                      boxShadow: isDark
+                        ? "0 4px 24px rgba(0,0,0,0.3)"
+                        : "0 4px 24px rgba(0,0,0,0.08)",
+                      bgcolor: isDark ? alpha("#1e293b", 0.6) : "#fff",
+                      border: `1px solid ${isDark ? alpha("#fff", 0.05) : alpha("#000", 0.05)}`,
+                      p: 3,
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        transform: "translateY(-4px)",
+                        boxShadow: isDark
+                          ? "0 8px 32px rgba(0,0,0,0.4)"
+                          : "0 8px 32px rgba(0,0,0,0.12)",
+                      },
+                    }}
+                  >
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="start"
+                      mb={2.5}
+                    >
+                      <Box display="flex" alignItems="center" gap={2}>
+                        <Avatar
+                          sx={{
+                            width: 56,
+                            height: 56,
+                            bgcolor:
+                              transaction.type === "INCOME"
+                                ? alpha("#10b981", 0.15)
+                                : alpha("#ef4444", 0.15),
+                            borderRadius: "14px",
+                            fontSize: "1.75rem",
+                          }}
+                        >
+                          {categoryIcons[transaction.category] || "📋"}
+                        </Avatar>
+                        <Box>
+                          <Typography
+                            variant="body1"
+                            fontWeight="800"
+                            sx={{
+                              color: isDark ? "#fff" : "#0f172a",
+                              mb: 0.5,
+                            }}
+                          >
+                            {transaction.name}
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              color: isDark ? "#64748b" : "#94a3b8",
+                              fontWeight: 600,
+                            }}
+                          >
+                            {new Date(transaction.date).toLocaleDateString(
+                              "en-GB",
+                              {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              },
+                            )}
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box textAlign="right">
                         <Typography
-                          variant="body1"
-                          fontWeight="700"
+                          variant="h5"
+                          fontWeight="900"
                           sx={{
                             color:
                               transaction.type === "INCOME"
@@ -707,231 +1387,225 @@ const TransactionsPage = () => {
                           }}
                         >
                           {transaction.type === "INCOME" ? "+" : "-"}
-                          {transaction.amount.toFixed(2)} TND
+                          {transaction.amount.toLocaleString("en-US", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
                         </Typography>
-                      </TableCell>
-                      <TableCell align="right">
-                        <IconButton
-                          size="small"
-                          onClick={() => handleOpenDialog(transaction)}
+                        <Typography
+                          variant="caption"
                           sx={{
-                            color: isDark ? "#667eea" : "#667eea",
-                            "&:hover": {
-                              bgcolor: isDark ? "#2a3441" : "#f1f5f9",
-                            },
+                            color: isDark ? "#64748b" : "#94a3b8",
+                            fontWeight: 600,
                           }}
                         >
-                          <Edit fontSize="small" />
-                        </IconButton>
-                        <IconButton
-                          size="small"
-                          onClick={() => handleDelete(transaction.id)}
-                          sx={{
-                            color: "#ef4444",
-                            "&:hover": {
-                              bgcolor: isDark ? "#2a3441" : "#fef2f2",
-                            },
-                          }}
-                        >
-                          <Delete fontSize="small" />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Card>
-      </Box>
+                          TND
+                        </Typography>
+                      </Box>
+                    </Box>
 
-      {/* Mobile Card View */}
-      <Box sx={{ display: { xs: "block", md: "none" } }}>
-        {filteredTransactions.length === 0 ? (
-          <Card
+                    <Box display="flex" gap={1.5} mb={3} flexWrap="wrap">
+                      <Chip
+                        label={transaction.category}
+                        size="small"
+                        sx={{
+                          bgcolor: alpha(
+                            categoryColors[transaction.category] || "#64748b",
+                            0.15,
+                          ),
+                          color:
+                            categoryColors[transaction.category] || "#64748b",
+                          fontWeight: 700,
+                          fontSize: "0.75rem",
+                          borderRadius: "10px",
+                          border: `1px solid ${alpha(
+                            categoryColors[transaction.category] || "#64748b",
+                            0.3,
+                          )}`,
+                        }}
+                      />
+                      <Chip
+                        label={transaction.accountName || "N/A"}
+                        size="small"
+                        sx={{
+                          bgcolor: isDark ? alpha("#fff", 0.05) : "#f1f5f9",
+                          color: isDark ? "#94a3b8" : "#64748b",
+                          fontWeight: 700,
+                          fontSize: "0.75rem",
+                          borderRadius: "10px",
+                        }}
+                      />
+                      <Chip
+                        label={
+                          transaction.type === "INCOME" ? "Income" : "Expense"
+                        }
+                        size="small"
+                        sx={{
+                          bgcolor:
+                            transaction.type === "INCOME"
+                              ? alpha("#10b981", 0.1)
+                              : alpha("#ef4444", 0.1),
+                          color:
+                            transaction.type === "INCOME"
+                              ? "#10b981"
+                              : "#ef4444",
+                          fontWeight: 700,
+                          fontSize: "0.75rem",
+                          borderRadius: "10px",
+                        }}
+                      />
+                    </Box>
+
+                    <Box display="flex" gap={2}>
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        size="medium"
+                        startIcon={<Edit />}
+                        onClick={() => handleOpenDialog(transaction)}
+                        sx={{
+                          borderRadius: "12px",
+                          py: 1.25,
+                          textTransform: "none",
+                          fontWeight: 700,
+                          borderColor: "#6366f1",
+                          borderWidth: "2px",
+                          color: "#6366f1",
+                          "&:hover": {
+                            borderWidth: "2px",
+                            borderColor: "#4f46e5",
+                            bgcolor: alpha("#6366f1", 0.05),
+                          },
+                        }}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        size="medium"
+                        startIcon={<Delete />}
+                        onClick={() => handleDelete(transaction.id)}
+                        sx={{
+                          borderRadius: "12px",
+                          py: 1.25,
+                          textTransform: "none",
+                          fontWeight: 700,
+                          borderColor: "#ef4444",
+                          borderWidth: "2px",
+                          color: "#ef4444",
+                          "&:hover": {
+                            borderWidth: "2px",
+                            borderColor: "#dc2626",
+                            bgcolor: alpha("#ef4444", 0.05),
+                          },
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </Box>
+                  </Card>
+                </Grow>
+              ))}
+            </Stack>
+          )}
+        </Box>
+
+        {/* Enhanced Dialog */}
+        <Dialog
+          open={openDialog}
+          onClose={handleCloseDialog}
+          maxWidth="sm"
+          fullWidth
+          TransitionComponent={Slide}
+          TransitionProps={{ direction: "up" } as any}
+          PaperProps={{
+            sx: {
+              borderRadius: "28px",
+              bgcolor: isDark ? "#0f172a" : "#fff",
+              backgroundImage: "none",
+              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+              overflow: "hidden",
+            },
+          }}
+        >
+          {/* Dialog Header with Gradient */}
+          <Box
             sx={{
-              borderRadius: 3,
-              boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
-              bgcolor: isDark ? "#16213e" : "#fff",
-              p: 6,
-              textAlign: "center",
+              background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+              p: 4,
+              position: "relative",
+              overflow: "hidden",
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                top: -100,
+                right: -100,
+                width: 300,
+                height: 300,
+                background:
+                  "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
+                borderRadius: "50%",
+              },
             }}
           >
-            <Receipt
-              sx={{
-                fontSize: 64,
-                color: isDark ? "#3a4a5c" : "#cbd5e1",
-                mb: 2,
-              }}
-            />
-            <Typography variant="h6" color={isDark ? "#a0a0a0" : "#64748b"}>
-              No transactions found
-            </Typography>
-            <Typography
-              variant="body2"
-              color={isDark ? "#707070" : "#94a3b8"}
-              mt={1}
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              sx={{ position: "relative" }}
             >
-              {searchQuery
-                ? "Try adjusting your search"
-                : "Create your first transaction"}
-            </Typography>
-          </Card>
-        ) : (
-          <Stack spacing={2}>
-            {filteredTransactions.map((transaction) => (
-              <Card
-                key={transaction.id}
-                sx={{
-                  borderRadius: 3,
-                  boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
-                  bgcolor: isDark ? "#16213e" : "#fff",
-                  p: 2,
-                }}
-              >
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="start"
-                  mb={2}
-                >
-                  <Box flex={1}>
-                    <Typography
-                      variant="body1"
-                      fontWeight="700"
-                      sx={{ color: isDark ? "#fff" : "#1a1a2e", mb: 0.5 }}
-                    >
-                      {transaction.name}
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      sx={{ color: isDark ? "#a0a0a0" : "#64748b" }}
-                    >
-                      {new Date(transaction.date).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </Typography>
-                  </Box>
-                  <Typography
-                    variant="h6"
-                    fontWeight="700"
-                    sx={{
-                      color:
-                        transaction.type === "INCOME" ? "#10b981" : "#ef4444",
-                    }}
-                  >
-                    {transaction.type === "INCOME" ? "+" : "-"}
-                    {transaction.amount.toFixed(2)}
-                  </Typography>
-                </Box>
-                <Box display="flex" gap={1} mb={2} flexWrap="wrap">
-                  <Chip
-                    label={transaction.category}
-                    size="small"
-                    sx={{
-                      bgcolor: isDark ? "#2a3441" : "#f1f5f9",
-                      color: isDark ? "#a0a0a0" : "#64748b",
-                      fontWeight: 600,
-                    }}
-                  />
-                  <Chip
-                    label={transaction.accountName || "N/A"}
-                    size="small"
-                    sx={{
-                      bgcolor: isDark ? "#2a3441" : "#f1f5f9",
-                      color: isDark ? "#a0a0a0" : "#64748b",
-                      fontWeight: 600,
-                    }}
-                  />
-                </Box>
-                <Box display="flex" gap={1}>
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    size="small"
-                    startIcon={<Edit />}
-                    onClick={() => handleOpenDialog(transaction)}
-                    sx={{
-                      borderRadius: 2,
-                      textTransform: "none",
-                      borderColor: isDark ? "#667eea" : "#667eea",
-                      color: isDark ? "#667eea" : "#667eea",
-                      "&:hover": {
-                        borderColor: isDark ? "#7e8efa" : "#7e8efa",
-                        bgcolor: isDark ? "#1a2332" : "#f1f5f9",
-                      },
-                    }}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    size="small"
-                    startIcon={<Delete />}
-                    onClick={() => handleDelete(transaction.id)}
-                    sx={{
-                      borderRadius: 2,
-                      textTransform: "none",
-                      borderColor: "#ef4444",
-                      color: "#ef4444",
-                      "&:hover": {
-                        borderColor: "#dc2626",
-                        bgcolor: isDark ? "#2a3441" : "#fef2f2",
-                      },
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </Box>
-              </Card>
-            ))}
-          </Stack>
-        )}
-      </Box>
-
-      <Dialog
-        open={openDialog}
-        onClose={handleCloseDialog}
-        maxWidth="sm"
-        fullWidth
-        PaperProps={{
-          sx: {
-            borderRadius: 4,
-            bgcolor: isDark ? "#16213e" : "#fff",
-            backgroundImage: "none",
-          },
-        }}
-      >
-        <Box sx={{ p: 3 }}>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-            mb={3}
-          >
-            <Typography
-              variant="h5"
-              fontWeight="700"
-              sx={{ color: isDark ? "#fff" : "#1a1a2e" }}
-            >
-              {editingTransaction ? "Edit Transaction" : "New Transaction"}
-            </Typography>
-            <IconButton onClick={handleCloseDialog} size="small">
-              <Close />
-            </IconButton>
-          </Box>
-          <Divider sx={{ mb: 3 }} />
-          <DialogContent sx={{ p: 0 }}>
-            <Stack spacing={3}>
               <Box>
                 <Typography
+                  variant="h4"
+                  sx={{
+                    fontWeight: 800,
+                    color: "white",
+                    mb: 0.5,
+                    letterSpacing: "-0.01em",
+                  }}
+                >
+                  {editingTransaction ? "Edit Transaction" : "New Transaction"}
+                </Typography>
+                <Typography
                   variant="body2"
-                  fontWeight="600"
-                  mb={1.5}
-                  sx={{ color: isDark ? "#a0a0a0" : "#64748b" }}
+                  sx={{ color: "rgba(255,255,255,0.85)", fontWeight: 500 }}
+                >
+                  {editingTransaction
+                    ? "Update transaction details"
+                    : "Add a new transaction to your records"}
+                </Typography>
+              </Box>
+              <IconButton
+                onClick={handleCloseDialog}
+                sx={{
+                  bgcolor: "rgba(255,255,255,0.2)",
+                  borderRadius: "12px",
+                  color: "white",
+                  "&:hover": {
+                    bgcolor: "rgba(255,255,255,0.3)",
+                  },
+                }}
+              >
+                <Close />
+              </IconButton>
+            </Stack>
+          </Box>
+
+          <DialogContent sx={{ p: 4 }}>
+            <Stack spacing={3.5}>
+              {/* Transaction Type Selection */}
+              <Box>
+                <Typography
+                  variant="subtitle2"
+                  fontWeight="700"
+                  mb={2}
+                  sx={{
+                    color: isDark ? "#94a3b8" : "#64748b",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.5px",
+                    fontSize: "0.85rem",
+                  }}
                 >
                   Transaction Type
                 </Typography>
@@ -945,18 +1619,39 @@ const TransactionsPage = () => {
                       setFormData({ ...formData, type: "EXPENSE" })
                     }
                     sx={{
-                      py: 1.5,
-                      borderRadius: 2,
+                      py: 2.5,
+                      borderRadius: "14px",
                       textTransform: "none",
-                      fontWeight: 600,
-                      ...(formData.type === "EXPENSE" && {
-                        background:
-                          "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-                        border: "none",
-                      }),
+                      fontWeight: 800,
+                      fontSize: "1rem",
+                      transition: "all 0.3s ease",
+                      ...(formData.type === "EXPENSE"
+                        ? {
+                            background:
+                              "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
+                            boxShadow: "0 8px 24px rgba(239, 68, 68, 0.4)",
+                            border: "none",
+                            "&:hover": {
+                              background:
+                                "linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)",
+                              boxShadow: "0 12px 32px rgba(239, 68, 68, 0.5)",
+                            },
+                          }
+                        : {
+                            borderColor: isDark
+                              ? alpha("#fff", 0.1)
+                              : "#e2e8f0",
+                            borderWidth: "2px",
+                            color: isDark ? "#94a3b8" : "#64748b",
+                            "&:hover": {
+                              borderWidth: "2px",
+                              borderColor: "#ef4444",
+                              bgcolor: alpha("#ef4444", 0.05),
+                            },
+                          }),
                     }}
                   >
-                    Expense
+                    💸 Expense
                   </Button>
                   <Button
                     fullWidth
@@ -965,21 +1660,43 @@ const TransactionsPage = () => {
                     }
                     onClick={() => setFormData({ ...formData, type: "INCOME" })}
                     sx={{
-                      py: 1.5,
-                      borderRadius: 2,
+                      py: 2.5,
+                      borderRadius: "14px",
                       textTransform: "none",
-                      fontWeight: 600,
-                      ...(formData.type === "INCOME" && {
-                        background:
-                          "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-                        border: "none",
-                      }),
+                      fontWeight: 800,
+                      fontSize: "1rem",
+                      transition: "all 0.3s ease",
+                      ...(formData.type === "INCOME"
+                        ? {
+                            background:
+                              "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+                            boxShadow: "0 8px 24px rgba(16, 185, 129, 0.4)",
+                            border: "none",
+                            "&:hover": {
+                              background:
+                                "linear-gradient(135deg, #059669 0%, #047857 100%)",
+                              boxShadow: "0 12px 32px rgba(16, 185, 129, 0.5)",
+                            },
+                          }
+                        : {
+                            borderColor: isDark
+                              ? alpha("#fff", 0.1)
+                              : "#e2e8f0",
+                            borderWidth: "2px",
+                            color: isDark ? "#94a3b8" : "#64748b",
+                            "&:hover": {
+                              borderWidth: "2px",
+                              borderColor: "#10b981",
+                              bgcolor: alpha("#10b981", 0.05),
+                            },
+                          }),
                     }}
                   >
-                    Income
+                    💰 Income
                   </Button>
                 </Box>
               </Box>
+
               <TextField
                 label="Transaction Name"
                 fullWidth
@@ -990,8 +1707,25 @@ const TransactionsPage = () => {
                 }
                 placeholder="e.g., Grocery Shopping"
                 InputLabelProps={{ shrink: true }}
-                sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "14px",
+                    bgcolor: isDark ? alpha("#fff", 0.02) : "#f8fafc",
+                    "& fieldset": {
+                      borderColor: isDark ? alpha("#fff", 0.08) : "#e2e8f0",
+                      borderWidth: "2px",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#6366f1",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#6366f1",
+                      borderWidth: "2px",
+                    },
+                  },
+                }}
               />
+
               <TextField
                 label="Amount (TND)"
                 type="number"
@@ -1005,11 +1739,38 @@ const TransactionsPage = () => {
                 InputLabelProps={{ shrink: true }}
                 InputProps={{
                   startAdornment: (
-                    <InputAdornment position="start">TND</InputAdornment>
+                    <InputAdornment position="start">
+                      <Typography
+                        sx={{
+                          color: "#6366f1",
+                          fontWeight: 800,
+                          fontSize: "1.1rem",
+                        }}
+                      >
+                        TND
+                      </Typography>
+                    </InputAdornment>
                   ),
                 }}
-                sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "14px",
+                    bgcolor: isDark ? alpha("#fff", 0.02) : "#f8fafc",
+                    "& fieldset": {
+                      borderColor: isDark ? alpha("#fff", 0.08) : "#e2e8f0",
+                      borderWidth: "2px",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#6366f1",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#6366f1",
+                      borderWidth: "2px",
+                    },
+                  },
+                }}
               />
+
               <TextField
                 label="Date"
                 type="date"
@@ -1023,12 +1784,29 @@ const TransactionsPage = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <CalendarToday sx={{ color: colors.primary[500] }} />
+                      <CalendarToday sx={{ color: "#6366f1", fontSize: 22 }} />
                     </InputAdornment>
                   ),
                 }}
-                sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "14px",
+                    bgcolor: isDark ? alpha("#fff", 0.02) : "#f8fafc",
+                    "& fieldset": {
+                      borderColor: isDark ? alpha("#fff", 0.08) : "#e2e8f0",
+                      borderWidth: "2px",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#6366f1",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#6366f1",
+                      borderWidth: "2px",
+                    },
+                  },
+                }}
               />
+
               <TextField
                 select
                 label="Category"
@@ -1042,18 +1820,48 @@ const TransactionsPage = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <CategoryIcon sx={{ color: colors.primary[500] }} />
+                      <CategoryIcon sx={{ color: "#6366f1", fontSize: 22 }} />
                     </InputAdornment>
                   ),
                 }}
-                sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "14px",
+                    bgcolor: isDark ? alpha("#fff", 0.02) : "#f8fafc",
+                    "& fieldset": {
+                      borderColor: isDark ? alpha("#fff", 0.08) : "#e2e8f0",
+                      borderWidth: "2px",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#6366f1",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#6366f1",
+                      borderWidth: "2px",
+                    },
+                  },
+                }}
               >
                 {categories.map((cat) => (
                   <MenuItem key={cat} value={cat}>
-                    {cat}
+                    <Box display="flex" alignItems="center" gap={2}>
+                      <Typography fontSize="1.25rem">
+                        {categoryIcons[cat]}
+                      </Typography>
+                      <Box
+                        sx={{
+                          width: 12,
+                          height: 12,
+                          borderRadius: "50%",
+                          bgcolor: categoryColors[cat],
+                        }}
+                      />
+                      <Typography fontWeight="600">{cat}</Typography>
+                    </Box>
                   </MenuItem>
                 ))}
               </TextField>
+
               <TextField
                 select
                 label="Account"
@@ -1068,50 +1876,93 @@ const TransactionsPage = () => {
                 }
                 disabled={!!editingTransaction}
                 InputLabelProps={{ shrink: true }}
-                sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "14px",
+                    bgcolor: isDark ? alpha("#fff", 0.02) : "#f8fafc",
+                    "& fieldset": {
+                      borderColor: isDark ? alpha("#fff", 0.08) : "#e2e8f0",
+                      borderWidth: "2px",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#6366f1",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#6366f1",
+                      borderWidth: "2px",
+                    },
+                  },
+                }}
               >
                 {availableAccounts.map((account) => (
                   <MenuItem key={account.id} value={account.id}>
-                    {account.name} ({account.currentBalance.toFixed(2)} TND)
+                    <Box>
+                      <Typography fontWeight="700">{account.name}</Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Balance: {account.currentBalance.toFixed(2)} TND
+                      </Typography>
+                    </Box>
                   </MenuItem>
                 ))}
               </TextField>
+
+              {/* File Upload */}
               <Box>
                 <Typography
-                  variant="body2"
-                  fontWeight="600"
-                  mb={1}
-                  sx={{ color: isDark ? "#a0a0a0" : "#64748b" }}
+                  variant="subtitle2"
+                  fontWeight="700"
+                  mb={2}
+                  sx={{
+                    color: isDark ? "#94a3b8" : "#64748b",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.5px",
+                    fontSize: "0.85rem",
+                  }}
                 >
                   Attach Document (Optional)
                 </Typography>
                 {selectedFile ? (
                   <Box
                     sx={{
-                      p: 2,
-                      borderRadius: 2,
-                      bgcolor: isDark ? "#1a2332" : "#f8fafc",
-                      border: `1px solid ${isDark ? "#3a4a5c" : "#cbd5e1"}`,
+                      p: 3,
+                      borderRadius: "14px",
+                      bgcolor: isDark
+                        ? alpha("#10b981", 0.1)
+                        : alpha("#10b981", 0.08),
+                      border: `2px solid ${alpha("#10b981", 0.3)}`,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
                     }}
                   >
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <CloudUpload
-                        sx={{ color: isDark ? "#a0a0a0" : "#64748b" }}
-                      />
+                    <Box display="flex" alignItems="center" gap={2}>
+                      <Box
+                        sx={{
+                          width: 52,
+                          height: 52,
+                          borderRadius: "12px",
+                          bgcolor: alpha("#10b981", 0.2),
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <CloudUpload sx={{ color: "#10b981", fontSize: 28 }} />
+                      </Box>
                       <Box>
                         <Typography
-                          variant="body2"
-                          fontWeight="600"
-                          sx={{ color: isDark ? "#fff" : "#1a1a2e" }}
+                          variant="body1"
+                          fontWeight="700"
+                          sx={{ color: isDark ? "#fff" : "#0f172a" }}
                         >
                           {selectedFile.name}
                         </Typography>
                         <Typography
                           variant="caption"
-                          sx={{ color: isDark ? "#707070" : "#94a3b8" }}
+                          sx={{
+                            color: isDark ? "#64748b" : "#94a3b8",
+                            fontWeight: 600,
+                          }}
                         >
                           {(selectedFile.size / 1024).toFixed(2)} KB
                         </Typography>
@@ -1120,8 +1971,14 @@ const TransactionsPage = () => {
                     <IconButton
                       size="small"
                       onClick={() => setSelectedFile(null)}
+                      sx={{
+                        bgcolor: alpha("#ef4444", 0.1),
+                        color: "#ef4444",
+                        borderRadius: "10px",
+                        "&:hover": { bgcolor: alpha("#ef4444", 0.2) },
+                      }}
                     >
-                      <Close />
+                      <Close fontSize="small" />
                     </IconButton>
                   </Box>
                 ) : (
@@ -1131,15 +1988,18 @@ const TransactionsPage = () => {
                     fullWidth
                     startIcon={<AttachFile />}
                     sx={{
-                      py: 1.5,
-                      borderRadius: 2,
+                      py: 2.5,
+                      borderRadius: "14px",
                       textTransform: "none",
+                      fontWeight: 700,
                       borderStyle: "dashed",
-                      color: isDark ? "#a0a0a0" : "#64748b",
-                      borderColor: isDark ? "#3a4a5c" : "#cbd5e1",
+                      borderWidth: 2,
+                      color: isDark ? "#64748b" : "#94a3b8",
+                      borderColor: isDark ? alpha("#fff", 0.1) : "#e2e8f0",
                       "&:hover": {
-                        borderColor: "#667eea",
-                        bgcolor: isDark ? "#1a2332" : "#f8fafc",
+                        borderWidth: 2,
+                        borderColor: "#6366f1",
+                        bgcolor: alpha("#6366f1", 0.05),
                       },
                     }}
                   >
@@ -1155,21 +2015,33 @@ const TransactionsPage = () => {
               </Box>
             </Stack>
           </DialogContent>
-          <Box display="flex" gap={2} mt={4}>
+
+          {/* Dialog Footer */}
+          <Box
+            sx={{
+              p: 4,
+              pt: 2,
+              display: "flex",
+              gap: 2,
+            }}
+          >
             <Button
               fullWidth
               variant="outlined"
               onClick={handleCloseDialog}
               sx={{
-                py: 1.5,
-                borderRadius: 2,
+                py: 2,
+                borderRadius: "14px",
                 textTransform: "none",
-                fontWeight: 600,
-                borderColor: isDark ? "#3a4a5c" : "#cbd5e1",
-                color: isDark ? "#a0a0a0" : "#64748b",
+                fontWeight: 700,
+                fontSize: "1rem",
+                borderColor: isDark ? alpha("#fff", 0.1) : "#e2e8f0",
+                borderWidth: "2px",
+                color: isDark ? "#94a3b8" : "#64748b",
                 "&:hover": {
-                  borderColor: isDark ? "#4a5a6c" : "#94a3b8",
-                  bgcolor: isDark ? "#1a2332" : "#f8fafc",
+                  borderWidth: "2px",
+                  borderColor: isDark ? alpha("#fff", 0.2) : "#cbd5e1",
+                  bgcolor: isDark ? alpha("#fff", 0.02) : "#f8fafc",
                 },
               }}
             >
@@ -1186,16 +2058,23 @@ const TransactionsPage = () => {
                 !formData.accountId
               }
               sx={{
-                py: 1.5,
-                borderRadius: 2,
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                py: 2,
+                borderRadius: "14px",
+                background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
                 textTransform: "none",
-                fontWeight: 600,
-                boxShadow: "0 4px 12px rgba(102, 126, 234, 0.4)",
-                "&:hover": { boxShadow: "0 6px 20px rgba(102, 126, 234, 0.6)" },
+                fontWeight: 800,
+                fontSize: "1rem",
+                boxShadow: "0 8px 24px rgba(99, 102, 241, 0.4)",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                  boxShadow: "0 12px 32px rgba(99, 102, 241, 0.5)",
+                  transform: "translateY(-2px)",
+                },
                 "&:disabled": {
-                  background: isDark ? "#2a3441" : "#e2e8f0",
-                  color: isDark ? "#5a6a7c" : "#94a3b8",
+                  background: isDark ? alpha("#fff", 0.05) : "#e2e8f0",
+                  color: isDark ? "#475569" : "#94a3b8",
                   boxShadow: "none",
                 },
               }}
@@ -1203,27 +2082,38 @@ const TransactionsPage = () => {
               {editingTransaction ? "Update Transaction" : "Create Transaction"}
             </Button>
           </Box>
-        </Box>
-      </Dialog>
+        </Dialog>
 
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={4000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-      >
-        <Alert
+        {/* Snackbar */}
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={4000}
           onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          sx={{
-            width: "100%",
-            borderRadius: 2,
-            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-          }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
+          <Alert
+            onClose={handleCloseSnackbar}
+            severity={snackbar.severity}
+            sx={{
+              borderRadius: "14px",
+              fontWeight: 700,
+              boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+              ...(snackbar.severity === "success" && {
+                bgcolor: "#10b981",
+                color: "#fff",
+                "& .MuiAlert-icon": { color: "#fff" },
+              }),
+              ...(snackbar.severity === "error" && {
+                bgcolor: "#ef4444",
+                color: "#fff",
+                "& .MuiAlert-icon": { color: "#fff" },
+              }),
+            }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+      </Box>
     </Box>
   );
 };

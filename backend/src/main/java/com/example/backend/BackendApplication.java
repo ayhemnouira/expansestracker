@@ -1,5 +1,5 @@
 package com.example.backend;
-// ExpensesTracker - Personal Finance Management Application
+
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,7 +8,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class BackendApplication {
 
 	public static void main(String[] args) {
+		// Load environment variables from .env file
+		Dotenv dotenv = Dotenv.configure()
+				.directory("./")
+				.ignoreIfMissing()
+				.load();
+
+		// Set them as system properties so Spring can use them
+		dotenv.entries().forEach(entry ->
+				System.setProperty(entry.getKey(), entry.getValue())
+		);
+
+		// Now start Spring Boot
 		SpringApplication.run(BackendApplication.class, args);
 	}
-
 }
