@@ -36,7 +36,6 @@ import {
   CalendarToday,
   Savings,
   Receipt,
-  PriorityHigh,
 } from "@mui/icons-material";
 import { toast } from "react-hot-toast";
 

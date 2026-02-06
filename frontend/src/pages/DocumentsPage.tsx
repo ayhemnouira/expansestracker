@@ -22,7 +22,6 @@ import {
   Fade,
   Grow,
   Slide,
-  Avatar,
 } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
 import {
@@ -287,14 +286,6 @@ const DocumentsPage = () => {
       transactionId: undefined,
     });
   };
-
-  const getFileIcon = (fileType: string) => {
-    if (fileType === "application/pdf") {
-      return <PictureAsPdf sx={{ fontSize: 48, color: "#ef4444" }} />;
-    }
-    return <ImageIcon sx={{ fontSize: 48, color: "#3b82f6" }} />;
-  };
-
   const getTypeInfo = (type: string) => {
     return (
       documentTypes.find((t) => t.value === type) ||
