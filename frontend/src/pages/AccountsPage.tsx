@@ -270,50 +270,33 @@ const AccountsPage = () => {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
-        background:
-          theme.palette.mode === "dark"
-            ? "linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%)"
-            : "#ffffff",
-        position: "relative",
-        "&::before": {
-          content: '""',
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: "400px",
-          background:
-            theme.palette.mode === "dark"
-              ? `radial-gradient(ellipse at top, ${colors.primary[900]}40 0%, transparent 60%)`
-              : "transparent",
-          pointerEvents: "none",
-        },
+        height: "100%",
+        overflow: "auto",
+        p: 3,
+        pl: 0,
       }}
     >
       <Box
         sx={{
           maxWidth: 1400,
           mx: "auto",
-          px: { xs: 2, sm: 3, md: 4 },
-          py: 4,
-          position: "relative",
+          px: { xs: 2, sm: 3 },
         }}
       >
         {/* Modern Header */}
-        <Box mb={5}>
+        <Box mb={{ xs: 3, md: 5 }}>
           <Stack
             direction="row"
             alignItems="center"
             justifyContent="space-between"
-            mb={1}
+            mb={{ xs: 0.5, md: 1 }}
           >
             <Box>
               <Typography
                 variant="h3"
                 sx={{
                   fontWeight: 700,
-                  fontSize: { xs: "2rem", md: "2.5rem" },
+                  fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" },
                   background:
                     theme.palette.mode === "dark"
                       ? "linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%)"
@@ -335,13 +318,14 @@ const AccountsPage = () => {
                       ? colors.grey[400]
                       : colors.grey[600],
                   fontWeight: 500,
+                  fontSize: { xs: "0.875rem", md: "1rem" },
                 }}
               >
                 Track and manage your financial portfolio
               </Typography>
             </Box>
             <Chip
-              icon={<AccountBalance sx={{ fontSize: 20 }} />}
+              icon={<AccountBalance sx={{ fontSize: { xs: 16, md: 20 } }} />}
               label={`${accounts.length} Total`}
               sx={{
                 background:
@@ -353,9 +337,9 @@ const AccountsPage = () => {
                     ? colors.primary[300]
                     : colors.primary[700],
                 fontWeight: 600,
-                fontSize: "0.9rem",
-                px: 1,
-                py: 2.5,
+                fontSize: { xs: "0.75rem", md: "0.9rem" },
+                px: { xs: 0.5, md: 1 },
+                py: { xs: 1.5, md: 2.5 },
                 borderRadius: "12px",
                 border: `1px solid ${
                   theme.palette.mode === "dark"
@@ -372,7 +356,7 @@ const AccountsPage = () => {
               severity="error"
               onClose={() => setError(null)}
               sx={{
-                mb: 3,
+                mb: { xs: 2, md: 3 },
                 borderRadius: "16px",
                 border: `1px solid ${colors.error[400]}40`,
                 backdropFilter: "blur(10px)",
@@ -384,7 +368,11 @@ const AccountsPage = () => {
 
           {/* Enhanced Summary Cards */}
           {summary && (
-            <Grid container spacing={2.5} mt={1}>
+            <Grid
+              container
+              spacing={{ xs: 1.5, md: 2.5 }}
+              mt={{ xs: 0.5, md: 1 }}
+            >
               {/* Total Balance Card - Featured */}
               <Grid size={{ xs: 12, md: 6 }}>
                 <Card
@@ -393,8 +381,8 @@ const AccountsPage = () => {
                       theme.palette.mode === "dark"
                         ? "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)"
                         : "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)",
-                    borderRadius: "20px",
-                    p: 3,
+                    borderRadius: { xs: "16px", md: "20px" },
+                    p: { xs: 2, md: 3 },
                     position: "relative",
                     overflow: "hidden",
                     border: "none",
@@ -428,14 +416,14 @@ const AccountsPage = () => {
                     <Stack
                       direction="row"
                       alignItems="center"
-                      spacing={1.5}
-                      mb={2}
+                      spacing={{ xs: 1, md: 1.5 }}
+                      mb={{ xs: 1.5, md: 2 }}
                     >
                       <Box
                         sx={{
-                          width: 48,
-                          height: 48,
-                          borderRadius: "14px",
+                          width: { xs: 40, md: 48 },
+                          height: { xs: 40, md: 48 },
+                          borderRadius: { xs: "12px", md: "14px" },
                           background: "rgba(255,255,255,0.2)",
                           backdropFilter: "blur(10px)",
                           display: "flex",
@@ -443,7 +431,9 @@ const AccountsPage = () => {
                           justifyContent: "center",
                         }}
                       >
-                        <AttachMoney sx={{ fontSize: 28, color: "white" }} />
+                        <AttachMoney
+                          sx={{ fontSize: { xs: 24, md: 28 }, color: "white" }}
+                        />
                       </Box>
                       <Box>
                         <Typography
@@ -465,14 +455,14 @@ const AccountsPage = () => {
                       sx={{
                         color: "white",
                         fontWeight: 700,
-                        fontSize: { xs: "2rem", md: "2.5rem" },
+                        fontSize: { xs: "1.75rem", sm: "2rem", md: "2.5rem" },
                         letterSpacing: "-0.02em",
-                        mb: 1,
+                        mb: { xs: 0.5, md: 1 },
                       }}
                     >
                       {summary.totalBalance.toFixed(2)} TND
                     </Typography>
-                    <Stack direction="row" spacing={3} mt={2}>
+                    <Stack direction="row" spacing={3} mt={{ xs: 1, md: 2 }}>
                       <Box>
                         <Typography
                           variant="caption"
@@ -503,8 +493,8 @@ const AccountsPage = () => {
                       theme.palette.mode === "dark"
                         ? "rgba(16, 185, 129, 0.1)"
                         : "rgba(16, 185, 129, 0.08)",
-                    borderRadius: "20px",
-                    p: 3,
+                    borderRadius: { xs: "16px", md: "20px" },
+                    p: { xs: 2, md: 3 },
                     border: `1px solid ${
                       theme.palette.mode === "dark"
                         ? "rgba(16, 185, 129, 0.2)"
@@ -521,14 +511,14 @@ const AccountsPage = () => {
                   <Stack
                     direction="row"
                     alignItems="center"
-                    spacing={1.5}
-                    mb={2}
+                    spacing={{ xs: 1, md: 1.5 }}
+                    mb={{ xs: 1.5, md: 2 }}
                   >
                     <Box
                       sx={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: "12px",
+                        width: { xs: 36, md: 44 },
+                        height: { xs: 36, md: 44 },
+                        borderRadius: { xs: "10px", md: "12px" },
                         background:
                           theme.palette.mode === "dark"
                             ? "rgba(16, 185, 129, 0.2)"
@@ -539,7 +529,10 @@ const AccountsPage = () => {
                       }}
                     >
                       <TrendingUp
-                        sx={{ fontSize: 24, color: colors.success[500] }}
+                        sx={{
+                          fontSize: { xs: 20, md: 24 },
+                          color: colors.success[500],
+                        }}
                       />
                     </Box>
                   </Stack>
@@ -551,9 +544,9 @@ const AccountsPage = () => {
                           ? colors.grey[400]
                           : colors.grey[600],
                       fontWeight: 600,
-                      mb: 1,
+                      mb: { xs: 0.5, md: 1 },
                       textTransform: "uppercase",
-                      fontSize: "0.7rem",
+                      fontSize: { xs: "0.65rem", md: "0.7rem" },
                       letterSpacing: "0.5px",
                     }}
                   >
@@ -564,7 +557,7 @@ const AccountsPage = () => {
                     sx={{
                       color: colors.success[500],
                       fontWeight: 700,
-                      fontSize: "1.5rem",
+                      fontSize: { xs: "1.25rem", md: "1.5rem" },
                       letterSpacing: "-0.01em",
                     }}
                   >
@@ -587,8 +580,8 @@ const AccountsPage = () => {
                       theme.palette.mode === "dark"
                         ? "rgba(239, 68, 68, 0.1)"
                         : "rgba(239, 68, 68, 0.08)",
-                    borderRadius: "20px",
-                    p: 3,
+                    borderRadius: { xs: "16px", md: "20px" },
+                    p: { xs: 2, md: 3 },
                     border: `1px solid ${
                       theme.palette.mode === "dark"
                         ? "rgba(239, 68, 68, 0.2)"
@@ -605,14 +598,14 @@ const AccountsPage = () => {
                   <Stack
                     direction="row"
                     alignItems="center"
-                    spacing={1.5}
-                    mb={2}
+                    spacing={{ xs: 1, md: 1.5 }}
+                    mb={{ xs: 1.5, md: 2 }}
                   >
                     <Box
                       sx={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: "12px",
+                        width: { xs: 36, md: 44 },
+                        height: { xs: 36, md: 44 },
+                        borderRadius: { xs: "10px", md: "12px" },
                         background:
                           theme.palette.mode === "dark"
                             ? "rgba(239, 68, 68, 0.2)"
@@ -623,7 +616,10 @@ const AccountsPage = () => {
                       }}
                     >
                       <TrendingDown
-                        sx={{ fontSize: 24, color: colors.error[500] }}
+                        sx={{
+                          fontSize: { xs: 20, md: 24 },
+                          color: colors.error[500],
+                        }}
                       />
                     </Box>
                   </Stack>
@@ -635,9 +631,9 @@ const AccountsPage = () => {
                           ? colors.grey[400]
                           : colors.grey[600],
                       fontWeight: 600,
-                      mb: 1,
+                      mb: { xs: 0.5, md: 1 },
                       textTransform: "uppercase",
-                      fontSize: "0.7rem",
+                      fontSize: { xs: "0.65rem", md: "0.7rem" },
                       letterSpacing: "0.5px",
                     }}
                   >
@@ -648,7 +644,7 @@ const AccountsPage = () => {
                     sx={{
                       color: colors.error[500],
                       fontWeight: 700,
-                      fontSize: "1.5rem",
+                      fontSize: { xs: "1.25rem", md: "1.5rem" },
                       letterSpacing: "-0.01em",
                     }}
                   >
@@ -670,8 +666,13 @@ const AccountsPage = () => {
         <Box>
           {/* Enabled Accounts */}
           {enabledAccounts.length > 0 && (
-            <Box mb={5}>
-              <Stack direction="row" alignItems="center" spacing={2} mb={3}>
+            <Box mb={{ xs: 3, md: 5 }}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing={2}
+                mb={{ xs: 2, md: 3 }}
+              >
                 <Box
                   sx={{
                     width: 4,
@@ -687,6 +688,7 @@ const AccountsPage = () => {
                   variant="h5"
                   sx={{
                     fontWeight: 700,
+                    fontSize: { xs: "1.125rem", md: "1.5rem" },
                     color:
                       theme.palette.mode === "dark"
                         ? colors.grey[100]
@@ -710,7 +712,7 @@ const AccountsPage = () => {
                   }}
                 />
               </Stack>
-              <Grid container spacing={3}>
+              <Grid container spacing={{ xs: 2, md: 3 }}>
                 {enabledAccounts.map((account, index) => (
                   <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={account.id}>
                     <Zoom
@@ -821,8 +823,13 @@ const AccountsPage = () => {
 
           {/* Disabled Accounts */}
           {disabledAccounts.length > 0 && (
-            <Box mb={5}>
-              <Stack direction="row" alignItems="center" spacing={2} mb={3}>
+            <Box mb={{ xs: 3, md: 5 }}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing={2}
+                mb={{ xs: 2, md: 3 }}
+              >
                 <Box
                   sx={{
                     width: 4,
@@ -838,6 +845,7 @@ const AccountsPage = () => {
                   variant="h5"
                   sx={{
                     fontWeight: 700,
+                    fontSize: { xs: "1.125rem", md: "1.5rem" },
                     color:
                       theme.palette.mode === "dark"
                         ? colors.grey[400]
@@ -861,7 +869,7 @@ const AccountsPage = () => {
                   }}
                 />
               </Stack>
-              <Grid container spacing={3}>
+              <Grid container spacing={{ xs: 2, md: 3 }}>
                 {disabledAccounts.map((account) => (
                   <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={account.id}>
                     <Card
@@ -870,8 +878,8 @@ const AccountsPage = () => {
                           theme.palette.mode === "dark"
                             ? "linear-gradient(135deg, rgba(55, 65, 81, 0.4) 0%, rgba(31, 41, 55, 0.4) 100%)"
                             : "linear-gradient(135deg, rgba(229, 231, 235, 0.6) 0%, rgba(209, 213, 219, 0.6) 100%)",
-                        borderRadius: "20px",
-                        p: 3,
+                        borderRadius: { xs: "16px", md: "20px" },
+                        p: { xs: 2, md: 3 },
                         border: `1px solid ${
                           theme.palette.mode === "dark"
                             ? colors.grey[700]
@@ -894,7 +902,7 @@ const AccountsPage = () => {
                         direction="row"
                         justifyContent="space-between"
                         alignItems="flex-start"
-                        mb={3}
+                        mb={{ xs: 2, md: 3 }}
                       >
                         <Box>
                           <Chip
@@ -986,7 +994,7 @@ const AccountsPage = () => {
                           </Tooltip>
                         </Stack>
                       </Stack>
-                      <Box mb={2}>
+                      <Box mb={{ xs: 1.5, md: 2 }}>
                         <Typography
                           variant="caption"
                           sx={{
@@ -1071,7 +1079,7 @@ const AccountsPage = () => {
           {accounts.length === 0 && (
             <Card
               sx={{
-                borderRadius: "24px",
+                borderRadius: { xs: "20px", md: "24px" },
                 border: `2px dashed ${
                   theme.palette.mode === "dark"
                     ? colors.grey[700]
@@ -1082,32 +1090,35 @@ const AccountsPage = () => {
                     ? "rgba(17, 24, 39, 0.4)"
                     : "rgba(255, 255, 255, 0.6)",
                 backdropFilter: "blur(10px)",
-                p: 6,
+                p: { xs: 4, md: 6 },
                 textAlign: "center",
               }}
             >
               <Box
                 sx={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: "24px",
+                  width: { xs: 80, md: 100 },
+                  height: { xs: 80, md: 100 },
+                  borderRadius: { xs: "20px", md: "24px" },
                   background:
                     "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   mx: "auto",
-                  mb: 3,
+                  mb: { xs: 2, md: 3 },
                   boxShadow: "0 12px 40px rgba(99, 102, 241, 0.3)",
                 }}
               >
-                <AccountBalance sx={{ fontSize: 48, color: "white" }} />
+                <AccountBalance
+                  sx={{ fontSize: { xs: 40, md: 48 }, color: "white" }}
+                />
               </Box>
               <Typography
                 variant="h4"
                 sx={{
                   fontWeight: 700,
-                  mb: 1.5,
+                  fontSize: { xs: "1.5rem", md: "2rem" },
+                  mb: { xs: 1, md: 1.5 },
                   color:
                     theme.palette.mode === "dark"
                       ? colors.grey[100]
@@ -1124,10 +1135,11 @@ const AccountsPage = () => {
                     theme.palette.mode === "dark"
                       ? colors.grey[400]
                       : colors.grey[600],
-                  mb: 4,
+                  mb: { xs: 3, md: 4 },
                   maxWidth: 480,
                   mx: "auto",
                   lineHeight: 1.7,
+                  fontSize: { xs: "0.875rem", md: "1rem" },
                 }}
               >
                 Start managing your finances by creating your first account.
@@ -1172,10 +1184,10 @@ const AccountsPage = () => {
             onClick={() => handleOpenDialog()}
             sx={{
               position: "fixed",
-              bottom: 32,
-              right: 32,
-              width: 64,
-              height: 64,
+              bottom: { xs: 20, md: 32 },
+              right: { xs: 20, md: 32 },
+              width: { xs: 56, md: 64 },
+              height: { xs: 56, md: 64 },
               background: "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)",
               boxShadow: "0 8px 32px rgba(99, 102, 241, 0.4)",
               transition: "all 0.3s ease",
@@ -1186,11 +1198,11 @@ const AccountsPage = () => {
               },
             }}
           >
-            <Add sx={{ fontSize: 32 }} />
+            <Add sx={{ fontSize: { xs: 28, md: 32 } }} />
           </Fab>
         )}
 
-        {/* Enhanced Dialog */}
+        {/* Dialog - keeping the same as before */}
         <Dialog
           open={openDialog}
           onClose={handleCloseDialog}
