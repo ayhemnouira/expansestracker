@@ -13,7 +13,7 @@ A modern, full-stack financial management application built with **Spring Boot**
 [![Portfolio](https://img.shields.io/badge/Portfolio-View_Projects-0077B5?style=for-the-badge&logo=about.me&logoColor=white)](https://portfolio-roan-psi-26.vercel.app/)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ayhemnouira/)
 
-**📺 [Watch Demo Video](#-demo-video)** | **📖 [View Screenshots](#-screenshots)** | **🚀 [Quick Start Guide](#-getting-started)**
+ **📖 [View Screenshots](#-screenshots)** | **🚀 [Quick Start Guide](#-getting-started)**
 
 </div>
 
