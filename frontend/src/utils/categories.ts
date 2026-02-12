@@ -8,6 +8,13 @@ export interface CategoryInfo {
 }
 
 export const CATEGORIES: CategoryInfo[] = [
+  { value: "Salary", label: "Salary", icon: "💰", color: "bg-emerald-500" },
+  {
+    value: "Investment",
+    label: "Investment",
+    icon: "📈",
+    color: "bg-blue-600",
+  },
   { value: "Food", label: "Food & Dining", icon: "🍔", color: "bg-orange-500" },
   {
     value: "Transport",
@@ -44,7 +51,7 @@ export const CATEGORIES: CategoryInfo[] = [
     color: "bg-yellow-600",
   },
   { value: "Housing", label: "Housing", icon: "🏠", color: "bg-teal-500" },
-  { value: "Income", label: "Income", icon: "💰", color: "bg-emerald-500" },
+  { value: "Income", label: "Income", icon: "💵", color: "bg-green-600" },
   { value: "Other", label: "Other", icon: "📦", color: "bg-gray-500" },
 ];
 
@@ -55,12 +62,14 @@ export const standardizeCategory = (category: string): string => {
 export const getCategoryInfo = (categoryName: string): CategoryInfo => {
   const normalized = standardizeCategory(categoryName);
   const found = CATEGORIES.find(
-    (cat) => standardizeCategory(cat.value) === normalized
+    (cat) => standardizeCategory(cat.value) === normalized,
   );
   return found || CATEGORIES[CATEGORIES.length - 1];
 };
 
 const TAILWIND_TO_HEX: Record<string, string> = {
+  "bg-emerald-500": "#10B981",
+  "bg-blue-600": "#2563EB",
   "bg-orange-500": "#F97316",
   "bg-blue-500": "#3B82F6",
   "bg-pink-500": "#EC4899",
@@ -69,12 +78,11 @@ const TAILWIND_TO_HEX: Record<string, string> = {
   "bg-indigo-500": "#6366F1",
   "bg-yellow-500": "#EAB308",
   "bg-gray-500": "#6B7280",
-
   "bg-green-500": "#22C55E",
   "bg-amber-500": "#F59E0B",
   "bg-yellow-600": "#CA8A04",
   "bg-teal-500": "#14B8A6",
-  "bg-emerald-500": "#10B981",
+  "bg-green-600": "#16A34A",
 };
 
 export const getCategoryColor = (categoryName: string): string => {

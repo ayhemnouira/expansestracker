@@ -16,7 +16,6 @@ import BankCard from "../../components/BankCard";
 import { getUserTransactions } from "../../api/transactionService";
 import { getCategoryInfo } from "../../utils/categories";
 
-
 interface RightSidebarProps {
   imageUrl?: string;
   banks?: Account[];
@@ -27,8 +26,10 @@ interface RightSidebarProps {
 // Create gradient mapping based on your category colors
 const getGradientForCategory = (categoryName: string): string[] => {
   const info = getCategoryInfo(categoryName);
-  
+
   const gradientMap: Record<string, string[]> = {
+    "bg-emerald-500": ["#10B981", "#059669"], // Salary (green)
+    "bg-blue-600": ["#2563EB", "#1D4ED8"], // Investment (blue)
     "bg-green-500": ["#22C55E", "#16A34A"],
     "bg-amber-500": ["#F59E0B", "#D97706"],
     "bg-blue-500": ["#3B82F6", "#2563EB"],
@@ -37,13 +38,13 @@ const getGradientForCategory = (categoryName: string): string[] => {
     "bg-red-500": ["#EF4444", "#DC2626"],
     "bg-purple-500": ["#A855F7", "#9333EA"],
     "bg-teal-500": ["#14B8A6", "#0D9488"],
-    "bg-emerald-500": ["#10B981", "#059669"],
     "bg-indigo-500": ["#6366F1", "#4F46E5"],
     "bg-orange-500": ["#F97316", "#EA580C"],
     "bg-yellow-500": ["#EAB308", "#CA8A04"],
     "bg-gray-500": ["#6B7280", "#4B5563"],
+    "bg-green-600": ["#16A34A", "#15803D"], // Income (darker green)
   };
-  
+
   return gradientMap[info.color] || ["#6B7280", "#4B5563"];
 };
 
@@ -104,7 +105,9 @@ const RightSidebar: React.FC<RightSidebarProps> = ({
               amount,
               period: "This month",
               gradient: getGradientForCategory(name),
-              type: (amount >= 0 ? "positive" : "negative") as "positive" | "negative",
+              type: (amount >= 0 ? "positive" : "negative") as
+                | "positive"
+                | "negative",
             };
           })
           .sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount))
