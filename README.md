@@ -2,8 +2,26 @@
 
 A modern, full-stack financial management application built with **Spring Boot** and **React** that helps users track expenses, manage budgets, and gain insights into their spending habits with intelligent alerts and beautiful visualizations.
 
+<div align="center">
+
+## 🚀 **[LIVE DEMO - TRY IT NOW!](https://expansestrackera.vercel.app/)** 🚀
+
+### 👉 **[expansestrackera.vercel.app](https://expansestrackera.vercel.app/)** 👈
+
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Visit_Application-brightgreen?style=for-the-badge&logo=vercel&logoColor=white)](https://expansestrackera.vercel.app/)
+[![GitHub](https://img.shields.io/badge/GitHub-Source_Code-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ayhemnouira/ExpensesTracker)
+[![Portfolio](https://img.shields.io/badge/Portfolio-View_Projects-0077B5?style=for-the-badge&logo=about.me&logoColor=white)](https://portfolio-roan-psi-26.vercel.app/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ayhemnouira/)
+
+**📺 [Watch Demo Video](#-demo-video)** | **📖 [View Screenshots](#-screenshots)** | **🚀 [Quick Start Guide](#-getting-started)**
+
+</div>
+
+---
+
 ![ExpensesTracker Dashboard](screenshots/dashboard1.png)
-**[Live Demo](https://expansestrackera.vercel.app/)**
+
+---
 
 ## ✨ Key Features
 
@@ -64,6 +82,8 @@ A modern, full-stack financial management application built with **Spring Boot**
 - Clean, modern Material-UI interface
 - Real-time notifications and alerts
 
+---
+
 ## 🛠️ Tech Stack
 
 ### Backend
@@ -91,6 +111,8 @@ A modern, full-stack financial management application built with **Spring Boot**
 - **Database:** MySQL (Railway)
 - **Version Control:** Git/GitHub
 
+---
+
 ## 📸 Screenshots
 
 ### Dashboard
@@ -101,7 +123,6 @@ A modern, full-stack financial management application built with **Spring Boot**
 ### Transactions
 ![Transactions Page](screenshots/TransactionPage.png)
 
-
 ### Budget Management
 ![Budget Overview](screenshots/budgetpage.png)
 ![New Budget Form](screenshots/budgetform.png)
@@ -110,6 +131,8 @@ A modern, full-stack financial management application built with **Spring Boot**
 ### Account Management
 ![Accounts Page](screenshots/AccountPage1.png)
 ![Accounts Page](screenshots/AccountPage2.png)
+
+---
 
 ## 🚀 Getting Started
 
@@ -189,6 +212,8 @@ npm run dev
 
 Frontend runs on: `http://localhost:5173`
 
+---
+
 ## 📋 API Endpoints
 
 ### Authentication
@@ -244,6 +269,8 @@ Frontend runs on: `http://localhost:5173`
 - `PUT /api/alerts/{id}/read` - Mark alert as read
 - `PUT /api/alerts/read-all` - Mark all alerts as read
 
+---
+
 ## 🎯 Key Features Explained
 
 ### Smart Budget Alerts
@@ -280,6 +307,8 @@ Secure file upload and storage:
 - Documents linked to transactions for easy reference
 - Download functionality with proper MIME type handling
 
+---
+
 ## 📦 Project Structure
 ```
 ExpensesTracker/
@@ -309,6 +338,8 @@ ExpensesTracker/
 └── README.md
 ```
 
+---
+
 ## 🔒 Security Features
 
 - **Password Hashing**: BCrypt with salt rounds
@@ -319,6 +350,8 @@ ExpensesTracker/
 - **Secure File Upload**: File type and size validation
 - **Role-Based Access Control**: User role authorization
 - **Secure HTTP Headers**: Configured via Spring Security
+
+---
 
 ## 🌐 Environment Variables
 
@@ -340,6 +373,8 @@ PORT=8080
 VITE_API_URL=http://localhost:8080/api
 ```
 
+---
+
 ## 📈 Future Enhancements
 
 - [x] JWT authentication with refresh tokens
@@ -354,6 +389,8 @@ VITE_API_URL=http://localhost:8080/api
 - [ ] Financial goal tracking
 - [ ] Bank account integration (Plaid API)
 - [ ] Mobile app (React Native)
+
+---
 
 ## 🐛 Known Issues & Solutions
 
@@ -372,16 +409,23 @@ VITE_API_URL=http://localhost:8080/api
 2. Check file size (max 5MB)
 3. Verify file format (PDF, JPG, PNG only)
 
+---
+
 ## 👨‍💻 Author
 
 **Ayhem Nouira**
-- Portfolio: [https://portfolio-roan-psi-26.vercel.app/](https://portfolio-roan-psi-26.vercel.app/)
-- LinkedIn: [https://www.linkedin.com/in/ayhemnouira/](https://www.linkedin.com/in/ayhemnouira/)
-- GitHub: [https://github.com/ayhemnouira](https://github.com/ayhemnouira)
+- 🌐 Portfolio: [portfolio-roan-psi-26.vercel.app](https://portfolio-roan-psi-26.vercel.app/)
+- 💼 LinkedIn: [linkedin.com/in/ayhemnouira](https://www.linkedin.com/in/ayhemnouira/)
+- 💻 GitHub: [github.com/ayhemnouira](https://github.com/ayhemnouira)
+- 📧 Email: ayhemnouira9@gmail.com
+
+---
 
 ## 📄 License
 
 This project is open source and available under the [MIT License](LICENSE).
+
+---
 
 ## 🙏 Acknowledgments
 
@@ -393,9 +437,17 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
-⭐ **Star this repository if you found it helpful!**
+<div align="center">
 
-📫 **Questions?** Feel free to reach out or open an issue!
+## ⭐ Star this repository if you found it helpful!
+
+### 🚀 [**TRY THE LIVE DEMO NOW**](https://expansestrackera.vercel.app/) 🚀
+
+[![Live Demo](https://img.shields.io/badge/🌐_Click_Here-Visit_Live_Application-brightgreen?style=for-the-badge&logo=vercel&logoColor=white)](https://expansestrackera.vercel.app/)
+
+**📫 Questions?** Feel free to reach out or open an issue!
+
+</div>
 
 ---
 
