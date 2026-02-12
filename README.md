@@ -95,11 +95,12 @@ A modern, full-stack financial management application built with **Spring Boot**
 
 ### Dashboard
 ![Dashboard Light Mode](screenshots/dashboard1.png)
-![Dashboard Dark Mode](screenshots/dashboard-darkmode.png)
+![Dashboard Light Mode](screenshots/dashboard2.png)
+![Dashboard Dark Mode](screenshots/dashboard3.png.png)
 
 ### Transactions
 ![Transactions Page](screenshots/TransactionPage.png)
-![New Transaction Form](screenshots/transaction-form.png)
+
 
 ### Budget Management
 ![Budget Overview](screenshots/budgetpage.png)
@@ -107,7 +108,8 @@ A modern, full-stack financial management application built with **Spring Boot**
 ![Budget Alerts](screenshots/alert.png)
 
 ### Account Management
-![Accounts Page](screenshots/AccountPage.png)
+![Accounts Page](screenshots/AccountPage1.png)
+![Accounts Page](screenshots/AccountPage2.png)
 
 ## 🚀 Getting Started
 
