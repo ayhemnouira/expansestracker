@@ -21,11 +21,9 @@ import {
 import {
   Search as SearchIcon,
   Notifications as NotificationsIcon,
-  Settings as SettingsIcon,
   Brightness4,
   Brightness7,
   Logout,
-  Person,
   Warning as WarningIcon,
   Error as ErrorIcon,
   DoneAll as DoneAllIcon,
