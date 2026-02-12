@@ -1,4 +1,12 @@
-import { Box, Grid, CircularProgress, Alert } from "@mui/material";
+import {
+  Box,
+  Grid,
+  CircularProgress,
+  Alert,
+  Fade,
+  Grow,
+  Zoom,
+} from "@mui/material";
 import { useState, useEffect } from "react";
 import { getUserAccounts, getAccountSummary } from "../api/accountService";
 import { getUserTransactions } from "../api/transactionService";
@@ -14,28 +22,19 @@ import { useAuth } from "../context/use-auth";
 const Dashboard = () => {
   const { user } = useAuth();
 
-  // State management
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [summary, setSummary] = useState<AccountSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch all data when component mounts
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-
-        // Fetch all data in parallel
         const [accountsData, transactionsData, summaryData] = await Promise.all(
-          [
-            getUserAccounts(true), // Only enabled accounts
-            getUserTransactions(),
-            getAccountSummary(),
-          ]
+          [getUserAccounts(true), getUserTransactions(), getAccountSummary()],
         );
-
         setAccounts(accountsData);
         setTransactions(transactionsData);
         setSummary(summaryData);
@@ -52,7 +51,6 @@ const Dashboard = () => {
     fetchDashboardData();
   }, []);
 
-  // Loading state
   if (loading) {
     return (
       <Box
@@ -68,7 +66,6 @@ const Dashboard = () => {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <Box sx={{ p: 3 }}>
@@ -85,49 +82,76 @@ const Dashboard = () => {
         {/* Left Column - Main Content */}
         <Grid size={{ xs: 12, lg: 8.5 }}>
           {/* Header */}
-          <HeaderBox
-            type="greeting"
-            title="Welcome back,"
-            user={user?.username || "Guest"}
-            subtext="Here's your financial overview for today"
-          />
+          <Fade in timeout={600}>
+            <Box>
+              <HeaderBox
+                type="greeting"
+                title="Welcome back,"
+                user={user?.username || "Guest"}
+                subtext="Here's your financial overview for today"
+              />
+            </Box>
+          </Fade>
 
           {/* Top Cards Row */}
           <Grid container spacing={2} sx={{ mt: 2 }}>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <TotalBalanceBox
-                accounts={accounts}
-                totalBanks={accounts.length}
-                totalCurrentBalance={totalBalance}
-              />
+            <Grid size={{ xs: 12, md: 6 }} sx={{ display: "flex" }}>
+              <Grow in timeout={800} style={{ width: "100%" }}>
+                <Box sx={{ width: "100%" }}>
+                  <TotalBalanceBox
+                    accounts={accounts}
+                    totalBanks={accounts.length}
+                    totalCurrentBalance={totalBalance}
+                  />
+                </Box>
+              </Grow>
             </Grid>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <MonthlyExpensesChart transactions={transactions} />
+            <Grid size={{ xs: 12, md: 6 }} sx={{ display: "flex" }}>
+              <Grow
+                in
+                timeout={1000}
+                style={{ width: "100%" }}
+                onEntered={() => window.dispatchEvent(new Event("resize"))}
+              >
+                <Box sx={{ width: "100%" }}>
+                  <MonthlyExpensesChart transactions={transactions} />
+                </Box>
+              </Grow>
             </Grid>
           </Grid>
 
           {/* Recent Transactions */}
-          <Box sx={{ mt: 3 }}>
-            <RecentTransactions transactions={transactions} maxDisplay={8} />
-          </Box>
+          <Fade in timeout={1200}>
+            <Box sx={{ mt: 3 }}>
+              <RecentTransactions transactions={transactions} maxDisplay={8} />
+            </Box>
+          </Fade>
         </Grid>
 
         {/* Right Sidebar */}
         <Grid size={{ xs: 12, lg: 3.5 }}>
-          <Box sx={{ position: "sticky", top: 90 }}>
-            <RightSidebar
-              banks={accounts}
-              userName={user?.username || "Guest"}
-              userEmail={user?.email}
-            />
-          </Box>
+          <Zoom in timeout={1400}>
+            <Box>
+              <Box sx={{ position: "sticky", top: 90 }}>
+                <RightSidebar
+                  banks={accounts}
+                  userName={user?.username || "Guest"}
+                  userEmail={user?.email}
+                />
+              </Box>
+            </Box>
+          </Zoom>
         </Grid>
 
         {/* Full Width Transaction Overview Chart */}
         <Grid size={{ xs: 12 }}>
-          <Box sx={{ maxWidth: 1600, mx: "auto" }}>
-            <TransactionOverviewChart transactions={transactions} />
-          </Box>
+          <Grow in timeout={1600}>
+            <Box>
+              <Box sx={{ maxWidth: 1600, mx: "auto" }}>
+                <TransactionOverviewChart transactions={transactions} />
+              </Box>
+            </Box>
+          </Grow>
         </Grid>
       </Grid>
     </Box>

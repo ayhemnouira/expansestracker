@@ -220,7 +220,7 @@ const Topbar = ({ onMenuClick }: TopbarProps) => {
                     : alpha(theme.palette.common.black, 0.05),
                 boxShadow: `0 0 0 2px ${alpha(
                   theme.palette.primary.main,
-                  0.2
+                  0.2,
                 )}`,
               },
             }}
@@ -334,7 +334,7 @@ const Topbar = ({ onMenuClick }: TopbarProps) => {
           </Typography>
         </Box>
         <Divider />
-
+        {/*
         <MenuItem onClick={handleProfile} sx={{ py: 1.5 }}>
           <Person sx={{ mr: 1.5, fontSize: 20 }} />
           <Typography variant="body2">My Profile</Typography>
@@ -343,7 +343,7 @@ const Topbar = ({ onMenuClick }: TopbarProps) => {
           <SettingsIcon sx={{ mr: 1.5, fontSize: 20 }} />
           <Typography variant="body2">Settings</Typography>
         </MenuItem>
-        <Divider />
+        <Divider /> */}
         <MenuItem
           onClick={handleLogout}
           sx={{

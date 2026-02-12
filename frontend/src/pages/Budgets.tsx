@@ -146,7 +146,11 @@ const Budgets = () => {
         }}
       >
         <Box sx={{ position: "relative" }}>
-          <CircularProgress size={70} thickness={3} sx={{ color: "#6366f1" }} />
+          <CircularProgress
+            size={70}
+            thickness={3}
+            sx={{ color: isDark ? "#6366f1" : "#4f46e5" }}
+          />
           <Box
             sx={{
               position: "absolute",
@@ -156,7 +160,11 @@ const Budgets = () => {
             }}
           >
             <AccountBalance
-              sx={{ fontSize: 28, color: "#6366f1", opacity: 0.5 }}
+              sx={{
+                fontSize: 28,
+                color: isDark ? "#6366f1" : "#4f46e5",
+                opacity: 0.5,
+              }}
             />
           </Box>
         </Box>
@@ -185,7 +193,7 @@ const Budgets = () => {
                   fontWeight: 800,
                   fontSize: { xs: "1.75rem", sm: "2rem", md: "2.5rem" },
                   background: isDark
-                    ? "linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%)"
+                    ? "linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%)"
                     : "linear-gradient(135deg, #1e293b 0%, #6366f1 100%)",
                   backgroundClip: "text",
                   WebkitBackgroundClip: "text",
@@ -216,20 +224,22 @@ const Budgets = () => {
                 onClick={loadData}
                 disabled={isLoadingData}
                 sx={{
-                  bgcolor: isDark ? alpha("#fff", 0.05) : alpha("#6366f1", 0.1),
+                  bgcolor: isDark ? alpha("#fff", 0.04) : alpha("#6366f1", 0.1),
                   borderRadius: "12px",
                   width: 44,
                   height: 44,
                   transition: "all 0.3s ease",
                   "&:hover": {
                     bgcolor: isDark
-                      ? alpha("#fff", 0.1)
+                      ? alpha("#fff", 0.08)
                       : alpha("#6366f1", 0.15),
                     transform: "rotate(180deg)",
                   },
                 }}
               >
-                <RefreshIcon sx={{ color: "#6366f1", fontSize: 20 }} />
+                <RefreshIcon
+                  sx={{ color: isDark ? "#6366f1" : "#4f46e5", fontSize: 20 }}
+                />
               </IconButton>
               <Button
                 variant="contained"
@@ -244,13 +254,19 @@ const Budgets = () => {
                   fontSize: { xs: "0.9rem", md: "0.95rem" },
                   px: { xs: 2.5, md: 3 },
                   py: 1.25,
-                  background:
-                    "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
-                  boxShadow: "0 4px 14px rgba(99, 102, 241, 0.4)",
+                  background: isDark
+                    ? "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)"
+                    : "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                  boxShadow: isDark
+                    ? "0 4px 14px rgba(79, 70, 229, 0.25)"
+                    : "0 4px 14px rgba(99, 102, 241, 0.4)",
                   "&:hover": {
-                    background:
-                      "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
-                    boxShadow: "0 6px 20px rgba(99, 102, 241, 0.5)",
+                    background: isDark
+                      ? "linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)"
+                      : "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                    boxShadow: isDark
+                      ? "0 6px 20px rgba(79, 70, 229, 0.35)"
+                      : "0 6px 20px rgba(99, 102, 241, 0.5)",
                     transform: "translateY(-1px)",
                   },
                 }}
@@ -275,17 +291,22 @@ const Budgets = () => {
               <Grow in timeout={800}>
                 <Card
                   sx={{
-                    background:
-                      "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                    background: isDark
+                      ? "linear-gradient(135deg, #3730a3 0%, #4f46e5 100%)"
+                      : "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
                     borderRadius: { xs: "14px", md: "16px" },
                     p: { xs: 1.5, sm: 2, md: 2.5 },
                     position: "relative",
                     overflow: "hidden",
-                    boxShadow: "0 4px 20px rgba(99, 102, 241, 0.25)",
+                    boxShadow: isDark
+                      ? "0 4px 16px rgba(55, 48, 163, 0.2)"
+                      : "0 4px 20px rgba(99, 102, 241, 0.25)",
                     transition: "all 0.3s ease",
                     "&:hover": {
                       transform: "translateY(-3px)",
-                      boxShadow: "0 8px 30px rgba(99, 102, 241, 0.35)",
+                      boxShadow: isDark
+                        ? "0 8px 24px rgba(55, 48, 163, 0.3)"
+                        : "0 8px 30px rgba(99, 102, 241, 0.35)",
                     },
                     "&::before": {
                       content: '""',
@@ -294,8 +315,9 @@ const Budgets = () => {
                       right: -50,
                       width: 150,
                       height: 150,
-                      background:
-                        "radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)",
+                      background: isDark
+                        ? "radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%)"
+                        : "radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)",
                       borderRadius: "50%",
                     },
                   }}
@@ -337,17 +359,22 @@ const Budgets = () => {
               <Grow in timeout={1000}>
                 <Card
                   sx={{
-                    background:
-                      "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+                    background: isDark
+                      ? "linear-gradient(135deg, #065f46 0%, #047857 100%)"
+                      : "linear-gradient(135deg, #10b981 0%, #059669 100%)",
                     borderRadius: { xs: "14px", md: "16px" },
                     p: { xs: 1.5, sm: 2, md: 2.5 },
                     position: "relative",
                     overflow: "hidden",
-                    boxShadow: "0 4px 20px rgba(16, 185, 129, 0.25)",
+                    boxShadow: isDark
+                      ? "0 4px 16px rgba(5, 95, 70, 0.2)"
+                      : "0 4px 20px rgba(16, 185, 129, 0.25)",
                     transition: "all 0.3s ease",
                     "&:hover": {
                       transform: "translateY(-3px)",
-                      boxShadow: "0 8px 30px rgba(16, 185, 129, 0.35)",
+                      boxShadow: isDark
+                        ? "0 8px 24px rgba(5, 95, 70, 0.3)"
+                        : "0 8px 30px rgba(16, 185, 129, 0.35)",
                     },
                     "&::before": {
                       content: '""',
@@ -356,8 +383,9 @@ const Budgets = () => {
                       right: -50,
                       width: 150,
                       height: 150,
-                      background:
-                        "radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)",
+                      background: isDark
+                        ? "radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%)"
+                        : "radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)",
                       borderRadius: "50%",
                     },
                   }}
@@ -399,17 +427,22 @@ const Budgets = () => {
               <Grow in timeout={1200}>
                 <Card
                   sx={{
-                    background:
-                      "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
+                    background: isDark
+                      ? "linear-gradient(135deg, #b45309 0%, #d97706 100%)"
+                      : "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
                     borderRadius: { xs: "14px", md: "16px" },
                     p: { xs: 1.5, sm: 2, md: 2.5 },
                     position: "relative",
                     overflow: "hidden",
-                    boxShadow: "0 4px 20px rgba(245, 158, 11, 0.25)",
+                    boxShadow: isDark
+                      ? "0 4px 16px rgba(180, 83, 9, 0.2)"
+                      : "0 4px 20px rgba(245, 158, 11, 0.25)",
                     transition: "all 0.3s ease",
                     "&:hover": {
                       transform: "translateY(-3px)",
-                      boxShadow: "0 8px 30px rgba(245, 158, 11, 0.35)",
+                      boxShadow: isDark
+                        ? "0 8px 24px rgba(180, 83, 9, 0.3)"
+                        : "0 8px 30px rgba(245, 158, 11, 0.35)",
                     },
                     "&::before": {
                       content: '""',
@@ -418,8 +451,9 @@ const Budgets = () => {
                       right: -50,
                       width: 150,
                       height: 150,
-                      background:
-                        "radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)",
+                      background: isDark
+                        ? "radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%)"
+                        : "radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)",
                       borderRadius: "50%",
                     },
                   }}
@@ -461,17 +495,22 @@ const Budgets = () => {
               <Grow in timeout={1400}>
                 <Card
                   sx={{
-                    background:
-                      "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
+                    background: isDark
+                      ? "linear-gradient(135deg, #991b1b 0%, #b91c1c 100%)"
+                      : "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
                     borderRadius: { xs: "14px", md: "16px" },
                     p: { xs: 1.5, sm: 2, md: 2.5 },
                     position: "relative",
                     overflow: "hidden",
-                    boxShadow: "0 4px 20px rgba(239, 68, 68, 0.25)",
+                    boxShadow: isDark
+                      ? "0 4px 16px rgba(153, 27, 27, 0.2)"
+                      : "0 4px 20px rgba(239, 68, 68, 0.25)",
                     transition: "all 0.3s ease",
                     "&:hover": {
                       transform: "translateY(-3px)",
-                      boxShadow: "0 8px 30px rgba(239, 68, 68, 0.35)",
+                      boxShadow: isDark
+                        ? "0 8px 24px rgba(153, 27, 27, 0.3)"
+                        : "0 8px 30px rgba(239, 68, 68, 0.35)",
                     },
                     "&::before": {
                       content: '""',
@@ -480,8 +519,9 @@ const Budgets = () => {
                       right: -50,
                       width: 150,
                       height: 150,
-                      background:
-                        "radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)",
+                      background: isDark
+                        ? "radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%)"
+                        : "radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)",
                       borderRadius: "50%",
                     },
                   }}
@@ -524,16 +564,22 @@ const Budgets = () => {
           <Grow in timeout={1600}>
             <Card
               sx={{
-                background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                background: isDark
+                  ? "linear-gradient(135deg, #3730a3 0%, #4f46e5 100%)"
+                  : "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
                 borderRadius: { xs: "16px", md: "20px" },
                 p: { xs: 2.5, sm: 3, md: 4 },
                 position: "relative",
                 overflow: "hidden",
-                boxShadow: "0 8px 32px rgba(79, 70, 229, 0.3)",
+                boxShadow: isDark
+                  ? "0 8px 24px rgba(55, 48, 163, 0.25)"
+                  : "0 8px 32px rgba(79, 70, 229, 0.3)",
                 transition: "all 0.3s ease",
                 "&:hover": {
                   transform: "translateY(-4px)",
-                  boxShadow: "0 12px 40px rgba(79, 70, 229, 0.4)",
+                  boxShadow: isDark
+                    ? "0 12px 32px rgba(55, 48, 163, 0.35)"
+                    : "0 12px 40px rgba(79, 70, 229, 0.4)",
                 },
                 "&::before": {
                   content: '""',
@@ -542,8 +588,9 @@ const Budgets = () => {
                   right: -100,
                   width: { xs: 250, md: 350 },
                   height: { xs: 250, md: 350 },
-                  background:
-                    "radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)",
+                  background: isDark
+                    ? "radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)"
+                    : "radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)",
                   borderRadius: "50%",
                 },
               }}
@@ -806,7 +853,7 @@ const Budgets = () => {
             boxShadow: isDark
               ? "0 2px 12px rgba(0,0,0,0.2)"
               : "0 2px 12px rgba(0,0,0,0.06)",
-            bgcolor: isDark ? alpha("#1e293b", 0.6) : "#fff",
+            bgcolor: isDark ? alpha("#1e293b", 0.4) : "#fff",
             border: `1px solid ${isDark ? alpha("#fff", 0.05) : alpha("#000", 0.05)}`,
           }}
         >
@@ -819,14 +866,19 @@ const Budgets = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon sx={{ color: "#6366f1", fontSize: 22 }} />
+                    <SearchIcon
+                      sx={{
+                        color: isDark ? "#6366f1" : "#4f46e5",
+                        fontSize: 22,
+                      }}
+                    />
                   </InputAdornment>
                 ),
               }}
               sx={{
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "12px",
-                  bgcolor: isDark ? alpha("#0f172a", 0.4) : "#f8fafc",
+                  bgcolor: isDark ? alpha("#0f172a", 0.3) : "#f8fafc",
                   "& fieldset": {
                     borderColor: isDark
                       ? alpha("#fff", 0.06)
@@ -834,10 +886,10 @@ const Budgets = () => {
                     borderWidth: "2px",
                   },
                   "&:hover fieldset": {
-                    borderColor: "#6366f1",
+                    borderColor: isDark ? "#6366f1" : "#4f46e5",
                   },
                   "&.Mui-focused fieldset": {
-                    borderColor: "#6366f1",
+                    borderColor: isDark ? "#6366f1" : "#4f46e5",
                   },
                 },
               }}
@@ -866,14 +918,17 @@ const Budgets = () => {
                   width: { xs: 70, md: 90 },
                   height: { xs: 70, md: 90 },
                   borderRadius: { xs: "16px", md: "20px" },
-                  background:
-                    "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                  background: isDark
+                    ? "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)"
+                    : "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   mx: "auto",
                   mb: 2.5,
-                  boxShadow: "0 8px 24px rgba(99, 102, 241, 0.25)",
+                  boxShadow: isDark
+                    ? "0 8px 24px rgba(79, 70, 229, 0.2)"
+                    : "0 8px 24px rgba(99, 102, 241, 0.25)",
                 }}
               >
                 <AccountBalance
@@ -911,20 +966,26 @@ const Budgets = () => {
                   startIcon={<AddIcon />}
                   onClick={() => setIsFormOpen(true)}
                   sx={{
-                    background:
-                      "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                    background: isDark
+                      ? "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)"
+                      : "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
                     borderRadius: "12px",
                     px: 3,
                     py: 1.25,
                     fontSize: "0.95rem",
                     fontWeight: 700,
                     textTransform: "none",
-                    boxShadow: "0 4px 14px rgba(99, 102, 241, 0.3)",
+                    boxShadow: isDark
+                      ? "0 4px 14px rgba(79, 70, 229, 0.25)"
+                      : "0 4px 14px rgba(99, 102, 241, 0.3)",
                     "&:hover": {
-                      background:
-                        "linear-gradient(135deg, #4338ca 0%, #7c3aed 100%)",
+                      background: isDark
+                        ? "linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)"
+                        : "linear-gradient(135deg, #4338ca 0%, #7c3aed 100%)",
                       transform: "translateY(-2px)",
-                      boxShadow: "0 6px 20px rgba(99, 102, 241, 0.4)",
+                      boxShadow: isDark
+                        ? "0 6px 20px rgba(79, 70, 229, 0.35)"
+                        : "0 6px 20px rgba(99, 102, 241, 0.4)",
                     },
                   }}
                 >
@@ -947,7 +1008,7 @@ const Budgets = () => {
                           boxShadow: isDark
                             ? "0 2px 12px rgba(0,0,0,0.2)"
                             : "0 2px 12px rgba(0,0,0,0.06)",
-                          bgcolor: isDark ? alpha("#1e293b", 0.6) : "#fff",
+                          bgcolor: isDark ? alpha("#1e293b", 0.4) : "#fff",
                           border: `1px solid ${isDark ? alpha("#fff", 0.05) : alpha("#000", 0.05)}`,
                           transition: "all 0.3s ease",
                           height: "100%",
@@ -956,7 +1017,7 @@ const Budgets = () => {
                           "&:hover": {
                             transform: "translateY(-4px)",
                             boxShadow: isDark
-                              ? "0 8px 28px rgba(0,0,0,0.3)"
+                              ? "0 8px 24px rgba(0,0,0,0.3)"
                               : "0 8px 28px rgba(0,0,0,0.1)",
                           },
                         }}
@@ -965,8 +1026,8 @@ const Budgets = () => {
                         <Box
                           sx={{
                             p: { xs: 2, md: 2.5 },
-                            background: `linear-gradient(135deg, ${alpha(statusColor, 0.12)} 0%, ${alpha(statusColor, 0.04)} 100%)`,
-                            borderBottom: `2px solid ${alpha(statusColor, 0.15)}`,
+                            background: `linear-gradient(135deg, ${alpha(statusColor, isDark ? 0.1 : 0.12)} 0%, ${alpha(statusColor, isDark ? 0.03 : 0.04)} 100%)`,
+                            borderBottom: `2px solid ${alpha(statusColor, isDark ? 0.12 : 0.15)}`,
                           }}
                         >
                           <Stack
@@ -985,7 +1046,10 @@ const Budgets = () => {
                                   width: { xs: 42, md: 48 },
                                   height: { xs: 42, md: 48 },
                                   borderRadius: "12px",
-                                  bgcolor: alpha(statusColor, 0.15),
+                                  bgcolor: alpha(
+                                    statusColor,
+                                    isDark ? 0.12 : 0.15,
+                                  ),
                                   display: "flex",
                                   alignItems: "center",
                                   justifyContent: "center",
@@ -1000,7 +1064,7 @@ const Budgets = () => {
                                   variant="h6"
                                   fontWeight="800"
                                   sx={{
-                                    color: isDark ? "#fff" : "#0f172a",
+                                    color: isDark ? "#e2e8f0" : "#0f172a",
                                     mb: 0.5,
                                     fontSize: { xs: "0.95rem", md: "1rem" },
                                     overflow: "hidden",
@@ -1019,7 +1083,10 @@ const Budgets = () => {
                                     label={budget.period}
                                     size="small"
                                     sx={{
-                                      bgcolor: alpha(statusColor, 0.12),
+                                      bgcolor: alpha(
+                                        statusColor,
+                                        isDark ? 0.1 : 0.12,
+                                      ),
                                       color: statusColor,
                                       fontWeight: 700,
                                       fontSize: "0.65rem",
@@ -1035,7 +1102,7 @@ const Budgets = () => {
                                     size="small"
                                     sx={{
                                       bgcolor: isDark
-                                        ? alpha("#fff", 0.05)
+                                        ? alpha("#fff", 0.04)
                                         : alpha("#000", 0.04),
                                       fontWeight: 700,
                                       fontSize: "0.65rem",
@@ -1051,13 +1118,19 @@ const Budgets = () => {
                                 size="small"
                                 onClick={() => handleEdit(budget)}
                                 sx={{
-                                  bgcolor: alpha("#6366f1", 0.1),
-                                  color: "#6366f1",
+                                  bgcolor: alpha(
+                                    isDark ? "#4f46e5" : "#6366f1",
+                                    0.1,
+                                  ),
+                                  color: isDark ? "#6366f1" : "#4f46e5",
                                   borderRadius: "8px",
                                   width: { xs: 30, md: 34 },
                                   height: { xs: 30, md: 34 },
                                   "&:hover": {
-                                    bgcolor: alpha("#6366f1", 0.15),
+                                    bgcolor: alpha(
+                                      isDark ? "#4f46e5" : "#6366f1",
+                                      0.15,
+                                    ),
                                   },
                                 }}
                               >
@@ -1069,13 +1142,19 @@ const Budgets = () => {
                                 size="small"
                                 onClick={() => handleDelete(budget.id)}
                                 sx={{
-                                  bgcolor: alpha("#ef4444", 0.1),
-                                  color: "#ef4444",
+                                  bgcolor: alpha(
+                                    isDark ? "#b91c1c" : "#ef4444",
+                                    0.1,
+                                  ),
+                                  color: isDark ? "#ef4444" : "#dc2626",
                                   borderRadius: "8px",
                                   width: { xs: 30, md: 34 },
                                   height: { xs: 30, md: 34 },
                                   "&:hover": {
-                                    bgcolor: alpha("#ef4444", 0.15),
+                                    bgcolor: alpha(
+                                      isDark ? "#b91c1c" : "#ef4444",
+                                      0.15,
+                                    ),
                                   },
                                 }}
                               >
@@ -1133,7 +1212,10 @@ const Budgets = () => {
                               sx={{
                                 height: { xs: 7, md: 8 },
                                 borderRadius: "6px",
-                                bgcolor: alpha(statusColor, 0.12),
+                                bgcolor: alpha(
+                                  statusColor,
+                                  isDark ? 0.1 : 0.12,
+                                ),
                                 "& .MuiLinearProgress-bar": {
                                   bgcolor: statusColor,
                                   borderRadius: "6px",
@@ -1147,9 +1229,9 @@ const Budgets = () => {
                             sx={{
                               bgcolor: alpha(
                                 budget.remaining >= 0 ? "#10b981" : "#ef4444",
-                                isDark ? 0.08 : 0.06,
+                                isDark ? 0.06 : 0.06,
                               ),
-                              border: `1px solid ${alpha(budget.remaining >= 0 ? "#10b981" : "#ef4444", 0.2)}`,
+                              border: `1px solid ${alpha(budget.remaining >= 0 ? "#10b981" : "#ef4444", isDark ? 0.15 : 0.2)}`,
                               borderRadius: "12px",
                               p: { xs: 1.5, md: 1.75 },
                               mb: 1.5,

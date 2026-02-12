@@ -357,7 +357,7 @@ const DocumentsPage = () => {
                   fontSize: { xs: "2rem", md: "2.5rem" },
                   background:
                     theme.palette.mode === "dark"
-                      ? "linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%)"
+                      ? "linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%)"
                       : "linear-gradient(135deg, #1e293b 0%, #6366f1 100%)",
                   backgroundClip: "text",
                   WebkitBackgroundClip: "text",
@@ -403,35 +403,29 @@ const DocumentsPage = () => {
         </Box>
       </Fade>
 
-      {/* Enhanced Stats Cards */}
+      {/* Refined Stats Cards - MATCHING TRANSACTIONS PAGE COLORS */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid size={{ xs: 12, md: 4 }}>
           <Grow in timeout={800}>
             <Card
               sx={{
-                background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
-                borderRadius: "20px",
+                background: isDark
+                  ? "linear-gradient(135deg, #4f46e5 0%, #4338ca 100%)"
+                  : "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                borderRadius: "16px",
                 p: 3,
                 position: "relative",
                 overflow: "hidden",
                 border: "none",
-                boxShadow: "0 8px 32px rgba(99, 102, 241, 0.3)",
+                boxShadow: isDark
+                  ? "0 8px 32px rgba(79, 70, 229, 0.3)"
+                  : "0 8px 32px rgba(99, 102, 241, 0.3)",
                 transition: "all 0.3s ease",
                 "&:hover": {
-                  transform: "translateY(-4px)",
-                  boxShadow: "0 12px 48px rgba(99, 102, 241, 0.4)",
-                },
-                "&::before": {
-                  content: '""',
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  width: "200px",
-                  height: "200px",
-                  background:
-                    "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
-                  borderRadius: "50%",
-                  transform: "translate(30%, -30%)",
+                  transform: "translateY(-3px)",
+                  boxShadow: isDark
+                    ? "0 12px 48px rgba(79, 70, 229, 0.4)"
+                    : "0 12px 48px rgba(99, 102, 241, 0.4)",
                 },
               }}
             >
@@ -469,7 +463,10 @@ const DocumentsPage = () => {
                     </Typography>
                     <Typography
                       variant="caption"
-                      sx={{ color: "rgba(255,255,255,0.8)", fontWeight: 600 }}
+                      sx={{
+                        color: "rgba(255,255,255,0.8)",
+                        fontWeight: 600,
+                      }}
                     >
                       files
                     </Typography>
@@ -486,7 +483,12 @@ const DocumentsPage = () => {
                       justifyContent: "center",
                     }}
                   >
-                    <InsertDriveFile sx={{ fontSize: 28, color: "white" }} />
+                    <InsertDriveFile
+                      sx={{
+                        fontSize: 28,
+                        color: "white",
+                      }}
+                    />
                   </Box>
                 </Stack>
               </Box>
@@ -498,29 +500,23 @@ const DocumentsPage = () => {
           <Grow in timeout={1000}>
             <Card
               sx={{
-                background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
-                borderRadius: "20px",
+                background: isDark
+                  ? "linear-gradient(135deg, #d97706 0%, #b45309 100%)"
+                  : "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
+                borderRadius: "16px",
                 p: 3,
                 position: "relative",
                 overflow: "hidden",
                 border: "none",
-                boxShadow: "0 8px 32px rgba(245, 158, 11, 0.3)",
+                boxShadow: isDark
+                  ? "0 8px 32px rgba(217, 119, 6, 0.3)"
+                  : "0 8px 32px rgba(245, 158, 11, 0.3)",
                 transition: "all 0.3s ease",
                 "&:hover": {
-                  transform: "translateY(-4px)",
-                  boxShadow: "0 12px 48px rgba(245, 158, 11, 0.4)",
-                },
-                "&::before": {
-                  content: '""',
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  width: "200px",
-                  height: "200px",
-                  background:
-                    "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
-                  borderRadius: "50%",
-                  transform: "translate(30%, -30%)",
+                  transform: "translateY(-3px)",
+                  boxShadow: isDark
+                    ? "0 12px 48px rgba(217, 119, 6, 0.4)"
+                    : "0 12px 48px rgba(245, 158, 11, 0.4)",
                 },
               }}
             >
@@ -558,7 +554,10 @@ const DocumentsPage = () => {
                     </Typography>
                     <Typography
                       variant="caption"
-                      sx={{ color: "rgba(255,255,255,0.8)", fontWeight: 600 }}
+                      sx={{
+                        color: "rgba(255,255,255,0.8)",
+                        fontWeight: 600,
+                      }}
                     >
                       MB
                     </Typography>
@@ -575,7 +574,12 @@ const DocumentsPage = () => {
                       justifyContent: "center",
                     }}
                   >
-                    <Storage sx={{ fontSize: 28, color: "white" }} />
+                    <Storage
+                      sx={{
+                        fontSize: 28,
+                        color: "white",
+                      }}
+                    />
                   </Box>
                 </Stack>
               </Box>
@@ -587,29 +591,23 @@ const DocumentsPage = () => {
           <Grow in timeout={1200}>
             <Card
               sx={{
-                background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-                borderRadius: "20px",
+                background: isDark
+                  ? "linear-gradient(135deg, #059669 0%, #047857 100%)"
+                  : "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+                borderRadius: "16px",
                 p: 3,
                 position: "relative",
                 overflow: "hidden",
                 border: "none",
-                boxShadow: "0 8px 32px rgba(16, 185, 129, 0.3)",
+                boxShadow: isDark
+                  ? "0 8px 32px rgba(5, 150, 105, 0.3)"
+                  : "0 8px 32px rgba(16, 185, 129, 0.3)",
                 transition: "all 0.3s ease",
                 "&:hover": {
-                  transform: "translateY(-4px)",
-                  boxShadow: "0 12px 48px rgba(16, 185, 129, 0.4)",
-                },
-                "&::before": {
-                  content: '""',
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  width: "200px",
-                  height: "200px",
-                  background:
-                    "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
-                  borderRadius: "50%",
-                  transform: "translate(30%, -30%)",
+                  transform: "translateY(-3px)",
+                  boxShadow: isDark
+                    ? "0 12px 48px rgba(5, 150, 105, 0.4)"
+                    : "0 12px 48px rgba(16, 185, 129, 0.4)",
                 },
               }}
             >
@@ -647,7 +645,10 @@ const DocumentsPage = () => {
                     </Typography>
                     <Typography
                       variant="caption"
-                      sx={{ color: "rgba(255,255,255,0.8)", fontWeight: 600 }}
+                      sx={{
+                        color: "rgba(255,255,255,0.8)",
+                        fontWeight: 600,
+                      }}
                     >
                       to transactions
                     </Typography>
@@ -664,7 +665,12 @@ const DocumentsPage = () => {
                       justifyContent: "center",
                     }}
                   >
-                    <LinkIcon sx={{ fontSize: 28, color: "white" }} />
+                    <LinkIcon
+                      sx={{
+                        fontSize: 28,
+                        color: "white",
+                      }}
+                    />
                   </Box>
                 </Stack>
               </Box>
@@ -677,20 +683,15 @@ const DocumentsPage = () => {
       <Fade in timeout={1400}>
         <Card
           sx={{
-            borderRadius: "20px",
+            borderRadius: "16px",
             mb: 4,
             boxShadow: isDark
-              ? "0 4px 24px rgba(0,0,0,0.3)"
+              ? "0 2px 12px rgba(0,0,0,0.2)"
               : "0 4px 24px rgba(0,0,0,0.08)",
-            bgcolor: isDark ? alpha("#1e293b", 0.6) : "#fff",
+            bgcolor: isDark ? alpha("#1e293b", 0.4) : "#fff",
             backdropFilter: "blur(20px)",
             border: `1px solid ${isDark ? alpha("#fff", 0.05) : alpha("#000", 0.05)}`,
             transition: "all 0.3s ease",
-            "&:hover": {
-              boxShadow: isDark
-                ? "0 8px 32px rgba(0,0,0,0.4)"
-                : "0 8px 32px rgba(0,0,0,0.12)",
-            },
           }}
         >
           <CardContent sx={{ p: 3 }}>
@@ -741,17 +742,23 @@ const DocumentsPage = () => {
                   minWidth: { xs: "100%", sm: 220 },
                   py: 2,
                   borderRadius: "14px",
-                  background:
-                    "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                  background: isDark
+                    ? "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)"
+                    : "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
                   textTransform: "none",
                   fontWeight: 700,
                   fontSize: "1rem",
-                  boxShadow: "0 8px 24px rgba(99, 102, 241, 0.4)",
+                  boxShadow: isDark
+                    ? "0 4px 14px rgba(79, 70, 229, 0.25)"
+                    : "0 8px 24px rgba(99, 102, 241, 0.4)",
                   transition: "all 0.3s ease",
                   "&:hover": {
-                    background:
-                      "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
-                    boxShadow: "0 12px 32px rgba(99, 102, 241, 0.5)",
+                    background: isDark
+                      ? "linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)"
+                      : "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                    boxShadow: isDark
+                      ? "0 6px 20px rgba(79, 70, 229, 0.35)"
+                      : "0 12px 32px rgba(99, 102, 241, 0.5)",
                     transform: "translateY(-2px)",
                   },
                 }}
@@ -769,7 +776,7 @@ const DocumentsPage = () => {
           {filteredDocuments.length === 0 ? (
             <Card
               sx={{
-                borderRadius: "24px",
+                borderRadius: "20px",
                 border: `2px dashed ${
                   isDark ? colors.grey[700] : colors.grey[300]
                 }`,
@@ -785,18 +792,26 @@ const DocumentsPage = () => {
                 sx={{
                   width: 100,
                   height: 100,
-                  borderRadius: "24px",
-                  background:
-                    "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                  borderRadius: "20px",
+                  background: isDark
+                    ? alpha("#6366f1", 0.15)
+                    : "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   mx: "auto",
                   mb: 3,
-                  boxShadow: "0 12px 40px rgba(99, 102, 241, 0.3)",
+                  boxShadow: isDark
+                    ? "0 8px 24px rgba(99, 102, 241, 0.15)"
+                    : "0 12px 40px rgba(99, 102, 241, 0.3)",
                 }}
               >
-                <FolderOpen sx={{ fontSize: 48, color: "white" }} />
+                <FolderOpen
+                  sx={{
+                    fontSize: 48,
+                    color: isDark ? "#6366f1" : "white",
+                  }}
+                />
               </Box>
               <Typography
                 variant="h4"
@@ -829,21 +844,27 @@ const DocumentsPage = () => {
                 startIcon={<CloudUpload />}
                 onClick={() => setUploadDialog(true)}
                 sx={{
-                  background:
-                    "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                  background: isDark
+                    ? "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)"
+                    : "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
                   borderRadius: "14px",
                   px: 4,
                   py: 1.5,
                   fontSize: "1rem",
                   fontWeight: 700,
                   textTransform: "none",
-                  boxShadow: "0 8px 24px rgba(99, 102, 241, 0.35)",
+                  boxShadow: isDark
+                    ? "0 4px 14px rgba(79, 70, 229, 0.25)"
+                    : "0 8px 24px rgba(99, 102, 241, 0.35)",
                   transition: "all 0.3s ease",
                   "&:hover": {
-                    background:
-                      "linear-gradient(135deg, #4338ca 0%, #7c3aed 100%)",
+                    background: isDark
+                      ? "linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)"
+                      : "linear-gradient(135deg, #4338ca 0%, #7c3aed 100%)",
                     transform: "translateY(-2px)",
-                    boxShadow: "0 12px 32px rgba(99, 102, 241, 0.45)",
+                    boxShadow: isDark
+                      ? "0 6px 20px rgba(79, 70, 229, 0.35)"
+                      : "0 12px 32px rgba(99, 102, 241, 0.45)",
                   },
                 }}
               >
@@ -860,19 +881,19 @@ const DocumentsPage = () => {
                     <Grow in timeout={1600 + index * 100}>
                       <Card
                         sx={{
-                          borderRadius: "20px",
+                          borderRadius: "16px",
                           boxShadow: isDark
-                            ? "0 4px 24px rgba(0,0,0,0.3)"
+                            ? "0 2px 12px rgba(0,0,0,0.2)"
                             : "0 4px 24px rgba(0,0,0,0.08)",
-                          bgcolor: isDark ? alpha("#1e293b", 0.6) : "#fff",
+                          bgcolor: isDark ? alpha("#1e293b", 0.4) : "#fff",
                           backdropFilter: "blur(20px)",
                           border: `1px solid ${isDark ? alpha("#fff", 0.05) : alpha("#000", 0.05)}`,
                           transition: "all 0.3s ease",
                           overflow: "hidden",
                           "&:hover": {
-                            transform: "translateY(-6px)",
+                            transform: "translateY(-4px)",
                             boxShadow: isDark
-                              ? "0 16px 48px rgba(0,0,0,0.4)"
+                              ? "0 8px 24px rgba(0,0,0,0.3)"
                               : "0 16px 48px rgba(0,0,0,0.12)",
                           },
                         }}
@@ -882,13 +903,13 @@ const DocumentsPage = () => {
                           <Box
                             sx={{
                               height: 160,
-                              background: `linear-gradient(135deg, ${alpha(typeInfo.color, 0.15)} 0%, ${alpha(typeInfo.color, 0.05)} 100%)`,
+                              background: `linear-gradient(135deg, ${alpha(typeInfo.color, isDark ? 0.1 : 0.15)} 0%, ${alpha(typeInfo.color, isDark ? 0.02 : 0.05)} 100%)`,
                               display: "flex",
                               flexDirection: "column",
                               alignItems: "center",
                               justifyContent: "center",
                               position: "relative",
-                              borderBottom: `2px solid ${alpha(typeInfo.color, 0.2)}`,
+                              borderBottom: `2px solid ${alpha(typeInfo.color, isDark ? 0.15 : 0.2)}`,
                             }}
                           >
                             <Typography sx={{ fontSize: "3.5rem", mb: 1 }}>
@@ -898,13 +919,16 @@ const DocumentsPage = () => {
                               label={typeInfo.label}
                               size="small"
                               sx={{
-                                bgcolor: alpha(typeInfo.color, 0.2),
+                                bgcolor: alpha(
+                                  typeInfo.color,
+                                  isDark ? 0.15 : 0.2,
+                                ),
                                 color: typeInfo.color,
                                 fontWeight: 700,
                                 fontSize: "0.7rem",
                                 height: "24px",
                                 borderRadius: "8px",
-                                border: `1px solid ${alpha(typeInfo.color, 0.3)}`,
+                                border: `1px solid ${alpha(typeInfo.color, isDark ? 0.25 : 0.3)}`,
                               }}
                             />
                           </Box>
@@ -1152,7 +1176,7 @@ const DocumentsPage = () => {
         TransitionProps={{ direction: "up" } as any}
         PaperProps={{
           sx: {
-            borderRadius: "28px",
+            borderRadius: "24px",
             bgcolor: isDark ? "#0f172a" : "#fff",
             backgroundImage: "none",
             boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
@@ -1160,24 +1184,15 @@ const DocumentsPage = () => {
           },
         }}
       >
-        {/* Dialog Header with Gradient */}
+        {/* Dialog Header */}
         <Box
           sx={{
-            background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+            background: isDark
+              ? alpha("#1e293b", 0.6)
+              : "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
             p: 4,
             position: "relative",
             overflow: "hidden",
-            "&::before": {
-              content: '""',
-              position: "absolute",
-              top: -100,
-              right: -100,
-              width: 300,
-              height: 300,
-              background:
-                "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
-              borderRadius: "50%",
-            },
           }}
         >
           <Stack
@@ -1191,7 +1206,7 @@ const DocumentsPage = () => {
                 variant="h4"
                 sx={{
                   fontWeight: 800,
-                  color: "white",
+                  color: isDark ? "#e2e8f0" : "white",
                   mb: 0.5,
                   letterSpacing: "-0.01em",
                 }}
@@ -1200,7 +1215,10 @@ const DocumentsPage = () => {
               </Typography>
               <Typography
                 variant="body2"
-                sx={{ color: "rgba(255,255,255,0.85)", fontWeight: 500 }}
+                sx={{
+                  color: isDark ? "#94a3b8" : "rgba(255,255,255,0.85)",
+                  fontWeight: 500,
+                }}
               >
                 Add a new document to your records
               </Typography>
@@ -1208,11 +1226,13 @@ const DocumentsPage = () => {
             <IconButton
               onClick={handleCloseUploadDialog}
               sx={{
-                bgcolor: "rgba(255,255,255,0.2)",
+                bgcolor: isDark ? alpha("#fff", 0.05) : "rgba(255,255,255,0.2)",
                 borderRadius: "12px",
-                color: "white",
+                color: isDark ? "#e2e8f0" : "white",
                 "&:hover": {
-                  bgcolor: "rgba(255,255,255,0.3)",
+                  bgcolor: isDark
+                    ? alpha("#fff", 0.1)
+                    : "rgba(255,255,255,0.3)",
                 },
               }}
             >
@@ -1236,7 +1256,7 @@ const DocumentsPage = () => {
                 <Box
                   sx={{
                     border: `2px dashed ${alpha("#6366f1", 0.4)}`,
-                    borderRadius: "20px",
+                    borderRadius: "16px",
                     p: 4,
                     textAlign: "center",
                     cursor: "pointer",
@@ -1279,18 +1299,26 @@ const DocumentsPage = () => {
                           sx={{
                             width: 90,
                             height: 90,
-                            borderRadius: "18px",
-                            background:
-                              "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
+                            borderRadius: "16px",
+                            background: isDark
+                              ? alpha("#ef4444", 0.15)
+                              : "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
                             mx: "auto",
                             mb: 2,
-                            boxShadow: "0 8px 24px rgba(239, 68, 68, 0.3)",
+                            boxShadow: isDark
+                              ? "0 4px 14px rgba(239, 68, 68, 0.15)"
+                              : "0 8px 24px rgba(239, 68, 68, 0.3)",
                           }}
                         >
-                          <PictureAsPdf sx={{ fontSize: 44, color: "white" }} />
+                          <PictureAsPdf
+                            sx={{
+                              fontSize: 44,
+                              color: isDark ? "#ef4444" : "white",
+                            }}
+                          />
                         </Box>
                       )}
                       <Typography
@@ -1319,18 +1347,26 @@ const DocumentsPage = () => {
                         sx={{
                           width: 80,
                           height: 80,
-                          borderRadius: "18px",
-                          background:
-                            "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                          borderRadius: "16px",
+                          background: isDark
+                            ? alpha("#6366f1", 0.15)
+                            : "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
                           mx: "auto",
                           mb: 2.5,
-                          boxShadow: "0 8px 24px rgba(99, 102, 241, 0.3)",
+                          boxShadow: isDark
+                            ? "0 4px 14px rgba(99, 102, 241, 0.15)"
+                            : "0 8px 24px rgba(99, 102, 241, 0.3)",
                         }}
                       >
-                        <CloudUpload sx={{ fontSize: 36, color: "white" }} />
+                        <CloudUpload
+                          sx={{
+                            fontSize: 36,
+                            color: isDark ? "#6366f1" : "white",
+                          }}
+                        />
                       </Box>
                       <Typography
                         variant="h6"
@@ -1472,15 +1508,23 @@ const DocumentsPage = () => {
             sx={{
               py: 2,
               borderRadius: "14px",
-              background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+              background: isDark
+                ? "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)"
+                : "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
               textTransform: "none",
               fontWeight: 800,
               fontSize: "1rem",
-              boxShadow: "0 8px 24px rgba(99, 102, 241, 0.4)",
+              boxShadow: isDark
+                ? "0 4px 14px rgba(79, 70, 229, 0.25)"
+                : "0 8px 24px rgba(99, 102, 241, 0.4)",
               transition: "all 0.3s ease",
               "&:hover": {
-                background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
-                boxShadow: "0 12px 32px rgba(99, 102, 241, 0.5)",
+                background: isDark
+                  ? "linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)"
+                  : "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                boxShadow: isDark
+                  ? "0 6px 20px rgba(79, 70, 229, 0.35)"
+                  : "0 12px 32px rgba(99, 102, 241, 0.5)",
                 transform: "translateY(-2px)",
               },
               "&:disabled": {

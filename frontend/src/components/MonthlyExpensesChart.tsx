@@ -7,9 +7,9 @@ import {
   Stack,
   Chip,
 } from "@mui/material";
-import { ResponsivePie } from "@nivo/pie";
+import { Pie } from "@nivo/pie";
 import { TrendingDown, BarChart } from "@mui/icons-material";
-import { useMemo } from "react";
+import { useMemo, useEffect, useRef, useState } from "react";
 import { getCategoryColor, getCategoryInfo } from "../utils/categories";
 
 interface Transaction {
@@ -33,10 +33,24 @@ function MonthlyExpensesChart({
   transactions = [],
 }: MonthlyExpensesChartProps) {
   const theme = useTheme();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 250 });
 
-  // Transform transactions into chart data
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setDimensions({
+          width: entry.contentRect.width,
+          height: 250,
+        });
+      }
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   const chartData = useMemo(() => {
-    // Get current month expenses only
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
 
@@ -53,14 +67,12 @@ function MonthlyExpensesChart({
           );
         })
         .forEach((t) => {
-          // ✅ Normalize category to lowercase for consistent grouping
           const category = (t.category || "other").toLowerCase().trim();
           expensesByCategory[category] =
             (expensesByCategory[category] || 0) + t.amount;
         });
     }
 
-    // Convert to chart format
     const data = Object.entries(expensesByCategory).map(([category, value]) => {
       const categoryInfo = getCategoryInfo(category);
       return {
@@ -71,15 +83,13 @@ function MonthlyExpensesChart({
       };
     });
 
-    // Sort by value descending
     data.sort((a, b) => b.value - a.value);
 
-    return data; // Return empty array if no data
+    return data;
   }, [transactions]);
 
   const total = chartData.reduce((sum, item) => sum + item.value, 0);
 
-  // Calculate percentage change (mock for now - you can implement real logic)
   const percentageChange = -8.2;
   const hasData = chartData.length > 0;
 
@@ -131,10 +141,12 @@ function MonthlyExpensesChart({
         </Stack>
 
         {/* Chart or Empty State */}
-        <Box sx={{ height: 250 }}>
-          {hasData ? (
-            <ResponsivePie
+        <Box ref={containerRef} sx={{ height: 250 }}>
+          {hasData && dimensions.width > 0 ? (
+            <Pie
               data={chartData}
+              width={dimensions.width}
+              height={dimensions.height}
               margin={{ top: 20, right: 10, bottom: 20, left: 10 }}
               innerRadius={0.65}
               padAngle={2}
@@ -175,39 +187,41 @@ function MonthlyExpensesChart({
               )}
             />
           ) : (
-            <Box
-              sx={{
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 2,
-              }}
-            >
-              <BarChart
+            !hasData && (
+              <Box
                 sx={{
-                  fontSize: 64,
-                  color: theme.palette.grey[300],
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 2,
                 }}
-              />
-              <Stack spacing={0.5} alignItems="center">
-                <Typography
-                  variant="body1"
-                  fontWeight={600}
-                  color="text.secondary"
-                >
-                  No Expenses Yet
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  textAlign="center"
-                >
-                  Start tracking your expenses this month
-                </Typography>
-              </Stack>
-            </Box>
+              >
+                <BarChart
+                  sx={{
+                    fontSize: 64,
+                    color: theme.palette.grey[300],
+                  }}
+                />
+                <Stack spacing={0.5} alignItems="center">
+                  <Typography
+                    variant="body1"
+                    fontWeight={600}
+                    color="text.secondary"
+                  >
+                    No Expenses Yet
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    textAlign="center"
+                  >
+                    Start tracking your expenses this month
+                  </Typography>
+                </Stack>
+              </Box>
+            )
           )}
         </Box>
 

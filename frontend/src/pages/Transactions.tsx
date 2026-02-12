@@ -392,7 +392,7 @@ const TransactionsPage = () => {
             size={70}
             thickness={3}
             sx={{
-              color: "#6366f1",
+              color: isDark ? "#6366f1" : "#4f46e5",
             }}
           />
           <Box
@@ -401,13 +401,15 @@ const TransactionsPage = () => {
               width: 50,
               height: 50,
               borderRadius: "50%",
-              bgcolor: alpha("#6366f1", 0.1),
+              bgcolor: alpha(isDark ? "#6366f1" : "#4f46e5", 0.1),
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <Receipt sx={{ fontSize: 24, color: "#6366f1" }} />
+            <Receipt
+              sx={{ fontSize: 24, color: isDark ? "#6366f1" : "#4f46e5" }}
+            />
           </Box>
         </Box>
         <Typography
@@ -422,7 +424,7 @@ const TransactionsPage = () => {
 
   return (
     <Box sx={{ height: "100%", overflow: "auto", p: 3, pl: 0 }}>
-      {/* Modern Header with Gradient */}
+      {/* Modern Header */}
       <Fade in timeout={600}>
         <Box mb={5}>
           <Stack
@@ -437,10 +439,9 @@ const TransactionsPage = () => {
                 sx={{
                   fontWeight: 800,
                   fontSize: { xs: "2rem", md: "2.5rem" },
-                  background:
-                    theme.palette.mode === "dark"
-                      ? "linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%)"
-                      : "linear-gradient(135deg, #1e293b 0%, #6366f1 100%)",
+                  background: isDark
+                    ? "linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%)"
+                    : "linear-gradient(135deg, #1e293b 0%, #6366f1 100%)",
                   backgroundClip: "text",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
@@ -466,9 +467,9 @@ const TransactionsPage = () => {
               label={`${filteredTransactions.length} Total`}
               sx={{
                 background: isDark
-                  ? "rgba(99, 102, 241, 0.15)"
+                  ? "rgba(99, 102, 241, 0.12)"
                   : "rgba(99, 102, 241, 0.1)",
-                color: isDark ? colors.primary[300] : colors.primary[700],
+                color: isDark ? "#a5b4fc" : colors.primary[700],
                 fontWeight: 700,
                 fontSize: "0.9rem",
                 px: 1,
@@ -476,7 +477,7 @@ const TransactionsPage = () => {
                 borderRadius: "12px",
                 border: `1px solid ${
                   isDark
-                    ? "rgba(99, 102, 241, 0.2)"
+                    ? "rgba(99, 102, 241, 0.15)"
                     : "rgba(99, 102, 241, 0.15)"
                 }`,
               }}
@@ -500,23 +501,29 @@ const TransactionsPage = () => {
         </Box>
       </Fade>
 
-      {/* Enhanced Stats Cards */}
+      {/* Enhanced Stats Cards - IMPROVED FOR DARK MODE */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid size={{ xs: 12, md: 4 }}>
           <Grow in timeout={800}>
             <Card
               sx={{
-                background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+                background: isDark
+                  ? "linear-gradient(135deg, #065f46 0%, #047857 100%)"
+                  : "linear-gradient(135deg, #10b981 0%, #059669 100%)",
                 borderRadius: "20px",
                 p: 3,
                 position: "relative",
                 overflow: "hidden",
                 border: "none",
-                boxShadow: "0 8px 32px rgba(16, 185, 129, 0.3)",
+                boxShadow: isDark
+                  ? "0 4px 16px rgba(5, 95, 70, 0.2)"
+                  : "0 8px 32px rgba(16, 185, 129, 0.3)",
                 transition: "all 0.3s ease",
                 "&:hover": {
                   transform: "translateY(-4px)",
-                  boxShadow: "0 12px 48px rgba(16, 185, 129, 0.4)",
+                  boxShadow: isDark
+                    ? "0 8px 24px rgba(5, 95, 70, 0.3)"
+                    : "0 12px 48px rgba(16, 185, 129, 0.4)",
                 },
                 "&::before": {
                   content: '""',
@@ -525,8 +532,9 @@ const TransactionsPage = () => {
                   right: 0,
                   width: "200px",
                   height: "200px",
-                  background:
-                    "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
+                  background: isDark
+                    ? "radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%)"
+                    : "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
                   borderRadius: "50%",
                   transform: "translate(30%, -30%)",
                 },
@@ -543,7 +551,7 @@ const TransactionsPage = () => {
                     <Typography
                       variant="body2"
                       sx={{
-                        color: "rgba(255,255,255,0.9)",
+                        color: "rgba(255,255,255,0.85)",
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.5px",
@@ -569,7 +577,10 @@ const TransactionsPage = () => {
                     </Typography>
                     <Typography
                       variant="caption"
-                      sx={{ color: "rgba(255,255,255,0.8)", fontWeight: 600 }}
+                      sx={{
+                        color: "rgba(255,255,255,0.75)",
+                        fontWeight: 600,
+                      }}
                     >
                       TND
                     </Typography>
@@ -579,7 +590,7 @@ const TransactionsPage = () => {
                       width: 56,
                       height: 56,
                       borderRadius: "14px",
-                      background: "rgba(255,255,255,0.2)",
+                      background: "rgba(255,255,255,0.15)",
                       backdropFilter: "blur(10px)",
                       display: "flex",
                       alignItems: "center",
@@ -598,17 +609,23 @@ const TransactionsPage = () => {
           <Grow in timeout={1000}>
             <Card
               sx={{
-                background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
+                background: isDark
+                  ? "linear-gradient(135deg, #991b1b 0%, #b91c1c 100%)"
+                  : "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
                 borderRadius: "20px",
                 p: 3,
                 position: "relative",
                 overflow: "hidden",
                 border: "none",
-                boxShadow: "0 8px 32px rgba(239, 68, 68, 0.3)",
+                boxShadow: isDark
+                  ? "0 4px 16px rgba(153, 27, 27, 0.2)"
+                  : "0 8px 32px rgba(239, 68, 68, 0.3)",
                 transition: "all 0.3s ease",
                 "&:hover": {
                   transform: "translateY(-4px)",
-                  boxShadow: "0 12px 48px rgba(239, 68, 68, 0.4)",
+                  boxShadow: isDark
+                    ? "0 8px 24px rgba(153, 27, 27, 0.3)"
+                    : "0 12px 48px rgba(239, 68, 68, 0.4)",
                 },
                 "&::before": {
                   content: '""',
@@ -617,8 +634,9 @@ const TransactionsPage = () => {
                   right: 0,
                   width: "200px",
                   height: "200px",
-                  background:
-                    "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
+                  background: isDark
+                    ? "radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%)"
+                    : "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
                   borderRadius: "50%",
                   transform: "translate(30%, -30%)",
                 },
@@ -635,7 +653,7 @@ const TransactionsPage = () => {
                     <Typography
                       variant="body2"
                       sx={{
-                        color: "rgba(255,255,255,0.9)",
+                        color: "rgba(255,255,255,0.85)",
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.5px",
@@ -661,7 +679,10 @@ const TransactionsPage = () => {
                     </Typography>
                     <Typography
                       variant="caption"
-                      sx={{ color: "rgba(255,255,255,0.8)", fontWeight: 600 }}
+                      sx={{
+                        color: "rgba(255,255,255,0.75)",
+                        fontWeight: 600,
+                      }}
                     >
                       TND
                     </Typography>
@@ -671,7 +692,7 @@ const TransactionsPage = () => {
                       width: 56,
                       height: 56,
                       borderRadius: "14px",
-                      background: "rgba(255,255,255,0.2)",
+                      background: "rgba(255,255,255,0.15)",
                       backdropFilter: "blur(10px)",
                       display: "flex",
                       alignItems: "center",
@@ -690,17 +711,23 @@ const TransactionsPage = () => {
           <Grow in timeout={1200}>
             <Card
               sx={{
-                background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                background: isDark
+                  ? "linear-gradient(135deg, #3730a3 0%, #4f46e5 100%)"
+                  : "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
                 borderRadius: "20px",
                 p: 3,
                 position: "relative",
                 overflow: "hidden",
                 border: "none",
-                boxShadow: "0 8px 32px rgba(99, 102, 241, 0.3)",
+                boxShadow: isDark
+                  ? "0 4px 16px rgba(55, 48, 163, 0.2)"
+                  : "0 8px 32px rgba(99, 102, 241, 0.3)",
                 transition: "all 0.3s ease",
                 "&:hover": {
                   transform: "translateY(-4px)",
-                  boxShadow: "0 12px 48px rgba(99, 102, 241, 0.4)",
+                  boxShadow: isDark
+                    ? "0 8px 24px rgba(55, 48, 163, 0.3)"
+                    : "0 12px 48px rgba(99, 102, 241, 0.4)",
                 },
                 "&::before": {
                   content: '""',
@@ -709,8 +736,9 @@ const TransactionsPage = () => {
                   right: 0,
                   width: "200px",
                   height: "200px",
-                  background:
-                    "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
+                  background: isDark
+                    ? "radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%)"
+                    : "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
                   borderRadius: "50%",
                   transform: "translate(30%, -30%)",
                 },
@@ -727,7 +755,7 @@ const TransactionsPage = () => {
                     <Typography
                       variant="body2"
                       sx={{
-                        color: "rgba(255,255,255,0.9)",
+                        color: "rgba(255,255,255,0.85)",
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.5px",
@@ -754,7 +782,10 @@ const TransactionsPage = () => {
                     </Typography>
                     <Typography
                       variant="caption"
-                      sx={{ color: "rgba(255,255,255,0.8)", fontWeight: 600 }}
+                      sx={{
+                        color: "rgba(255,255,255,0.75)",
+                        fontWeight: 600,
+                      }}
                     >
                       TND
                     </Typography>
@@ -764,7 +795,7 @@ const TransactionsPage = () => {
                       width: 56,
                       height: 56,
                       borderRadius: "14px",
-                      background: "rgba(255,255,255,0.2)",
+                      background: "rgba(255,255,255,0.15)",
                       backdropFilter: "blur(10px)",
                       display: "flex",
                       alignItems: "center",
@@ -787,15 +818,15 @@ const TransactionsPage = () => {
             borderRadius: "20px",
             mb: 4,
             boxShadow: isDark
-              ? "0 4px 24px rgba(0,0,0,0.3)"
+              ? "0 2px 12px rgba(0,0,0,0.2)"
               : "0 4px 24px rgba(0,0,0,0.08)",
-            bgcolor: isDark ? alpha("#1e293b", 0.6) : "#fff",
+            bgcolor: isDark ? alpha("#1e293b", 0.4) : "#fff",
             backdropFilter: "blur(20px)",
             border: `1px solid ${isDark ? alpha("#fff", 0.05) : alpha("#000", 0.05)}`,
             transition: "all 0.3s ease",
             "&:hover": {
               boxShadow: isDark
-                ? "0 8px 32px rgba(0,0,0,0.4)"
+                ? "0 4px 16px rgba(0,0,0,0.3)"
                 : "0 8px 32px rgba(0,0,0,0.12)",
             },
           }}
@@ -815,26 +846,31 @@ const TransactionsPage = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <SearchIcon sx={{ color: "#6366f1", fontSize: 24 }} />
+                      <SearchIcon
+                        sx={{
+                          color: isDark ? "#6366f1" : "#4f46e5",
+                          fontSize: 24,
+                        }}
+                      />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "14px",
-                    bgcolor: isDark ? alpha("#0f172a", 0.5) : "#f8fafc",
+                    bgcolor: isDark ? alpha("#0f172a", 0.3) : "#f8fafc",
                     transition: "all 0.3s ease",
                     "& fieldset": {
                       borderColor: isDark
-                        ? alpha("#fff", 0.08)
+                        ? alpha("#fff", 0.06)
                         : alpha("#6366f1", 0.2),
                       borderWidth: "2px",
                     },
                     "&:hover fieldset": {
-                      borderColor: "#6366f1",
+                      borderColor: isDark ? "#6366f1" : "#4f46e5",
                     },
                     "&.Mui-focused fieldset": {
-                      borderColor: "#6366f1",
+                      borderColor: isDark ? "#6366f1" : "#4f46e5",
                       borderWidth: "2px",
                     },
                   },
@@ -848,17 +884,23 @@ const TransactionsPage = () => {
                   minWidth: { xs: "100%", sm: 220 },
                   py: 2,
                   borderRadius: "14px",
-                  background:
-                    "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                  background: isDark
+                    ? "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)"
+                    : "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
                   textTransform: "none",
                   fontWeight: 700,
                   fontSize: "1rem",
-                  boxShadow: "0 8px 24px rgba(99, 102, 241, 0.4)",
+                  boxShadow: isDark
+                    ? "0 4px 16px rgba(79, 70, 229, 0.25)"
+                    : "0 8px 24px rgba(99, 102, 241, 0.4)",
                   transition: "all 0.3s ease",
                   "&:hover": {
-                    background:
-                      "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
-                    boxShadow: "0 12px 32px rgba(99, 102, 241, 0.5)",
+                    background: isDark
+                      ? "linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)"
+                      : "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                    boxShadow: isDark
+                      ? "0 6px 20px rgba(79, 70, 229, 0.35)"
+                      : "0 12px 32px rgba(99, 102, 241, 0.5)",
                     transform: "translateY(-2px)",
                   },
                 }}
@@ -877,9 +919,9 @@ const TransactionsPage = () => {
             sx={{
               borderRadius: "20px",
               boxShadow: isDark
-                ? "0 4px 24px rgba(0,0,0,0.3)"
+                ? "0 2px 12px rgba(0,0,0,0.2)"
                 : "0 4px 24px rgba(0,0,0,0.08)",
-              bgcolor: isDark ? alpha("#1e293b", 0.6) : "#fff",
+              bgcolor: isDark ? alpha("#1e293b", 0.4) : "#fff",
               backdropFilter: "blur(20px)",
               border: `1px solid ${isDark ? alpha("#fff", 0.05) : alpha("#000", 0.05)}`,
               overflow: "hidden",
@@ -890,7 +932,7 @@ const TransactionsPage = () => {
                 <TableHead>
                   <TableRow
                     sx={{
-                      bgcolor: isDark ? alpha("#0f172a", 0.5) : "#f8fafc",
+                      bgcolor: isDark ? alpha("#0f172a", 0.3) : "#f8fafc",
                     }}
                   >
                     <TableCell
@@ -901,7 +943,7 @@ const TransactionsPage = () => {
                         fontSize: "0.75rem",
                         letterSpacing: "0.1em",
                         py: 2.5,
-                        borderBottom: `2px solid ${isDark ? alpha("#fff", 0.08) : "#e2e8f0"}`,
+                        borderBottom: `2px solid ${isDark ? alpha("#fff", 0.06) : "#e2e8f0"}`,
                       }}
                     >
                       Transaction
@@ -914,7 +956,7 @@ const TransactionsPage = () => {
                         fontSize: "0.75rem",
                         letterSpacing: "0.1em",
                         py: 2.5,
-                        borderBottom: `2px solid ${isDark ? alpha("#fff", 0.08) : "#e2e8f0"}`,
+                        borderBottom: `2px solid ${isDark ? alpha("#fff", 0.06) : "#e2e8f0"}`,
                       }}
                     >
                       Category
@@ -927,7 +969,7 @@ const TransactionsPage = () => {
                         fontSize: "0.75rem",
                         letterSpacing: "0.1em",
                         py: 2.5,
-                        borderBottom: `2px solid ${isDark ? alpha("#fff", 0.08) : "#e2e8f0"}`,
+                        borderBottom: `2px solid ${isDark ? alpha("#fff", 0.06) : "#e2e8f0"}`,
                       }}
                     >
                       Account
@@ -940,7 +982,7 @@ const TransactionsPage = () => {
                         fontSize: "0.75rem",
                         letterSpacing: "0.1em",
                         py: 2.5,
-                        borderBottom: `2px solid ${isDark ? alpha("#fff", 0.08) : "#e2e8f0"}`,
+                        borderBottom: `2px solid ${isDark ? alpha("#fff", 0.06) : "#e2e8f0"}`,
                       }}
                     >
                       Date
@@ -954,7 +996,7 @@ const TransactionsPage = () => {
                         fontSize: "0.75rem",
                         letterSpacing: "0.1em",
                         py: 2.5,
-                        borderBottom: `2px solid ${isDark ? alpha("#fff", 0.08) : "#e2e8f0"}`,
+                        borderBottom: `2px solid ${isDark ? alpha("#fff", 0.06) : "#e2e8f0"}`,
                       }}
                     >
                       Amount
@@ -968,7 +1010,7 @@ const TransactionsPage = () => {
                         fontSize: "0.75rem",
                         letterSpacing: "0.1em",
                         py: 2.5,
-                        borderBottom: `2px solid ${isDark ? alpha("#fff", 0.08) : "#e2e8f0"}`,
+                        borderBottom: `2px solid ${isDark ? alpha("#fff", 0.06) : "#e2e8f0"}`,
                       }}
                     >
                       Actions
@@ -992,7 +1034,7 @@ const TransactionsPage = () => {
                             height: 100,
                             borderRadius: "24px",
                             bgcolor: isDark
-                              ? alpha("#6366f1", 0.1)
+                              ? alpha("#6366f1", 0.08)
                               : alpha("#6366f1", 0.08),
                             display: "flex",
                             alignItems: "center",
@@ -1004,7 +1046,7 @@ const TransactionsPage = () => {
                           <Receipt
                             sx={{
                               fontSize: 48,
-                              color: "#6366f1",
+                              color: isDark ? "#6366f1" : "#4f46e5",
                             }}
                           />
                         </Box>
@@ -1012,7 +1054,7 @@ const TransactionsPage = () => {
                           variant="h5"
                           fontWeight="800"
                           sx={{
-                            color: isDark ? "#fff" : "#0f172a",
+                            color: isDark ? "#e2e8f0" : "#0f172a",
                             mb: 1.5,
                             letterSpacing: "-0.01em",
                           }}
@@ -1042,12 +1084,11 @@ const TransactionsPage = () => {
                           transition: "all 0.3s ease",
                           "&:hover": {
                             bgcolor: isDark
-                              ? alpha("#6366f1", 0.08)
+                              ? alpha("#6366f1", 0.06)
                               : alpha("#6366f1", 0.03),
-                            transform: "scale(1.005)",
                           },
                           "& td": {
-                            borderBottom: `1px solid ${isDark ? alpha("#fff", 0.05) : "#f1f5f9"}`,
+                            borderBottom: `1px solid ${isDark ? alpha("#fff", 0.04) : "#f1f5f9"}`,
                           },
                         }}
                       >
@@ -1059,8 +1100,8 @@ const TransactionsPage = () => {
                                 height: 52,
                                 bgcolor:
                                   transaction.type === "INCOME"
-                                    ? alpha("#10b981", 0.15)
-                                    : alpha("#ef4444", 0.15),
+                                    ? alpha("#10b981", isDark ? 0.12 : 0.15)
+                                    : alpha("#ef4444", isDark ? 0.12 : 0.15),
                                 borderRadius: "14px",
                                 fontSize: "1.5rem",
                               }}
@@ -1072,7 +1113,7 @@ const TransactionsPage = () => {
                                 variant="body1"
                                 fontWeight="700"
                                 sx={{
-                                  color: isDark ? "#fff" : "#0f172a",
+                                  color: isDark ? "#e2e8f0" : "#0f172a",
                                   mb: 0.5,
                                   fontSize: "1rem",
                                 }}
@@ -1089,8 +1130,8 @@ const TransactionsPage = () => {
                                 sx={{
                                   bgcolor:
                                     transaction.type === "INCOME"
-                                      ? alpha("#10b981", 0.1)
-                                      : alpha("#ef4444", 0.1),
+                                      ? alpha("#10b981", isDark ? 0.1 : 0.1)
+                                      : alpha("#ef4444", isDark ? 0.1 : 0.1),
                                   color:
                                     transaction.type === "INCOME"
                                       ? "#10b981"
@@ -1112,7 +1153,7 @@ const TransactionsPage = () => {
                               bgcolor: alpha(
                                 categoryColors[transaction.category] ||
                                   "#64748b",
-                                0.15,
+                                isDark ? 0.12 : 0.15,
                               ),
                               color:
                                 categoryColors[transaction.category] ||
@@ -1125,7 +1166,7 @@ const TransactionsPage = () => {
                               border: `1px solid ${alpha(
                                 categoryColors[transaction.category] ||
                                   "#64748b",
-                                0.3,
+                                isDark ? 0.2 : 0.3,
                               )}`,
                             }}
                           />
@@ -1195,13 +1236,13 @@ const TransactionsPage = () => {
                               onClick={() => handleOpenDialog(transaction)}
                               sx={{
                                 color: "white",
-                                bgcolor: "#6366f1",
+                                bgcolor: isDark ? "#4f46e5" : "#6366f1",
                                 borderRadius: "10px",
                                 width: 36,
                                 height: 36,
                                 transition: "all 0.2s ease",
                                 "&:hover": {
-                                  bgcolor: "#4f46e5",
+                                  bgcolor: isDark ? "#4338ca" : "#4f46e5",
                                   transform: "scale(1.1)",
                                 },
                               }}
@@ -1213,13 +1254,13 @@ const TransactionsPage = () => {
                               onClick={() => handleDelete(transaction.id)}
                               sx={{
                                 color: "white",
-                                bgcolor: "#ef4444",
+                                bgcolor: isDark ? "#b91c1c" : "#ef4444",
                                 borderRadius: "10px",
                                 width: 36,
                                 height: 36,
                                 transition: "all 0.2s ease",
                                 "&:hover": {
-                                  bgcolor: "#dc2626",
+                                  bgcolor: isDark ? "#991b1b" : "#dc2626",
                                   transform: "scale(1.1)",
                                 },
                               }}
@@ -1245,9 +1286,9 @@ const TransactionsPage = () => {
             sx={{
               borderRadius: "20px",
               boxShadow: isDark
-                ? "0 4px 24px rgba(0,0,0,0.3)"
+                ? "0 2px 12px rgba(0,0,0,0.2)"
                 : "0 4px 24px rgba(0,0,0,0.08)",
-              bgcolor: isDark ? alpha("#1e293b", 0.6) : "#fff",
+              bgcolor: isDark ? alpha("#1e293b", 0.4) : "#fff",
               p: 6,
               textAlign: "center",
             }}
@@ -1258,7 +1299,7 @@ const TransactionsPage = () => {
                 height: 100,
                 borderRadius: "24px",
                 bgcolor: isDark
-                  ? alpha("#6366f1", 0.1)
+                  ? alpha("#6366f1", 0.08)
                   : alpha("#6366f1", 0.08),
                 display: "flex",
                 alignItems: "center",
@@ -1267,12 +1308,14 @@ const TransactionsPage = () => {
                 mb: 3,
               }}
             >
-              <Receipt sx={{ fontSize: 48, color: "#6366f1" }} />
+              <Receipt
+                sx={{ fontSize: 48, color: isDark ? "#6366f1" : "#4f46e5" }}
+              />
             </Box>
             <Typography
               variant="h5"
               fontWeight="800"
-              sx={{ color: isDark ? "#fff" : "#0f172a", mb: 1.5 }}
+              sx={{ color: isDark ? "#e2e8f0" : "#0f172a", mb: 1.5 }}
             >
               No transactions found
             </Typography>
@@ -1293,16 +1336,16 @@ const TransactionsPage = () => {
                   sx={{
                     borderRadius: "20px",
                     boxShadow: isDark
-                      ? "0 4px 24px rgba(0,0,0,0.3)"
+                      ? "0 2px 12px rgba(0,0,0,0.2)"
                       : "0 4px 24px rgba(0,0,0,0.08)",
-                    bgcolor: isDark ? alpha("#1e293b", 0.6) : "#fff",
+                    bgcolor: isDark ? alpha("#1e293b", 0.4) : "#fff",
                     border: `1px solid ${isDark ? alpha("#fff", 0.05) : alpha("#000", 0.05)}`,
                     p: 3,
                     transition: "all 0.3s ease",
                     "&:hover": {
                       transform: "translateY(-4px)",
                       boxShadow: isDark
-                        ? "0 8px 32px rgba(0,0,0,0.4)"
+                        ? "0 4px 16px rgba(0,0,0,0.3)"
                         : "0 8px 32px rgba(0,0,0,0.12)",
                     },
                   }}
@@ -1320,8 +1363,8 @@ const TransactionsPage = () => {
                           height: 56,
                           bgcolor:
                             transaction.type === "INCOME"
-                              ? alpha("#10b981", 0.15)
-                              : alpha("#ef4444", 0.15),
+                              ? alpha("#10b981", isDark ? 0.12 : 0.15)
+                              : alpha("#ef4444", isDark ? 0.12 : 0.15),
                           borderRadius: "14px",
                           fontSize: "1.75rem",
                         }}
@@ -1333,7 +1376,7 @@ const TransactionsPage = () => {
                           variant="body1"
                           fontWeight="800"
                           sx={{
-                            color: isDark ? "#fff" : "#0f172a",
+                            color: isDark ? "#e2e8f0" : "#0f172a",
                             mb: 0.5,
                           }}
                         >
@@ -1393,7 +1436,7 @@ const TransactionsPage = () => {
                       sx={{
                         bgcolor: alpha(
                           categoryColors[transaction.category] || "#64748b",
-                          0.15,
+                          isDark ? 0.12 : 0.15,
                         ),
                         color:
                           categoryColors[transaction.category] || "#64748b",
@@ -1402,7 +1445,7 @@ const TransactionsPage = () => {
                         borderRadius: "10px",
                         border: `1px solid ${alpha(
                           categoryColors[transaction.category] || "#64748b",
-                          0.3,
+                          isDark ? 0.2 : 0.3,
                         )}`,
                       }}
                     />
@@ -1410,7 +1453,7 @@ const TransactionsPage = () => {
                       label={transaction.accountName || "N/A"}
                       size="small"
                       sx={{
-                        bgcolor: isDark ? alpha("#fff", 0.05) : "#f1f5f9",
+                        bgcolor: isDark ? alpha("#fff", 0.04) : "#f1f5f9",
                         color: isDark ? "#94a3b8" : "#64748b",
                         fontWeight: 700,
                         fontSize: "0.75rem",
@@ -1425,8 +1468,8 @@ const TransactionsPage = () => {
                       sx={{
                         bgcolor:
                           transaction.type === "INCOME"
-                            ? alpha("#10b981", 0.1)
-                            : alpha("#ef4444", 0.1),
+                            ? alpha("#10b981", isDark ? 0.1 : 0.1)
+                            : alpha("#ef4444", isDark ? 0.1 : 0.1),
                         color:
                           transaction.type === "INCOME" ? "#10b981" : "#ef4444",
                         fontWeight: 700,
@@ -1448,13 +1491,13 @@ const TransactionsPage = () => {
                         py: 1.25,
                         textTransform: "none",
                         fontWeight: 700,
-                        borderColor: "#6366f1",
+                        borderColor: isDark ? "#4f46e5" : "#6366f1",
                         borderWidth: "2px",
-                        color: "#6366f1",
+                        color: isDark ? "#6366f1" : "#4f46e5",
                         "&:hover": {
                           borderWidth: "2px",
-                          borderColor: "#4f46e5",
-                          bgcolor: alpha("#6366f1", 0.05),
+                          borderColor: isDark ? "#4338ca" : "#4f46e5",
+                          bgcolor: alpha(isDark ? "#4f46e5" : "#6366f1", 0.05),
                         },
                       }}
                     >
@@ -1471,13 +1514,13 @@ const TransactionsPage = () => {
                         py: 1.25,
                         textTransform: "none",
                         fontWeight: 700,
-                        borderColor: "#ef4444",
+                        borderColor: isDark ? "#b91c1c" : "#ef4444",
                         borderWidth: "2px",
-                        color: "#ef4444",
+                        color: isDark ? "#ef4444" : "#dc2626",
                         "&:hover": {
                           borderWidth: "2px",
-                          borderColor: "#dc2626",
-                          bgcolor: alpha("#ef4444", 0.05),
+                          borderColor: isDark ? "#991b1b" : "#dc2626",
+                          bgcolor: alpha(isDark ? "#b91c1c" : "#ef4444", 0.05),
                         },
                       }}
                     >
@@ -1504,7 +1547,9 @@ const TransactionsPage = () => {
             borderRadius: "28px",
             bgcolor: isDark ? "#0f172a" : "#fff",
             backgroundImage: "none",
-            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+            boxShadow: isDark
+              ? "0 20px 40px rgba(0, 0, 0, 0.5)"
+              : "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
             overflow: "hidden",
           },
         }}
@@ -1512,7 +1557,9 @@ const TransactionsPage = () => {
         {/* Dialog Header with Gradient */}
         <Box
           sx={{
-            background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+            background: isDark
+              ? "linear-gradient(135deg, #3730a3 0%, #4f46e5 100%)"
+              : "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
             p: 4,
             position: "relative",
             overflow: "hidden",
@@ -1523,8 +1570,9 @@ const TransactionsPage = () => {
               right: -100,
               width: 300,
               height: 300,
-              background:
-                "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
+              background: isDark
+                ? "radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%)"
+                : "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
               borderRadius: "50%",
             },
           }}
@@ -1559,11 +1607,11 @@ const TransactionsPage = () => {
             <IconButton
               onClick={handleCloseDialog}
               sx={{
-                bgcolor: "rgba(255,255,255,0.2)",
+                bgcolor: "rgba(255,255,255,0.15)",
                 borderRadius: "12px",
                 color: "white",
                 "&:hover": {
-                  bgcolor: "rgba(255,255,255,0.3)",
+                  bgcolor: "rgba(255,255,255,0.25)",
                 },
               }}
             >
@@ -1605,24 +1653,33 @@ const TransactionsPage = () => {
                     transition: "all 0.3s ease",
                     ...(formData.type === "EXPENSE"
                       ? {
-                          background:
-                            "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
-                          boxShadow: "0 8px 24px rgba(239, 68, 68, 0.4)",
+                          background: isDark
+                            ? "linear-gradient(135deg, #991b1b 0%, #b91c1c 100%)"
+                            : "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
+                          boxShadow: isDark
+                            ? "0 4px 16px rgba(153, 27, 27, 0.3)"
+                            : "0 8px 24px rgba(239, 68, 68, 0.4)",
                           border: "none",
                           "&:hover": {
-                            background:
-                              "linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)",
-                            boxShadow: "0 12px 32px rgba(239, 68, 68, 0.5)",
+                            background: isDark
+                              ? "linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%)"
+                              : "linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)",
+                            boxShadow: isDark
+                              ? "0 6px 20px rgba(153, 27, 27, 0.4)"
+                              : "0 12px 32px rgba(239, 68, 68, 0.5)",
                           },
                         }
                       : {
-                          borderColor: isDark ? alpha("#fff", 0.1) : "#e2e8f0",
+                          borderColor: isDark ? alpha("#fff", 0.08) : "#e2e8f0",
                           borderWidth: "2px",
                           color: isDark ? "#94a3b8" : "#64748b",
                           "&:hover": {
                             borderWidth: "2px",
-                            borderColor: "#ef4444",
-                            bgcolor: alpha("#ef4444", 0.05),
+                            borderColor: isDark ? "#b91c1c" : "#ef4444",
+                            bgcolor: alpha(
+                              isDark ? "#b91c1c" : "#ef4444",
+                              0.05,
+                            ),
                           },
                         }),
                   }}
@@ -1644,24 +1701,33 @@ const TransactionsPage = () => {
                     transition: "all 0.3s ease",
                     ...(formData.type === "INCOME"
                       ? {
-                          background:
-                            "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-                          boxShadow: "0 8px 24px rgba(16, 185, 129, 0.4)",
+                          background: isDark
+                            ? "linear-gradient(135deg, #065f46 0%, #047857 100%)"
+                            : "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+                          boxShadow: isDark
+                            ? "0 4px 16px rgba(5, 95, 70, 0.3)"
+                            : "0 8px 24px rgba(16, 185, 129, 0.4)",
                           border: "none",
                           "&:hover": {
-                            background:
-                              "linear-gradient(135deg, #059669 0%, #047857 100%)",
-                            boxShadow: "0 12px 32px rgba(16, 185, 129, 0.5)",
+                            background: isDark
+                              ? "linear-gradient(135deg, #064e3b 0%, #065f46 100%)"
+                              : "linear-gradient(135deg, #059669 0%, #047857 100%)",
+                            boxShadow: isDark
+                              ? "0 6px 20px rgba(5, 95, 70, 0.4)"
+                              : "0 12px 32px rgba(16, 185, 129, 0.5)",
                           },
                         }
                       : {
-                          borderColor: isDark ? alpha("#fff", 0.1) : "#e2e8f0",
+                          borderColor: isDark ? alpha("#fff", 0.08) : "#e2e8f0",
                           borderWidth: "2px",
                           color: isDark ? "#94a3b8" : "#64748b",
                           "&:hover": {
                             borderWidth: "2px",
-                            borderColor: "#10b981",
-                            bgcolor: alpha("#10b981", 0.05),
+                            borderColor: isDark ? "#047857" : "#10b981",
+                            bgcolor: alpha(
+                              isDark ? "#047857" : "#10b981",
+                              0.05,
+                            ),
                           },
                         }),
                   }}
@@ -1686,14 +1752,14 @@ const TransactionsPage = () => {
                   borderRadius: "14px",
                   bgcolor: isDark ? alpha("#fff", 0.02) : "#f8fafc",
                   "& fieldset": {
-                    borderColor: isDark ? alpha("#fff", 0.08) : "#e2e8f0",
+                    borderColor: isDark ? alpha("#fff", 0.06) : "#e2e8f0",
                     borderWidth: "2px",
                   },
                   "&:hover fieldset": {
-                    borderColor: "#6366f1",
+                    borderColor: isDark ? "#6366f1" : "#4f46e5",
                   },
                   "&.Mui-focused fieldset": {
-                    borderColor: "#6366f1",
+                    borderColor: isDark ? "#6366f1" : "#4f46e5",
                     borderWidth: "2px",
                   },
                 },
@@ -1716,7 +1782,7 @@ const TransactionsPage = () => {
                   <InputAdornment position="start">
                     <Typography
                       sx={{
-                        color: "#6366f1",
+                        color: isDark ? "#6366f1" : "#4f46e5",
                         fontWeight: 800,
                         fontSize: "1.1rem",
                       }}
@@ -1731,14 +1797,14 @@ const TransactionsPage = () => {
                   borderRadius: "14px",
                   bgcolor: isDark ? alpha("#fff", 0.02) : "#f8fafc",
                   "& fieldset": {
-                    borderColor: isDark ? alpha("#fff", 0.08) : "#e2e8f0",
+                    borderColor: isDark ? alpha("#fff", 0.06) : "#e2e8f0",
                     borderWidth: "2px",
                   },
                   "&:hover fieldset": {
-                    borderColor: "#6366f1",
+                    borderColor: isDark ? "#6366f1" : "#4f46e5",
                   },
                   "&.Mui-focused fieldset": {
-                    borderColor: "#6366f1",
+                    borderColor: isDark ? "#6366f1" : "#4f46e5",
                     borderWidth: "2px",
                   },
                 },
@@ -1758,7 +1824,12 @@ const TransactionsPage = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <CalendarToday sx={{ color: "#6366f1", fontSize: 22 }} />
+                    <CalendarToday
+                      sx={{
+                        color: isDark ? "#6366f1" : "#4f46e5",
+                        fontSize: 22,
+                      }}
+                    />
                   </InputAdornment>
                 ),
               }}
@@ -1767,14 +1838,14 @@ const TransactionsPage = () => {
                   borderRadius: "14px",
                   bgcolor: isDark ? alpha("#fff", 0.02) : "#f8fafc",
                   "& fieldset": {
-                    borderColor: isDark ? alpha("#fff", 0.08) : "#e2e8f0",
+                    borderColor: isDark ? alpha("#fff", 0.06) : "#e2e8f0",
                     borderWidth: "2px",
                   },
                   "&:hover fieldset": {
-                    borderColor: "#6366f1",
+                    borderColor: isDark ? "#6366f1" : "#4f46e5",
                   },
                   "&.Mui-focused fieldset": {
-                    borderColor: "#6366f1",
+                    borderColor: isDark ? "#6366f1" : "#4f46e5",
                     borderWidth: "2px",
                   },
                 },
@@ -1794,7 +1865,12 @@ const TransactionsPage = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <CategoryIcon sx={{ color: "#6366f1", fontSize: 22 }} />
+                    <CategoryIcon
+                      sx={{
+                        color: isDark ? "#6366f1" : "#4f46e5",
+                        fontSize: 22,
+                      }}
+                    />
                   </InputAdornment>
                 ),
               }}
@@ -1803,14 +1879,14 @@ const TransactionsPage = () => {
                   borderRadius: "14px",
                   bgcolor: isDark ? alpha("#fff", 0.02) : "#f8fafc",
                   "& fieldset": {
-                    borderColor: isDark ? alpha("#fff", 0.08) : "#e2e8f0",
+                    borderColor: isDark ? alpha("#fff", 0.06) : "#e2e8f0",
                     borderWidth: "2px",
                   },
                   "&:hover fieldset": {
-                    borderColor: "#6366f1",
+                    borderColor: isDark ? "#6366f1" : "#4f46e5",
                   },
                   "&.Mui-focused fieldset": {
-                    borderColor: "#6366f1",
+                    borderColor: isDark ? "#6366f1" : "#4f46e5",
                     borderWidth: "2px",
                   },
                 },
@@ -1855,14 +1931,14 @@ const TransactionsPage = () => {
                   borderRadius: "14px",
                   bgcolor: isDark ? alpha("#fff", 0.02) : "#f8fafc",
                   "& fieldset": {
-                    borderColor: isDark ? alpha("#fff", 0.08) : "#e2e8f0",
+                    borderColor: isDark ? alpha("#fff", 0.06) : "#e2e8f0",
                     borderWidth: "2px",
                   },
                   "&:hover fieldset": {
-                    borderColor: "#6366f1",
+                    borderColor: isDark ? "#6366f1" : "#4f46e5",
                   },
                   "&.Mui-focused fieldset": {
-                    borderColor: "#6366f1",
+                    borderColor: isDark ? "#6366f1" : "#4f46e5",
                     borderWidth: "2px",
                   },
                 },
@@ -1901,9 +1977,9 @@ const TransactionsPage = () => {
                     p: 3,
                     borderRadius: "14px",
                     bgcolor: isDark
-                      ? alpha("#10b981", 0.1)
+                      ? alpha("#10b981", 0.08)
                       : alpha("#10b981", 0.08),
-                    border: `2px solid ${alpha("#10b981", 0.3)}`,
+                    border: `2px solid ${alpha("#10b981", isDark ? 0.2 : 0.3)}`,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
@@ -1915,7 +1991,7 @@ const TransactionsPage = () => {
                         width: 52,
                         height: 52,
                         borderRadius: "12px",
-                        bgcolor: alpha("#10b981", 0.2),
+                        bgcolor: alpha("#10b981", isDark ? 0.15 : 0.2),
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -1927,7 +2003,7 @@ const TransactionsPage = () => {
                       <Typography
                         variant="body1"
                         fontWeight="700"
-                        sx={{ color: isDark ? "#fff" : "#0f172a" }}
+                        sx={{ color: isDark ? "#e2e8f0" : "#0f172a" }}
                       >
                         {selectedFile.name}
                       </Typography>
@@ -1969,11 +2045,11 @@ const TransactionsPage = () => {
                     borderStyle: "dashed",
                     borderWidth: 2,
                     color: isDark ? "#64748b" : "#94a3b8",
-                    borderColor: isDark ? alpha("#fff", 0.1) : "#e2e8f0",
+                    borderColor: isDark ? alpha("#fff", 0.08) : "#e2e8f0",
                     "&:hover": {
                       borderWidth: 2,
-                      borderColor: "#6366f1",
-                      bgcolor: alpha("#6366f1", 0.05),
+                      borderColor: isDark ? "#6366f1" : "#4f46e5",
+                      bgcolor: alpha(isDark ? "#6366f1" : "#4f46e5", 0.05),
                     },
                   }}
                 >
@@ -2009,12 +2085,12 @@ const TransactionsPage = () => {
               textTransform: "none",
               fontWeight: 700,
               fontSize: "1rem",
-              borderColor: isDark ? alpha("#fff", 0.1) : "#e2e8f0",
+              borderColor: isDark ? alpha("#fff", 0.08) : "#e2e8f0",
               borderWidth: "2px",
               color: isDark ? "#94a3b8" : "#64748b",
               "&:hover": {
                 borderWidth: "2px",
-                borderColor: isDark ? alpha("#fff", 0.2) : "#cbd5e1",
+                borderColor: isDark ? alpha("#fff", 0.15) : "#cbd5e1",
                 bgcolor: isDark ? alpha("#fff", 0.02) : "#f8fafc",
               },
             }}
@@ -2034,19 +2110,27 @@ const TransactionsPage = () => {
             sx={{
               py: 2,
               borderRadius: "14px",
-              background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+              background: isDark
+                ? "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)"
+                : "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
               textTransform: "none",
               fontWeight: 800,
               fontSize: "1rem",
-              boxShadow: "0 8px 24px rgba(99, 102, 241, 0.4)",
+              boxShadow: isDark
+                ? "0 4px 16px rgba(79, 70, 229, 0.25)"
+                : "0 8px 24px rgba(99, 102, 241, 0.4)",
               transition: "all 0.3s ease",
               "&:hover": {
-                background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
-                boxShadow: "0 12px 32px rgba(99, 102, 241, 0.5)",
+                background: isDark
+                  ? "linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)"
+                  : "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                boxShadow: isDark
+                  ? "0 6px 20px rgba(79, 70, 229, 0.35)"
+                  : "0 12px 32px rgba(99, 102, 241, 0.5)",
                 transform: "translateY(-2px)",
               },
               "&:disabled": {
-                background: isDark ? alpha("#fff", 0.05) : "#e2e8f0",
+                background: isDark ? alpha("#fff", 0.04) : "#e2e8f0",
                 color: isDark ? "#475569" : "#94a3b8",
                 boxShadow: "none",
               },
@@ -2070,7 +2154,9 @@ const TransactionsPage = () => {
           sx={{
             borderRadius: "14px",
             fontWeight: 700,
-            boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+            boxShadow: isDark
+              ? "0 8px 32px rgba(0,0,0,0.4)"
+              : "0 8px 32px rgba(0,0,0,0.2)",
             ...(snackbar.severity === "success" && {
               bgcolor: "#10b981",
               color: "#fff",

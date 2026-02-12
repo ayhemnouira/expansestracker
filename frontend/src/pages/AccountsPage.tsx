@@ -19,6 +19,8 @@ import {
   Stack,
   Tooltip,
   Zoom,
+  Fade,
+  Grow,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import {
@@ -36,6 +38,7 @@ import {
   AccountBalance,
   VisibilityOff,
   Visibility,
+  Refresh as RefreshIcon,
 } from "@mui/icons-material";
 
 import {
@@ -68,6 +71,7 @@ const AccountsPage = () => {
   const { user } = useAuth();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const isDark = theme.palette.mode === "dark";
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [summary, setSummary] = useState<AccountSummary | null>(null);
   const [loading, setLoading] = useState(true);
@@ -242,24 +246,40 @@ const AccountsPage = () => {
       <Box
         sx={{
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           minHeight: "100vh",
-          background:
-            theme.palette.mode === "dark"
-              ? "linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%)"
-              : "#ffffff",
+          gap: 3,
+          bgcolor: isDark ? "#060918" : "#ffffff",
         }}
       >
-        <Box sx={{ textAlign: "center" }}>
-          <CircularProgress size={60} thickness={4} />
-          <Typography
-            variant="body2"
-            sx={{ mt: 2, color: colors.grey[500], fontWeight: 500 }}
+        <Box sx={{ position: "relative" }}>
+          <CircularProgress
+            size={70}
+            thickness={3}
+            sx={{ color: isDark ? "#6366f1" : "#4f46e5" }}
+          />
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
           >
-            Loading your accounts...
-          </Typography>
+            <AccountBalance
+              sx={{
+                fontSize: 28,
+                color: isDark ? "#6366f1" : "#4f46e5",
+                opacity: 0.5,
+              }}
+            />
+          </Box>
         </Box>
+        <Typography variant="body1" sx={{ color: "#64748b", fontWeight: 600 }}>
+          Loading accounts...
+        </Typography>
       </Box>
     );
   }
@@ -283,923 +303,930 @@ const AccountsPage = () => {
           px: { xs: 2, sm: 3 },
         }}
       >
-        {/* Modern Header */}
-        <Box mb={{ xs: 3, md: 5 }}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            mb={{ xs: 0.5, md: 1 }}
-          >
-            <Box>
-              <Typography
-                variant="h3"
-                sx={{
-                  fontWeight: 700,
-                  fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" },
-                  background:
-                    theme.palette.mode === "dark"
-                      ? "linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%)"
-                      : "linear-gradient(135deg, #1e293b 0%, #4f46e5 100%)",
-                  backgroundClip: "text",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  mb: 0.5,
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                Financial Accounts
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{
-                  color:
-                    theme.palette.mode === "dark"
-                      ? colors.grey[400]
-                      : colors.grey[600],
-                  fontWeight: 500,
-                  fontSize: { xs: "0.875rem", md: "1rem" },
-                }}
-              >
-                Track and manage your financial portfolio
-              </Typography>
-            </Box>
-            <Chip
-              icon={<AccountBalance sx={{ fontSize: { xs: 16, md: 20 } }} />}
-              label={`${accounts.length} Total`}
-              sx={{
-                background:
-                  theme.palette.mode === "dark"
-                    ? "rgba(99, 102, 241, 0.15)"
-                    : "rgba(99, 102, 241, 0.1)",
-                color:
-                  theme.palette.mode === "dark"
-                    ? colors.primary[300]
-                    : colors.primary[700],
-                fontWeight: 600,
-                fontSize: { xs: "0.75rem", md: "0.9rem" },
-                px: { xs: 0.5, md: 1 },
-                py: { xs: 1.5, md: 2.5 },
-                borderRadius: "12px",
-                border: `1px solid ${
-                  theme.palette.mode === "dark"
-                    ? "rgba(99, 102, 241, 0.2)"
-                    : "rgba(99, 102, 241, 0.15)"
-                }`,
-              }}
-            />
-          </Stack>
-
-          {/* Error Alert */}
-          {error && (
-            <Alert
-              severity="error"
-              onClose={() => setError(null)}
-              sx={{
-                mb: { xs: 2, md: 3 },
-                borderRadius: "16px",
-                border: `1px solid ${colors.error[400]}40`,
-                backdropFilter: "blur(10px)",
-              }}
+        {/* Modern Header with Fade Animation */}
+        <Fade in timeout={600}>
+          <Box mb={{ xs: 3, md: 5 }}>
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              alignItems={{ xs: "flex-start", sm: "center" }}
+              justifyContent="space-between"
+              spacing={2}
+              mb={{ xs: 2, md: 3 }}
             >
-              {error}
-            </Alert>
-          )}
-
-          {/* Enhanced Summary Cards */}
-          {summary && (
-            <Grid
-              container
-              spacing={{ xs: 1.5, md: 2.5 }}
-              mt={{ xs: 0.5, md: 1 }}
-            >
-              {/* Total Balance Card - Featured */}
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Card
+              <Box>
+                <Typography
+                  variant="h3"
                   sx={{
-                    background:
-                      theme.palette.mode === "dark"
-                        ? "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)"
-                        : "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)",
-                    borderRadius: { xs: "16px", md: "20px" },
-                    p: { xs: 2, md: 3 },
-                    position: "relative",
-                    overflow: "hidden",
-                    border: "none",
-                    boxShadow:
-                      theme.palette.mode === "dark"
-                        ? "0 8px 32px rgba(99, 102, 241, 0.25)"
-                        : "0 8px 32px rgba(99, 102, 241, 0.3)",
-                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                    "&:hover": {
-                      transform: "translateY(-4px)",
-                      boxShadow:
-                        theme.palette.mode === "dark"
-                          ? "0 12px 48px rgba(99, 102, 241, 0.35)"
-                          : "0 12px 48px rgba(99, 102, 241, 0.4)",
-                    },
-                    "&::before": {
-                      content: '""',
-                      position: "absolute",
-                      top: 0,
-                      right: 0,
-                      width: "200px",
-                      height: "200px",
-                      background:
-                        "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
-                      borderRadius: "50%",
-                      transform: "translate(30%, -30%)",
-                    },
+                    fontWeight: 800,
+                    fontSize: { xs: "1.75rem", sm: "2rem", md: "2.5rem" },
+                    background: isDark
+                      ? "linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%)"
+                      : "linear-gradient(135deg, #1e293b 0%, #6366f1 100%)",
+                    backgroundClip: "text",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    mb: 0.5,
+                    letterSpacing: "-0.02em",
                   }}
                 >
-                  <Box sx={{ position: "relative", zIndex: 1 }}>
-                    <Stack
-                      direction="row"
-                      alignItems="center"
-                      spacing={{ xs: 1, md: 1.5 }}
-                      mb={{ xs: 1.5, md: 2 }}
-                    >
-                      <Box
-                        sx={{
-                          width: { xs: 40, md: 48 },
-                          height: { xs: 40, md: 48 },
-                          borderRadius: { xs: "12px", md: "14px" },
-                          background: "rgba(255,255,255,0.2)",
-                          backdropFilter: "blur(10px)",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <AttachMoney
-                          sx={{ fontSize: { xs: 24, md: 28 }, color: "white" }}
-                        />
-                      </Box>
-                      <Box>
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            color: "rgba(255,255,255,0.9)",
-                            fontWeight: 600,
-                            letterSpacing: "0.5px",
-                            textTransform: "uppercase",
-                            fontSize: "0.75rem",
-                          }}
-                        >
-                          Total Balance
-                        </Typography>
-                      </Box>
-                    </Stack>
-                    <Typography
-                      variant="h3"
-                      sx={{
-                        color: "white",
-                        fontWeight: 700,
-                        fontSize: { xs: "1.75rem", sm: "2rem", md: "2.5rem" },
-                        letterSpacing: "-0.02em",
-                        mb: { xs: 0.5, md: 1 },
-                      }}
-                    >
-                      {summary.totalBalance.toFixed(2)} TND
-                    </Typography>
-                    <Stack direction="row" spacing={3} mt={{ xs: 1, md: 2 }}>
-                      <Box>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            color: "rgba(255,255,255,0.8)",
-                            fontWeight: 500,
-                          }}
-                        >
-                          Active Accounts
-                        </Typography>
-                        <Typography
-                          variant="h6"
-                          sx={{ color: "white", fontWeight: 700 }}
-                        >
-                          {summary.totalAccounts}
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </Box>
-                </Card>
-              </Grid>
-
-              {/* Income Card */}
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                <Card
+                  Financial Accounts
+                </Typography>
+                <Typography
+                  variant="body1"
                   sx={{
-                    background:
-                      theme.palette.mode === "dark"
-                        ? "rgba(16, 185, 129, 0.1)"
-                        : "rgba(16, 185, 129, 0.08)",
-                    borderRadius: { xs: "16px", md: "20px" },
-                    p: { xs: 2, md: 3 },
-                    border: `1px solid ${
-                      theme.palette.mode === "dark"
-                        ? "rgba(16, 185, 129, 0.2)"
-                        : "rgba(16, 185, 129, 0.15)"
-                    }`,
-                    backdropFilter: "blur(10px)",
-                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                    "&:hover": {
-                      transform: "translateY(-4px)",
-                      boxShadow: `0 8px 24px ${colors.success[500]}20`,
-                    },
+                    color: "#64748b",
+                    fontWeight: 500,
+                    fontSize: { xs: "0.9rem", md: "1rem" },
                   }}
                 >
-                  <Stack
-                    direction="row"
-                    alignItems="center"
-                    spacing={{ xs: 1, md: 1.5 }}
-                    mb={{ xs: 1.5, md: 2 }}
-                  >
-                    <Box
-                      sx={{
-                        width: { xs: 36, md: 44 },
-                        height: { xs: 36, md: 44 },
-                        borderRadius: { xs: "10px", md: "12px" },
-                        background:
-                          theme.palette.mode === "dark"
-                            ? "rgba(16, 185, 129, 0.2)"
-                            : "rgba(16, 185, 129, 0.15)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <TrendingUp
-                        sx={{
-                          fontSize: { xs: 20, md: 24 },
-                          color: colors.success[500],
-                        }}
-                      />
-                    </Box>
-                  </Stack>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color:
-                        theme.palette.mode === "dark"
-                          ? colors.grey[400]
-                          : colors.grey[600],
-                      fontWeight: 600,
-                      mb: { xs: 0.5, md: 1 },
-                      textTransform: "uppercase",
-                      fontSize: { xs: "0.65rem", md: "0.7rem" },
-                      letterSpacing: "0.5px",
-                    }}
-                  >
-                    Total Income
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    sx={{
-                      color: colors.success[500],
-                      fontWeight: 700,
-                      fontSize: { xs: "1.25rem", md: "1.5rem" },
-                      letterSpacing: "-0.01em",
-                    }}
-                  >
-                    +{summary.totalIncome.toFixed(2)}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    sx={{ color: colors.grey[500], fontWeight: 500 }}
-                  >
-                    TND
-                  </Typography>
-                </Card>
-              </Grid>
-
-              {/* Expenses Card */}
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                <Card
-                  sx={{
-                    background:
-                      theme.palette.mode === "dark"
-                        ? "rgba(239, 68, 68, 0.1)"
-                        : "rgba(239, 68, 68, 0.08)",
-                    borderRadius: { xs: "16px", md: "20px" },
-                    p: { xs: 2, md: 3 },
-                    border: `1px solid ${
-                      theme.palette.mode === "dark"
-                        ? "rgba(239, 68, 68, 0.2)"
-                        : "rgba(239, 68, 68, 0.15)"
-                    }`,
-                    backdropFilter: "blur(10px)",
-                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                    "&:hover": {
-                      transform: "translateY(-4px)",
-                      boxShadow: `0 8px 24px ${colors.error[500]}20`,
-                    },
-                  }}
-                >
-                  <Stack
-                    direction="row"
-                    alignItems="center"
-                    spacing={{ xs: 1, md: 1.5 }}
-                    mb={{ xs: 1.5, md: 2 }}
-                  >
-                    <Box
-                      sx={{
-                        width: { xs: 36, md: 44 },
-                        height: { xs: 36, md: 44 },
-                        borderRadius: { xs: "10px", md: "12px" },
-                        background:
-                          theme.palette.mode === "dark"
-                            ? "rgba(239, 68, 68, 0.2)"
-                            : "rgba(239, 68, 68, 0.15)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <TrendingDown
-                        sx={{
-                          fontSize: { xs: 20, md: 24 },
-                          color: colors.error[500],
-                        }}
-                      />
-                    </Box>
-                  </Stack>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color:
-                        theme.palette.mode === "dark"
-                          ? colors.grey[400]
-                          : colors.grey[600],
-                      fontWeight: 600,
-                      mb: { xs: 0.5, md: 1 },
-                      textTransform: "uppercase",
-                      fontSize: { xs: "0.65rem", md: "0.7rem" },
-                      letterSpacing: "0.5px",
-                    }}
-                  >
-                    Total Expenses
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    sx={{
-                      color: colors.error[500],
-                      fontWeight: 700,
-                      fontSize: { xs: "1.25rem", md: "1.5rem" },
-                      letterSpacing: "-0.01em",
-                    }}
-                  >
-                    -{summary.totalExpenses.toFixed(2)}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    sx={{ color: colors.grey[500], fontWeight: 500 }}
-                  >
-                    TND
-                  </Typography>
-                </Card>
-              </Grid>
-            </Grid>
-          )}
-        </Box>
-
-        {/* Accounts Sections */}
-        <Box>
-          {/* Enabled Accounts */}
-          {enabledAccounts.length > 0 && (
-            <Box mb={{ xs: 3, md: 5 }}>
+                  Track and manage your financial portfolio
+                </Typography>
+              </Box>
               <Stack
                 direction="row"
-                alignItems="center"
-                spacing={2}
-                mb={{ xs: 2, md: 3 }}
+                spacing={1.5}
+                sx={{ width: { xs: "100%", sm: "auto" } }}
               >
-                <Box
+                <IconButton
+                  onClick={fetchData}
+                  disabled={loading}
                   sx={{
-                    width: 4,
-                    height: 28,
-                    background:
-                      theme.palette.mode === "dark"
-                        ? "linear-gradient(180deg, #6366f1 0%, #4f46e5 100%)"
-                        : "linear-gradient(180deg, #4f46e5 0%, #6366f1 100%)",
-                    borderRadius: "2px",
-                  }}
-                />
-                <Typography
-                  variant="h5"
-                  sx={{
-                    fontWeight: 700,
-                    fontSize: { xs: "1.125rem", md: "1.5rem" },
-                    color:
-                      theme.palette.mode === "dark"
-                        ? colors.grey[100]
-                        : colors.grey[900],
-                    letterSpacing: "-0.01em",
+                    bgcolor: isDark
+                      ? "rgba(255,255,255,0.04)"
+                      : "rgba(99, 102, 241, 0.1)",
+                    borderRadius: "12px",
+                    width: 44,
+                    height: 44,
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      bgcolor: isDark
+                        ? "rgba(255,255,255,0.08)"
+                        : "rgba(99, 102, 241, 0.15)",
+                      transform: "rotate(180deg)",
+                    },
                   }}
                 >
-                  Active Accounts
-                </Typography>
+                  <RefreshIcon
+                    sx={{ color: isDark ? "#6366f1" : "#4f46e5", fontSize: 20 }}
+                  />
+                </IconButton>
                 <Chip
-                  label={enabledAccounts.length}
-                  size="small"
+                  icon={
+                    <AccountBalance sx={{ fontSize: { xs: 16, md: 20 } }} />
+                  }
+                  label={`${accounts.length} Total`}
                   sx={{
-                    background:
-                      theme.palette.mode === "dark"
-                        ? "rgba(99, 102, 241, 0.15)"
-                        : "rgba(99, 102, 241, 0.1)",
-                    color: colors.primary[500],
-                    fontWeight: 700,
-                    borderRadius: "8px",
+                    background: isDark
+                      ? "rgba(99, 102, 241, 0.15)"
+                      : "rgba(99, 102, 241, 0.1)",
+                    color: isDark ? colors.primary[300] : colors.primary[700],
+                    fontWeight: 600,
+                    fontSize: { xs: "0.75rem", md: "0.9rem" },
+                    px: { xs: 0.5, md: 1 },
+                    py: { xs: 1.5, md: 2.5 },
+                    borderRadius: "12px",
+                    border: `1px solid ${
+                      isDark
+                        ? "rgba(99, 102, 241, 0.2)"
+                        : "rgba(99, 102, 241, 0.15)"
+                    }`,
                   }}
                 />
               </Stack>
-              <Grid container spacing={{ xs: 2, md: 3 }}>
-                {enabledAccounts.map((account, index) => (
-                  <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={account.id}>
-                    <Zoom
-                      in={true}
-                      style={{ transitionDelay: `${index * 50}ms` }}
-                    >
-                      <Box sx={{ position: "relative" }}>
-                        <BankCard
-                          account={account}
-                          userName={user?.username || "Guest"}
-                          showBalance={true}
-                        />
-                        <Box
-                          sx={{
-                            position: "absolute",
-                            top: 12,
-                            right: 12,
-                            display: "flex",
-                            gap: 0.5,
-                            zIndex: 20,
-                          }}
-                        >
-                          <Tooltip title="Edit Account" placement="top">
-                            <IconButton
-                              size="small"
-                              onClick={() => handleOpenDialog(account)}
-                              sx={{
-                                color: "white",
-                                backgroundColor: "rgba(0, 0, 0, 0.4)",
-                                backdropFilter: "blur(8px)",
-                                "&:hover": {
-                                  backgroundColor: "rgba(0, 0, 0, 0.6)",
-                                  transform: "scale(1.1)",
-                                },
-                                transition: "all 0.2s ease",
-                              }}
-                            >
-                              <Edit fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Delete Account" placement="top">
-                            <IconButton
-                              size="small"
-                              onClick={() =>
-                                handleDelete(account.id, account.name)
-                              }
-                              sx={{
-                                color: "white",
-                                backgroundColor: "rgba(0, 0, 0, 0.4)",
-                                backdropFilter: "blur(8px)",
-                                "&:hover": {
-                                  backgroundColor: "rgba(239, 68, 68, 0.8)",
-                                  transform: "scale(1.1)",
-                                },
-                                transition: "all 0.2s ease",
-                              }}
-                            >
-                              <Delete fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-                        </Box>
-                        <Box
-                          sx={{
-                            mt: 2,
-                            display: "flex",
-                            justifyContent: "flex-end",
-                          }}
-                        >
-                          <Button
-                            size="small"
-                            startIcon={<VisibilityOff />}
-                            onClick={() =>
-                              handleToggleAccount(account.id, false)
-                            }
-                            sx={{
-                              color:
-                                theme.palette.mode === "dark"
-                                  ? colors.grey[400]
-                                  : colors.grey[700],
-                              borderColor:
-                                theme.palette.mode === "dark"
-                                  ? colors.grey[700]
-                                  : colors.grey[300],
-                              borderRadius: "10px",
-                              textTransform: "none",
-                              fontWeight: 600,
-                              px: 2,
-                              "&:hover": {
-                                borderColor: colors.grey[500],
-                                backgroundColor:
-                                  theme.palette.mode === "dark"
-                                    ? "rgba(255,255,255,0.05)"
-                                    : "rgba(0,0,0,0.05)",
-                              },
-                            }}
-                            variant="outlined"
-                          >
-                            Disable
-                          </Button>
-                        </Box>
-                      </Box>
-                    </Zoom>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-          )}
+            </Stack>
 
-          {/* Disabled Accounts */}
-          {disabledAccounts.length > 0 && (
-            <Box mb={{ xs: 3, md: 5 }}>
-              <Stack
-                direction="row"
-                alignItems="center"
-                spacing={2}
-                mb={{ xs: 2, md: 3 }}
-              >
-                <Box
+            {/* Error Alert with Fade */}
+            {error && (
+              <Fade in timeout={400}>
+                <Alert
+                  severity="error"
+                  onClose={() => setError(null)}
                   sx={{
-                    width: 4,
-                    height: 28,
-                    background:
-                      theme.palette.mode === "dark"
-                        ? "linear-gradient(180deg, #6b7280 0%, #4b5563 100%)"
-                        : "linear-gradient(180deg, #9ca3af 0%, #6b7280 100%)",
-                    borderRadius: "2px",
-                  }}
-                />
-                <Typography
-                  variant="h5"
-                  sx={{
-                    fontWeight: 700,
-                    fontSize: { xs: "1.125rem", md: "1.5rem" },
-                    color:
-                      theme.palette.mode === "dark"
-                        ? colors.grey[400]
-                        : colors.grey[600],
-                    letterSpacing: "-0.01em",
+                    mb: { xs: 2, md: 3 },
+                    borderRadius: "16px",
+                    border: `1px solid ${colors.error[400]}40`,
+                    backdropFilter: "blur(10px)",
                   }}
                 >
-                  Disabled Accounts
-                </Typography>
-                <Chip
-                  label={disabledAccounts.length}
-                  size="small"
-                  sx={{
-                    background:
-                      theme.palette.mode === "dark"
-                        ? "rgba(107, 114, 128, 0.15)"
-                        : "rgba(107, 114, 128, 0.1)",
-                    color: colors.grey[500],
-                    fontWeight: 700,
-                    borderRadius: "8px",
-                  }}
-                />
-              </Stack>
-              <Grid container spacing={{ xs: 2, md: 3 }}>
-                {disabledAccounts.map((account) => (
-                  <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={account.id}>
+                  {error}
+                </Alert>
+              </Fade>
+            )}
+
+            {/* Enhanced Summary Cards with Grow Animation */}
+            {summary && (
+              <Grid
+                container
+                spacing={{ xs: 1.5, md: 2.5 }}
+                mt={{ xs: 0.5, md: 1 }}
+              >
+                {/* Total Balance Card - Featured */}
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <Grow in timeout={800}>
                     <Card
                       sx={{
-                        background:
-                          theme.palette.mode === "dark"
-                            ? "linear-gradient(135deg, rgba(55, 65, 81, 0.4) 0%, rgba(31, 41, 55, 0.4) 100%)"
-                            : "linear-gradient(135deg, rgba(229, 231, 235, 0.6) 0%, rgba(209, 213, 219, 0.6) 100%)",
+                        background: isDark
+                          ? "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)"
+                          : "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)",
+                        borderRadius: { xs: "16px", md: "20px" },
+                        p: { xs: 2, md: 3 },
+                        position: "relative",
+                        overflow: "hidden",
+                        border: "none",
+                        boxShadow: isDark
+                          ? "0 8px 32px rgba(99, 102, 241, 0.25)"
+                          : "0 8px 32px rgba(99, 102, 241, 0.3)",
+                        transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                        "&:hover": {
+                          transform: "translateY(-4px)",
+                          boxShadow: isDark
+                            ? "0 12px 48px rgba(99, 102, 241, 0.35)"
+                            : "0 12px 48px rgba(99, 102, 241, 0.4)",
+                        },
+                        "&::before": {
+                          content: '""',
+                          position: "absolute",
+                          top: 0,
+                          right: 0,
+                          width: "200px",
+                          height: "200px",
+                          background:
+                            "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
+                          borderRadius: "50%",
+                          transform: "translate(30%, -30%)",
+                        },
+                      }}
+                    >
+                      <Box sx={{ position: "relative", zIndex: 1 }}>
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          spacing={{ xs: 1, md: 1.5 }}
+                          mb={{ xs: 1.5, md: 2 }}
+                        >
+                          <Box
+                            sx={{
+                              width: { xs: 40, md: 48 },
+                              height: { xs: 40, md: 48 },
+                              borderRadius: { xs: "12px", md: "14px" },
+                              background: "rgba(255,255,255,0.2)",
+                              backdropFilter: "blur(10px)",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <AttachMoney
+                              sx={{
+                                fontSize: { xs: 24, md: 28 },
+                                color: "white",
+                              }}
+                            />
+                          </Box>
+                          <Box>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: "rgba(255,255,255,0.9)",
+                                fontWeight: 600,
+                                letterSpacing: "0.5px",
+                                textTransform: "uppercase",
+                                fontSize: "0.75rem",
+                              }}
+                            >
+                              Total Balance
+                            </Typography>
+                          </Box>
+                        </Stack>
+                        <Typography
+                          variant="h3"
+                          sx={{
+                            color: "white",
+                            fontWeight: 700,
+                            fontSize: {
+                              xs: "1.75rem",
+                              sm: "2rem",
+                              md: "2.5rem",
+                            },
+                            letterSpacing: "-0.02em",
+                            mb: { xs: 0.5, md: 1 },
+                          }}
+                        >
+                          {summary.totalBalance.toFixed(2)} TND
+                        </Typography>
+                        <Stack
+                          direction="row"
+                          spacing={3}
+                          mt={{ xs: 1, md: 2 }}
+                        >
+                          <Box>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                color: "rgba(255,255,255,0.8)",
+                                fontWeight: 500,
+                              }}
+                            >
+                              Active Accounts
+                            </Typography>
+                            <Typography
+                              variant="h6"
+                              sx={{ color: "white", fontWeight: 700 }}
+                            >
+                              {summary.totalAccounts}
+                            </Typography>
+                          </Box>
+                        </Stack>
+                      </Box>
+                    </Card>
+                  </Grow>
+                </Grid>
+
+                {/* Income Card */}
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Grow in timeout={1000}>
+                    <Card
+                      sx={{
+                        background: isDark
+                          ? "rgba(16, 185, 129, 0.1)"
+                          : "rgba(16, 185, 129, 0.08)",
                         borderRadius: { xs: "16px", md: "20px" },
                         p: { xs: 2, md: 3 },
                         border: `1px solid ${
-                          theme.palette.mode === "dark"
-                            ? colors.grey[700]
-                            : colors.grey[300]
+                          isDark
+                            ? "rgba(16, 185, 129, 0.2)"
+                            : "rgba(16, 185, 129, 0.15)"
                         }`,
                         backdropFilter: "blur(10px)",
-                        opacity: 0.7,
-                        transition: "all 0.3s ease",
+                        transition: "transform 0.3s ease, box-shadow 0.3s ease",
                         "&:hover": {
-                          opacity: 1,
                           transform: "translateY(-4px)",
-                          boxShadow:
-                            theme.palette.mode === "dark"
-                              ? "0 8px 24px rgba(0,0,0,0.3)"
-                              : "0 8px 24px rgba(0,0,0,0.1)",
+                          boxShadow: `0 8px 24px ${colors.success[500]}20`,
                         },
                       }}
                     >
                       <Stack
                         direction="row"
-                        justifyContent="space-between"
-                        alignItems="flex-start"
-                        mb={{ xs: 2, md: 3 }}
+                        alignItems="center"
+                        spacing={{ xs: 1, md: 1.5 }}
+                        mb={{ xs: 1.5, md: 2 }}
                       >
-                        <Box>
-                          <Chip
-                            label="DISABLED"
-                            size="small"
+                        <Box
+                          sx={{
+                            width: { xs: 36, md: 44 },
+                            height: { xs: 36, md: 44 },
+                            borderRadius: { xs: "10px", md: "12px" },
+                            background: isDark
+                              ? "rgba(16, 185, 129, 0.2)"
+                              : "rgba(16, 185, 129, 0.15)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <TrendingUp
                             sx={{
-                              background: colors.grey[700],
-                              color: colors.grey[300],
-                              fontWeight: 700,
-                              fontSize: "0.65rem",
-                              height: "20px",
-                              mb: 1,
+                              fontSize: { xs: 20, md: 24 },
+                              color: colors.success[500],
                             }}
                           />
-                          <Typography
-                            variant="h6"
-                            sx={{
-                              color:
-                                theme.palette.mode === "dark"
-                                  ? colors.grey[300]
-                                  : colors.grey[700],
-                              fontWeight: 700,
-                            }}
-                          >
-                            {account.name}
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              color:
-                                theme.palette.mode === "dark"
-                                  ? colors.grey[500]
-                                  : colors.grey[600],
-                              fontWeight: 500,
-                            }}
-                          >
-                            {account.type.charAt(0).toUpperCase() +
-                              account.type.slice(1)}
-                          </Typography>
                         </Box>
-                        <Stack direction="row" spacing={0.5}>
-                          <Tooltip title="Edit">
-                            <IconButton
-                              size="small"
-                              onClick={() => handleOpenDialog(account)}
-                              sx={{
-                                color:
-                                  theme.palette.mode === "dark"
-                                    ? colors.grey[400]
-                                    : colors.grey[600],
-                                backgroundColor:
-                                  theme.palette.mode === "dark"
-                                    ? "rgba(255,255,255,0.1)"
-                                    : "rgba(0,0,0,0.05)",
-                                "&:hover": {
-                                  backgroundColor:
-                                    theme.palette.mode === "dark"
-                                      ? "rgba(255,255,255,0.15)"
-                                      : "rgba(0,0,0,0.1)",
-                                },
-                              }}
-                            >
-                              <Edit fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Delete">
-                            <IconButton
-                              size="small"
-                              onClick={() =>
-                                handleDelete(account.id, account.name)
-                              }
-                              sx={{
-                                color:
-                                  theme.palette.mode === "dark"
-                                    ? colors.grey[400]
-                                    : colors.grey[600],
-                                backgroundColor:
-                                  theme.palette.mode === "dark"
-                                    ? "rgba(255,255,255,0.1)"
-                                    : "rgba(0,0,0,0.05)",
-                                "&:hover": {
-                                  backgroundColor: colors.error[500],
-                                  color: "white",
-                                },
-                              }}
-                            >
-                              <Delete fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-                        </Stack>
                       </Stack>
-                      <Box mb={{ xs: 1.5, md: 2 }}>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            color:
-                              theme.palette.mode === "dark"
-                                ? colors.grey[500]
-                                : colors.grey[600],
-                            fontWeight: 600,
-                            textTransform: "uppercase",
-                            fontSize: "0.65rem",
-                            letterSpacing: "0.5px",
-                          }}
-                        >
-                          Balance
-                        </Typography>
-                        <Typography
-                          variant="h5"
-                          sx={{
-                            color:
-                              theme.palette.mode === "dark"
-                                ? colors.grey[300]
-                                : colors.grey[700],
-                            fontWeight: 700,
-                            mt: 0.5,
-                          }}
-                        >
-                          {account.currentBalance.toFixed(2)} TND
-                        </Typography>
-                      </Box>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: isDark ? colors.grey[400] : colors.grey[600],
+                          fontWeight: 600,
+                          mb: { xs: 0.5, md: 1 },
+                          textTransform: "uppercase",
+                          fontSize: { xs: "0.65rem", md: "0.7rem" },
+                          letterSpacing: "0.5px",
+                        }}
+                      >
+                        Total Income
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        sx={{
+                          color: colors.success[500],
+                          fontWeight: 700,
+                          fontSize: { xs: "1.25rem", md: "1.5rem" },
+                          letterSpacing: "-0.01em",
+                        }}
+                      >
+                        +{summary.totalIncome.toFixed(2)}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: colors.grey[500], fontWeight: 500 }}
+                      >
+                        TND
+                      </Typography>
+                    </Card>
+                  </Grow>
+                </Grid>
+
+                {/* Expenses Card */}
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Grow in timeout={1200}>
+                    <Card
+                      sx={{
+                        background: isDark
+                          ? "rgba(239, 68, 68, 0.1)"
+                          : "rgba(239, 68, 68, 0.08)",
+                        borderRadius: { xs: "16px", md: "20px" },
+                        p: { xs: 2, md: 3 },
+                        border: `1px solid ${
+                          isDark
+                            ? "rgba(239, 68, 68, 0.2)"
+                            : "rgba(239, 68, 68, 0.15)"
+                        }`,
+                        backdropFilter: "blur(10px)",
+                        transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                        "&:hover": {
+                          transform: "translateY(-4px)",
+                          boxShadow: `0 8px 24px ${colors.error[500]}20`,
+                        },
+                      }}
+                    >
                       <Stack
                         direction="row"
-                        justifyContent="space-between"
                         alignItems="center"
+                        spacing={{ xs: 1, md: 1.5 }}
+                        mb={{ xs: 1.5, md: 2 }}
                       >
-                        {account.mask && (
-                          <Typography
-                            variant="body2"
+                        <Box
+                          sx={{
+                            width: { xs: 36, md: 44 },
+                            height: { xs: 36, md: 44 },
+                            borderRadius: { xs: "10px", md: "12px" },
+                            background: isDark
+                              ? "rgba(239, 68, 68, 0.2)"
+                              : "rgba(239, 68, 68, 0.15)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <TrendingDown
                             sx={{
-                              color:
-                                theme.palette.mode === "dark"
-                                  ? colors.grey[500]
-                                  : colors.grey[600],
-                              fontWeight: 600,
-                              fontFamily: "monospace",
+                              fontSize: { xs: 20, md: 24 },
+                              color: colors.error[500],
+                            }}
+                          />
+                        </Box>
+                      </Stack>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: isDark ? colors.grey[400] : colors.grey[600],
+                          fontWeight: 600,
+                          mb: { xs: 0.5, md: 1 },
+                          textTransform: "uppercase",
+                          fontSize: { xs: "0.65rem", md: "0.7rem" },
+                          letterSpacing: "0.5px",
+                        }}
+                      >
+                        Total Expenses
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        sx={{
+                          color: colors.error[500],
+                          fontWeight: 700,
+                          fontSize: { xs: "1.25rem", md: "1.5rem" },
+                          letterSpacing: "-0.01em",
+                        }}
+                      >
+                        -{summary.totalExpenses.toFixed(2)}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: colors.grey[500], fontWeight: 500 }}
+                      >
+                        TND
+                      </Typography>
+                    </Card>
+                  </Grow>
+                </Grid>
+              </Grid>
+            )}
+          </Box>
+        </Fade>
+
+        {/* Accounts Sections */}
+        <Box>
+          {/* Enabled Accounts */}
+          {enabledAccounts.length > 0 && (
+            <Fade in timeout={1400}>
+              <Box mb={{ xs: 3, md: 5 }}>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  spacing={2}
+                  mb={{ xs: 2, md: 3 }}
+                >
+                  <Box
+                    sx={{
+                      width: 4,
+                      height: 28,
+                      background: isDark
+                        ? "linear-gradient(180deg, #6366f1 0%, #4f46e5 100%)"
+                        : "linear-gradient(180deg, #4f46e5 0%, #6366f1 100%)",
+                      borderRadius: "2px",
+                    }}
+                  />
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 700,
+                      fontSize: { xs: "1.125rem", md: "1.5rem" },
+                      color: isDark ? colors.grey[100] : colors.grey[900],
+                      letterSpacing: "-0.01em",
+                    }}
+                  >
+                    Active Accounts
+                  </Typography>
+                  <Chip
+                    label={enabledAccounts.length}
+                    size="small"
+                    sx={{
+                      background: isDark
+                        ? "rgba(99, 102, 241, 0.15)"
+                        : "rgba(99, 102, 241, 0.1)",
+                      color: colors.primary[500],
+                      fontWeight: 700,
+                      borderRadius: "8px",
+                    }}
+                  />
+                </Stack>
+                <Grid container spacing={{ xs: 2, md: 3 }}>
+                  {enabledAccounts.map((account, index) => (
+                    <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={account.id}>
+                      <Grow in timeout={1600 + index * 100}>
+                        <Box sx={{ position: "relative" }}>
+                          <BankCard
+                            account={account}
+                            userName={user?.username || "Guest"}
+                            showBalance={true}
+                          />
+                          <Box
+                            sx={{
+                              position: "absolute",
+                              top: 12,
+                              right: 12,
+                              display: "flex",
+                              gap: 0.5,
+                              zIndex: 20,
                             }}
                           >
-                            •••• {account.mask}
-                          </Typography>
-                        )}
-                        <Button
-                          size="small"
-                          startIcon={<Visibility />}
-                          onClick={() => handleToggleAccount(account.id, true)}
-                          sx={{
-                            color: colors.primary[500],
-                            borderColor: colors.primary[500],
-                            borderRadius: "10px",
-                            textTransform: "none",
-                            fontWeight: 600,
-                            px: 2,
-                            "&:hover": {
-                              borderColor: colors.primary[600],
-                              backgroundColor:
-                                theme.palette.mode === "dark"
-                                  ? "rgba(99, 102, 241, 0.1)"
-                                  : "rgba(99, 102, 241, 0.05)",
-                            },
-                          }}
-                          variant="outlined"
-                        >
-                          Enable
-                        </Button>
-                      </Stack>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
+                            <Tooltip title="Edit Account" placement="top">
+                              <IconButton
+                                size="small"
+                                onClick={() => handleOpenDialog(account)}
+                                sx={{
+                                  color: "white",
+                                  backgroundColor: "rgba(0, 0, 0, 0.4)",
+                                  backdropFilter: "blur(8px)",
+                                  "&:hover": {
+                                    backgroundColor: "rgba(0, 0, 0, 0.6)",
+                                    transform: "scale(1.1)",
+                                  },
+                                  transition: "all 0.2s ease",
+                                }}
+                              >
+                                <Edit fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Delete Account" placement="top">
+                              <IconButton
+                                size="small"
+                                onClick={() =>
+                                  handleDelete(account.id, account.name)
+                                }
+                                sx={{
+                                  color: "white",
+                                  backgroundColor: "rgba(0, 0, 0, 0.4)",
+                                  backdropFilter: "blur(8px)",
+                                  "&:hover": {
+                                    backgroundColor: "rgba(239, 68, 68, 0.8)",
+                                    transform: "scale(1.1)",
+                                  },
+                                  transition: "all 0.2s ease",
+                                }}
+                              >
+                                <Delete fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          </Box>
+                          <Box
+                            sx={{
+                              mt: 2,
+                              display: "flex",
+                              justifyContent: "flex-end",
+                            }}
+                          >
+                            <Button
+                              size="small"
+                              startIcon={<VisibilityOff />}
+                              onClick={() =>
+                                handleToggleAccount(account.id, false)
+                              }
+                              sx={{
+                                color: isDark
+                                  ? colors.grey[400]
+                                  : colors.grey[700],
+                                borderColor: isDark
+                                  ? colors.grey[700]
+                                  : colors.grey[300],
+                                borderRadius: "10px",
+                                textTransform: "none",
+                                fontWeight: 600,
+                                px: 2,
+                                "&:hover": {
+                                  borderColor: colors.grey[500],
+                                  backgroundColor: isDark
+                                    ? "rgba(255,255,255,0.05)"
+                                    : "rgba(0,0,0,0.05)",
+                                },
+                              }}
+                              variant="outlined"
+                            >
+                              Disable
+                            </Button>
+                          </Box>
+                        </Box>
+                      </Grow>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            </Fade>
           )}
 
-          {/* Enhanced Empty State */}
+          {/* Disabled Accounts */}
+          {disabledAccounts.length > 0 && (
+            <Fade in timeout={1800}>
+              <Box mb={{ xs: 3, md: 5 }}>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  spacing={2}
+                  mb={{ xs: 2, md: 3 }}
+                >
+                  <Box
+                    sx={{
+                      width: 4,
+                      height: 28,
+                      background: isDark
+                        ? "linear-gradient(180deg, #6b7280 0%, #4b5563 100%)"
+                        : "linear-gradient(180deg, #9ca3af 0%, #6b7280 100%)",
+                      borderRadius: "2px",
+                    }}
+                  />
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 700,
+                      fontSize: { xs: "1.125rem", md: "1.5rem" },
+                      color: isDark ? colors.grey[400] : colors.grey[600],
+                      letterSpacing: "-0.01em",
+                    }}
+                  >
+                    Disabled Accounts
+                  </Typography>
+                  <Chip
+                    label={disabledAccounts.length}
+                    size="small"
+                    sx={{
+                      background: isDark
+                        ? "rgba(107, 114, 128, 0.15)"
+                        : "rgba(107, 114, 128, 0.1)",
+                      color: colors.grey[500],
+                      fontWeight: 700,
+                      borderRadius: "8px",
+                    }}
+                  />
+                </Stack>
+                <Grid container spacing={{ xs: 2, md: 3 }}>
+                  {disabledAccounts.map((account, index) => (
+                    <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={account.id}>
+                      <Grow in timeout={2000 + index * 100}>
+                        <Card
+                          sx={{
+                            background: isDark
+                              ? "linear-gradient(135deg, rgba(55, 65, 81, 0.4) 0%, rgba(31, 41, 55, 0.4) 100%)"
+                              : "linear-gradient(135deg, rgba(229, 231, 235, 0.6) 0%, rgba(209, 213, 219, 0.6) 100%)",
+                            borderRadius: { xs: "16px", md: "20px" },
+                            p: { xs: 2, md: 3 },
+                            border: `1px solid ${
+                              isDark ? colors.grey[700] : colors.grey[300]
+                            }`,
+                            backdropFilter: "blur(10px)",
+                            opacity: 0.7,
+                            transition: "all 0.3s ease",
+                            "&:hover": {
+                              opacity: 1,
+                              transform: "translateY(-4px)",
+                              boxShadow: isDark
+                                ? "0 8px 24px rgba(0,0,0,0.3)"
+                                : "0 8px 24px rgba(0,0,0,0.1)",
+                            },
+                          }}
+                        >
+                          <Stack
+                            direction="row"
+                            justifyContent="space-between"
+                            alignItems="flex-start"
+                            mb={{ xs: 2, md: 3 }}
+                          >
+                            <Box>
+                              <Chip
+                                label="DISABLED"
+                                size="small"
+                                sx={{
+                                  background: colors.grey[700],
+                                  color: colors.grey[300],
+                                  fontWeight: 700,
+                                  fontSize: "0.65rem",
+                                  height: "20px",
+                                  mb: 1,
+                                }}
+                              />
+                              <Typography
+                                variant="h6"
+                                sx={{
+                                  color: isDark
+                                    ? colors.grey[300]
+                                    : colors.grey[700],
+                                  fontWeight: 700,
+                                }}
+                              >
+                                {account.name}
+                              </Typography>
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  color: isDark
+                                    ? colors.grey[500]
+                                    : colors.grey[600],
+                                  fontWeight: 500,
+                                }}
+                              >
+                                {account.type.charAt(0).toUpperCase() +
+                                  account.type.slice(1)}
+                              </Typography>
+                            </Box>
+                            <Stack direction="row" spacing={0.5}>
+                              <Tooltip title="Edit">
+                                <IconButton
+                                  size="small"
+                                  onClick={() => handleOpenDialog(account)}
+                                  sx={{
+                                    color: isDark
+                                      ? colors.grey[400]
+                                      : colors.grey[600],
+                                    backgroundColor: isDark
+                                      ? "rgba(255,255,255,0.1)"
+                                      : "rgba(0,0,0,0.05)",
+                                    "&:hover": {
+                                      backgroundColor: isDark
+                                        ? "rgba(255,255,255,0.15)"
+                                        : "rgba(0,0,0,0.1)",
+                                    },
+                                  }}
+                                >
+                                  <Edit fontSize="small" />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Delete">
+                                <IconButton
+                                  size="small"
+                                  onClick={() =>
+                                    handleDelete(account.id, account.name)
+                                  }
+                                  sx={{
+                                    color: isDark
+                                      ? colors.grey[400]
+                                      : colors.grey[600],
+                                    backgroundColor: isDark
+                                      ? "rgba(255,255,255,0.1)"
+                                      : "rgba(0,0,0,0.05)",
+                                    "&:hover": {
+                                      backgroundColor: colors.error[500],
+                                      color: "white",
+                                    },
+                                  }}
+                                >
+                                  <Delete fontSize="small" />
+                                </IconButton>
+                              </Tooltip>
+                            </Stack>
+                          </Stack>
+                          <Box mb={{ xs: 1.5, md: 2 }}>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                color: isDark
+                                  ? colors.grey[500]
+                                  : colors.grey[600],
+                                fontWeight: 600,
+                                textTransform: "uppercase",
+                                fontSize: "0.65rem",
+                                letterSpacing: "0.5px",
+                              }}
+                            >
+                              Balance
+                            </Typography>
+                            <Typography
+                              variant="h5"
+                              sx={{
+                                color: isDark
+                                  ? colors.grey[300]
+                                  : colors.grey[700],
+                                fontWeight: 700,
+                                mt: 0.5,
+                              }}
+                            >
+                              {account.currentBalance.toFixed(2)} TND
+                            </Typography>
+                          </Box>
+                          <Stack
+                            direction="row"
+                            justifyContent="space-between"
+                            alignItems="center"
+                          >
+                            {account.mask && (
+                              <Typography
+                                variant="body2"
+                                sx={{
+                                  color: isDark
+                                    ? colors.grey[500]
+                                    : colors.grey[600],
+                                  fontWeight: 600,
+                                  fontFamily: "monospace",
+                                }}
+                              >
+                                •••• {account.mask}
+                              </Typography>
+                            )}
+                            <Button
+                              size="small"
+                              startIcon={<Visibility />}
+                              onClick={() =>
+                                handleToggleAccount(account.id, true)
+                              }
+                              sx={{
+                                color: colors.primary[500],
+                                borderColor: colors.primary[500],
+                                borderRadius: "10px",
+                                textTransform: "none",
+                                fontWeight: 600,
+                                px: 2,
+                                "&:hover": {
+                                  borderColor: colors.primary[600],
+                                  backgroundColor: isDark
+                                    ? "rgba(99, 102, 241, 0.1)"
+                                    : "rgba(99, 102, 241, 0.05)",
+                                },
+                              }}
+                              variant="outlined"
+                            >
+                              Enable
+                            </Button>
+                          </Stack>
+                        </Card>
+                      </Grow>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            </Fade>
+          )}
+
+          {/* Enhanced Empty State with Fade and Grow */}
           {accounts.length === 0 && (
-            <Card
-              sx={{
-                borderRadius: { xs: "20px", md: "24px" },
-                border: `2px dashed ${
-                  theme.palette.mode === "dark"
-                    ? colors.grey[700]
-                    : colors.grey[300]
-                }`,
-                background:
-                  theme.palette.mode === "dark"
+            <Fade in timeout={1000}>
+              <Card
+                sx={{
+                  borderRadius: { xs: "20px", md: "24px" },
+                  border: `2px dashed ${
+                    isDark ? colors.grey[700] : colors.grey[300]
+                  }`,
+                  background: isDark
                     ? "rgba(17, 24, 39, 0.4)"
                     : "rgba(255, 255, 255, 0.6)",
-                backdropFilter: "blur(10px)",
-                p: { xs: 4, md: 6 },
-                textAlign: "center",
-              }}
-            >
-              <Box
-                sx={{
-                  width: { xs: 80, md: 100 },
-                  height: { xs: 80, md: 100 },
-                  borderRadius: { xs: "20px", md: "24px" },
-                  background:
-                    "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  mx: "auto",
-                  mb: { xs: 2, md: 3 },
-                  boxShadow: "0 12px 40px rgba(99, 102, 241, 0.3)",
+                  backdropFilter: "blur(10px)",
+                  p: { xs: 4, md: 6 },
+                  textAlign: "center",
                 }}
               >
-                <AccountBalance
-                  sx={{ fontSize: { xs: 40, md: 48 }, color: "white" }}
-                />
-              </Box>
-              <Typography
-                variant="h4"
-                sx={{
-                  fontWeight: 700,
-                  fontSize: { xs: "1.5rem", md: "2rem" },
-                  mb: { xs: 1, md: 1.5 },
-                  color:
-                    theme.palette.mode === "dark"
-                      ? colors.grey[100]
-                      : colors.grey[900],
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                No accounts yet
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{
-                  color:
-                    theme.palette.mode === "dark"
-                      ? colors.grey[400]
-                      : colors.grey[600],
-                  mb: { xs: 3, md: 4 },
-                  maxWidth: 480,
-                  mx: "auto",
-                  lineHeight: 1.7,
-                  fontSize: { xs: "0.875rem", md: "1rem" },
-                }}
-              >
-                Start managing your finances by creating your first account.
-                Track balances, monitor transactions, and take control of your
-                money.
-              </Typography>
-              <Button
-                variant="contained"
-                size="large"
-                startIcon={<Add />}
-                onClick={() => handleOpenDialog()}
-                sx={{
-                  background:
-                    "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)",
-                  borderRadius: "14px",
-                  px: 4,
-                  py: 1.5,
-                  fontSize: "1rem",
-                  fontWeight: 700,
-                  textTransform: "none",
-                  boxShadow: "0 8px 24px rgba(99, 102, 241, 0.35)",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
+                <Grow in timeout={1200}>
+                  <Box
+                    sx={{
+                      width: { xs: 80, md: 100 },
+                      height: { xs: 80, md: 100 },
+                      borderRadius: { xs: "20px", md: "24px" },
+                      background:
+                        "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      mx: "auto",
+                      mb: { xs: 2, md: 3 },
+                      boxShadow: "0 12px 40px rgba(99, 102, 241, 0.3)",
+                    }}
+                  >
+                    <AccountBalance
+                      sx={{ fontSize: { xs: 40, md: 48 }, color: "white" }}
+                    />
+                  </Box>
+                </Grow>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: { xs: "1.5rem", md: "2rem" },
+                    mb: { xs: 1, md: 1.5 },
+                    color: isDark ? colors.grey[100] : colors.grey[900],
+                    letterSpacing: "-0.01em",
+                  }}
+                >
+                  No accounts yet
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: isDark ? colors.grey[400] : colors.grey[600],
+                    mb: { xs: 3, md: 4 },
+                    maxWidth: 480,
+                    mx: "auto",
+                    lineHeight: 1.7,
+                    fontSize: { xs: "0.875rem", md: "1rem" },
+                  }}
+                >
+                  Start managing your finances by creating your first account.
+                  Track balances, monitor transactions, and take control of your
+                  money.
+                </Typography>
+                <Button
+                  variant="contained"
+                  size="large"
+                  startIcon={<Add />}
+                  onClick={() => handleOpenDialog()}
+                  sx={{
                     background:
-                      "linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)",
-                    transform: "translateY(-2px)",
-                    boxShadow: "0 12px 32px rgba(99, 102, 241, 0.45)",
-                  },
-                }}
-              >
-                Create Your First Account
-              </Button>
-            </Card>
+                      "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)",
+                    borderRadius: "14px",
+                    px: 4,
+                    py: 1.5,
+                    fontSize: "1rem",
+                    fontWeight: 700,
+                    textTransform: "none",
+                    boxShadow: "0 8px 24px rgba(99, 102, 241, 0.35)",
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      background:
+                        "linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)",
+                      transform: "translateY(-2px)",
+                      boxShadow: "0 12px 32px rgba(99, 102, 241, 0.45)",
+                    },
+                  }}
+                >
+                  Create Your First Account
+                </Button>
+              </Card>
+            </Fade>
           )}
         </Box>
 
-        {/* Floating Action Button */}
+        {/* Floating Action Button with Zoom */}
         {accounts.length > 0 && (
-          <Fab
-            color="primary"
-            aria-label="add account"
-            onClick={() => handleOpenDialog()}
-            sx={{
-              position: "fixed",
-              bottom: { xs: 20, md: 32 },
-              right: { xs: 20, md: 32 },
-              width: { xs: 56, md: 64 },
-              height: { xs: 56, md: 64 },
-              background: "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)",
-              boxShadow: "0 8px 32px rgba(99, 102, 241, 0.4)",
-              transition: "all 0.3s ease",
-              "&:hover": {
-                background: "linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)",
-                transform: "scale(1.1) rotate(90deg)",
-                boxShadow: "0 12px 40px rgba(99, 102, 241, 0.5)",
-              },
-            }}
-          >
-            <Add sx={{ fontSize: { xs: 28, md: 32 } }} />
-          </Fab>
+          <Zoom in timeout={2200}>
+            <Fab
+              color="primary"
+              aria-label="add account"
+              onClick={() => handleOpenDialog()}
+              sx={{
+                position: "fixed",
+                bottom: { xs: 20, md: 32 },
+                right: { xs: 20, md: 32 },
+                width: { xs: 56, md: 64 },
+                height: { xs: 56, md: 64 },
+                background: "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)",
+                boxShadow: "0 8px 32px rgba(99, 102, 241, 0.4)",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, #4338ca 0%, #4f46e5 100%)",
+                  transform: "scale(1.1) rotate(90deg)",
+                  boxShadow: "0 12px 40px rgba(99, 102, 241, 0.5)",
+                },
+              }}
+            >
+              <Add sx={{ fontSize: { xs: 28, md: 32 } }} />
+            </Fab>
+          </Zoom>
         )}
 
         {/* Dialog - keeping the same as before */}
@@ -1210,17 +1237,14 @@ const AccountsPage = () => {
           fullWidth
           PaperProps={{
             sx: {
-              background:
-                theme.palette.mode === "dark"
-                  ? "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)"
-                  : "#ffffff",
+              background: isDark
+                ? "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)"
+                : "#ffffff",
               borderRadius: "28px",
               overflow: "hidden",
               boxShadow: "0 24px 64px rgba(0,0,0,0.2)",
               border: `1px solid ${
-                theme.palette.mode === "dark"
-                  ? colors.grey[800]
-                  : colors.grey[200]
+                isDark ? colors.grey[800] : colors.grey[200]
               }`,
             },
           }}
@@ -1298,10 +1322,7 @@ const AccountsPage = () => {
                   sx={{
                     fontWeight: 700,
                     mb: 2,
-                    color:
-                      theme.palette.mode === "dark"
-                        ? colors.grey[300]
-                        : colors.grey[800],
+                    color: isDark ? colors.grey[300] : colors.grey[800],
                     fontSize: "0.85rem",
                     textTransform: "uppercase",
                     letterSpacing: "0.5px",
@@ -1329,16 +1350,16 @@ const AccountsPage = () => {
                           border: `2px solid ${
                             formData.type === type.value
                               ? colors.primary[500]
-                              : theme.palette.mode === "dark"
+                              : isDark
                                 ? colors.grey[800]
                                 : colors.grey[200]
                           }`,
                           background:
                             formData.type === type.value
-                              ? theme.palette.mode === "dark"
+                              ? isDark
                                 ? "rgba(99, 102, 241, 0.15)"
                                 : "rgba(99, 102, 241, 0.08)"
-                              : theme.palette.mode === "dark"
+                              : isDark
                                 ? colors.grey[900]
                                 : colors.grey[50],
                           cursor: editingAccount ? "not-allowed" : "pointer",
@@ -1368,7 +1389,7 @@ const AccountsPage = () => {
                             color:
                               formData.type === type.value
                                 ? colors.primary[500]
-                                : theme.palette.mode === "dark"
+                                : isDark
                                   ? colors.grey[300]
                                   : colors.grey[700],
                             fontSize: "0.8rem",
@@ -1404,15 +1425,11 @@ const AccountsPage = () => {
                     sx={{
                       "& .MuiOutlinedInput-root": {
                         borderRadius: "14px",
-                        background:
-                          theme.palette.mode === "dark"
-                            ? colors.grey[900]
-                            : colors.grey[50],
+                        background: isDark ? colors.grey[900] : colors.grey[50],
                         "& fieldset": {
-                          borderColor:
-                            theme.palette.mode === "dark"
-                              ? colors.grey[800]
-                              : colors.grey[300],
+                          borderColor: isDark
+                            ? colors.grey[800]
+                            : colors.grey[300],
                           borderWidth: "2px",
                         },
                         "&:hover fieldset": {
@@ -1445,15 +1462,11 @@ const AccountsPage = () => {
                     sx={{
                       "& .MuiOutlinedInput-root": {
                         borderRadius: "14px",
-                        background:
-                          theme.palette.mode === "dark"
-                            ? colors.grey[900]
-                            : colors.grey[50],
+                        background: isDark ? colors.grey[900] : colors.grey[50],
                         "& fieldset": {
-                          borderColor:
-                            theme.palette.mode === "dark"
-                              ? colors.grey[800]
-                              : colors.grey[300],
+                          borderColor: isDark
+                            ? colors.grey[800]
+                            : colors.grey[300],
                           borderWidth: "2px",
                         },
                         "&:hover fieldset": {
@@ -1488,15 +1501,11 @@ const AccountsPage = () => {
                     sx={{
                       "& .MuiOutlinedInput-root": {
                         borderRadius: "14px",
-                        background:
-                          theme.palette.mode === "dark"
-                            ? colors.grey[900]
-                            : colors.grey[50],
+                        background: isDark ? colors.grey[900] : colors.grey[50],
                         "& fieldset": {
-                          borderColor:
-                            theme.palette.mode === "dark"
-                              ? colors.grey[800]
-                              : colors.grey[300],
+                          borderColor: isDark
+                            ? colors.grey[800]
+                            : colors.grey[300],
                           borderWidth: "2px",
                         },
                         "&:hover fieldset": {
@@ -1540,15 +1549,11 @@ const AccountsPage = () => {
                     sx={{
                       "& .MuiOutlinedInput-root": {
                         borderRadius: "14px",
-                        background:
-                          theme.palette.mode === "dark"
-                            ? colors.grey[900]
-                            : colors.grey[50],
+                        background: isDark ? colors.grey[900] : colors.grey[50],
                         "& fieldset": {
-                          borderColor:
-                            theme.palette.mode === "dark"
-                              ? colors.grey[800]
-                              : colors.grey[300],
+                          borderColor: isDark
+                            ? colors.grey[800]
+                            : colors.grey[300],
                           borderWidth: "2px",
                         },
                         "&:hover fieldset": {
@@ -1604,15 +1609,13 @@ const AccountsPage = () => {
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           borderRadius: "14px",
-                          background:
-                            theme.palette.mode === "dark"
-                              ? colors.grey[900]
-                              : colors.grey[50],
+                          background: isDark
+                            ? colors.grey[900]
+                            : colors.grey[50],
                           "& fieldset": {
-                            borderColor:
-                              theme.palette.mode === "dark"
-                                ? colors.grey[800]
-                                : colors.grey[300],
+                            borderColor: isDark
+                              ? colors.grey[800]
+                              : colors.grey[300],
                             borderWidth: "2px",
                           },
                           "&:hover fieldset": {
@@ -1648,15 +1651,11 @@ const AccountsPage = () => {
                     sx={{
                       "& .MuiOutlinedInput-root": {
                         borderRadius: "14px",
-                        background:
-                          theme.palette.mode === "dark"
-                            ? colors.grey[900]
-                            : colors.grey[50],
+                        background: isDark ? colors.grey[900] : colors.grey[50],
                         "& fieldset": {
-                          borderColor:
-                            theme.palette.mode === "dark"
-                              ? colors.grey[800]
-                              : colors.grey[300],
+                          borderColor: isDark
+                            ? colors.grey[800]
+                            : colors.grey[300],
                           borderWidth: "2px",
                         },
                         "&:hover fieldset": {
@@ -1677,15 +1676,12 @@ const AccountsPage = () => {
           <Box
             sx={{
               p: 3,
-              background:
-                theme.palette.mode === "dark"
-                  ? "rgba(15, 23, 42, 0.6)"
-                  : "rgba(248, 250, 252, 0.8)",
+              background: isDark
+                ? "rgba(15, 23, 42, 0.6)"
+                : "rgba(248, 250, 252, 0.8)",
               backdropFilter: "blur(10px)",
               borderTop: `1px solid ${
-                theme.palette.mode === "dark"
-                  ? colors.grey[800]
-                  : colors.grey[200]
+                isDark ? colors.grey[800] : colors.grey[200]
               }`,
               display: "flex",
               gap: 2,
@@ -1702,22 +1698,15 @@ const AccountsPage = () => {
                 py: 1.5,
                 fontWeight: 700,
                 textTransform: "none",
-                borderColor:
-                  theme.palette.mode === "dark"
-                    ? colors.grey[700]
-                    : colors.grey[300],
-                color:
-                  theme.palette.mode === "dark"
-                    ? colors.grey[300]
-                    : colors.grey[700],
+                borderColor: isDark ? colors.grey[700] : colors.grey[300],
+                color: isDark ? colors.grey[300] : colors.grey[700],
                 borderWidth: "2px",
                 "&:hover": {
                   borderColor: colors.grey[500],
                   borderWidth: "2px",
-                  background:
-                    theme.palette.mode === "dark"
-                      ? "rgba(255,255,255,0.05)"
-                      : "rgba(0,0,0,0.03)",
+                  background: isDark
+                    ? "rgba(255,255,255,0.05)"
+                    : "rgba(0,0,0,0.03)",
                 },
               }}
             >
