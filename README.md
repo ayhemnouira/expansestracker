@@ -96,7 +96,7 @@ A modern, full-stack financial management application built with **Spring Boot**
 ### Dashboard
 ![Dashboard Light Mode](screenshots/dashboard1.png)
 ![Dashboard Light Mode](screenshots/dashboard2.png)
-![Dashboard Dark Mode](screenshots/dashboard3.png.png)
+![Dashboard Dark Mode](screenshots/dashboard3.png)
 
 ### Transactions
 ![Transactions Page](screenshots/TransactionPage.png)
