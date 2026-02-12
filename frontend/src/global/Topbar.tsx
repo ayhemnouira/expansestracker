@@ -105,7 +105,7 @@ const Topbar = ({ onMenuClick }: TopbarProps) => {
     logout();
     navigate("/signin");
   };
-
+  /*
   const handleProfile = () => {
     handleMenuClose();
     navigate("/profile");
@@ -115,7 +115,7 @@ const Topbar = ({ onMenuClick }: TopbarProps) => {
     handleMenuClose();
     navigate("/settings");
   };
-
+*/
   const markAsRead = async (alertId: number) => {
     try {
       await alertService.markAsRead(alertId);
