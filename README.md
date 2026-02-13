@@ -18,6 +18,10 @@ A modern, full-stack financial management application built with **Spring Boot**
 </div>
 
 
+https://github.com/user-attachments/assets/e2afa4e7-3aeb-4a3b-8bfe-77cc82218d16
+
+
+
 ---
 
 ![ExpensesTracker Dashboard](screenshots/dashboard1.png)
